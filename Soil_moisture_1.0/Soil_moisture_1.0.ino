@@ -30,14 +30,8 @@
 #define CLOCK_BAT_VOLTAGE A0
 #define TMP36 A1
 
-#if 0
-// Standard SPI interface default values for the RadioHead library.
-#define MOSIPin 11
-#define MISOPin 12
-#define SCKPin 13
-#endif
-
 // Was LED_BUILTIN
+// The status LED will only be used for errors in production code
 #define STATUS 9 
 
 #define RF95_FREQ 915.0
@@ -50,7 +44,7 @@
 #define SOIL_SENSOR_ADDR 0x36
 
 // Tx should not use the Serial interface except for debugging
-#define DEBUG 0
+#define DEBUG 1
 
 #if DEBUG
 #define IO(x) do { x; } while (0)
@@ -72,7 +66,8 @@ Adafruit_seesaw soil_moisture;
 
 // Blink 2, 3, ..., times to indicate different componenets starting.
 // Blink twice at the start of initialization, once at the end, or
-// forever if an error occurs. 
+// forever if an error occurs. The SAMPLE_STATUS and STARTED/COMPLETED
+// values are used only for testing
 #define LORA_STATUS 2
 #define CLOCK_STATUS 3
 #define SOIL_MOISTURE_STATUS 4
@@ -94,10 +89,13 @@ void blink_times(int pin, int N, int M) {
     for (int i = 0; i < N; ++i) {
       digitalWrite(pin, HIGH);
       delay(quarter_second);
+      // LowPower.powerDown(SLEEP_250MS, ADC_OFF, BOD_OFF);
       digitalWrite(pin, LOW);
       delay(quarter_second);
+      // LowPower.powerDown(SLEEP_250MS, ADC_OFF, BOD_OFF);
     }
     delay(one_second);
+    //LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
   }
 }
 
@@ -125,7 +123,8 @@ uint16_t get_bandgap()   // Returns actual value of Vcc (x 100)
           | (1 << MUX2) | (1 << MUX1) | (0 << MUX0);
 #endif
 
-  delay(50);  // Let mux settle a little to get a more stable A/D conversion
+  //delay(50);  // Let mux settle a little to get a more stable A/D conversion
+  LowPower.powerDown(SLEEP_60MS, ADC_ON, BOD_OFF);
   // Start a conversion
   ADCSRA |= _BV(ADSC);
   // Wait for it to complete
@@ -138,8 +137,7 @@ uint16_t get_bandgap()   // Returns actual value of Vcc (x 100)
 
 // Given a DateTime instance, return a pointer to static string that holds
 // an ISO 8601 print representation of the object.
-//
-// TODO Use snprintf().
+
 char *iso8601_date_time(DateTime t) {
   static char date_time_str[32];
   
@@ -219,9 +217,11 @@ void lora_setup() {
   
   // LORA manual reset
   digitalWrite(RFM95_RST, LOW);
-  delay(10);
+  //delay(10);
+  LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
   digitalWrite(RFM95_RST, HIGH);
-  delay(10);
+  //delay(10);
+  LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
 
   // Defaults for RFM95 after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5,
   // Sf = 128chips/symbol, CRC on. If the init fails, LORA status LED blinks at
@@ -392,11 +392,6 @@ void send_packet(char *time_stamp, uint16_t  clock_temp, uint16_t clock_bat_volt
 
   char packet[64];
   
-#if 0
-  snprintf(packet, sizeof(packet), "%s,%d,%d,%d,%d,%d,%d,%d,%d,%d", 
-          time_stamp, SENSOR_ID, ++packetnum, sensor_bat_volts, clock_temp, clock_bat_volts, rssi, snr, soil_temp, soil_moisture);
-#else
- 
   // Send a message to rf95_server
   // The RSSI and SNR are for the most recent ACK received from the server in response to
   // the client's message. The message is '<packetnum>,<Vcc>,<rssi>,<snr>,<temp>'.
@@ -432,7 +427,6 @@ void send_packet(char *time_stamp, uint16_t  clock_temp, uint16_t clock_bat_volt
   strncat(packet, ",", sizeof(packet)-1);
 
   strncat(packet, itoa(soil_moisture, val, 10), sizeof(packet)-1);
-#endif
 
   rf95.send((uint8_t *) packet, strnlen(packet, sizeof(packet)) + 1);
 
@@ -456,16 +450,21 @@ void send_packet(char *time_stamp, uint16_t  clock_temp, uint16_t clock_bat_volt
       IO(Serial.println((char*)buf)); 
       IO(Serial.print(F("RSSI: "))); 
       IO(Serial.println(rssi, DEC));
+      IO(Serial.print(F("SNR: "))); 
+      IO(Serial.println(snr, DEC));
+      IO(Serial.flush());
     } 
     else {
       rssi = 0;
       snr = 0;
 
       IO(Serial.println(F("Receive failed")));
+      IO(Serial.flush());
     }
   } 
   else {
     IO(Serial.println(F("No reply, is there a listener around?")));
+    IO(Serial.flush());
   }
 }
 
@@ -524,8 +523,8 @@ uint16_t get_soil_moisture_value() {
 /// @param v_bat is the power supply voltage * 100 as an integer.
 /// @return The temperature * 10 as an integer
 int16_t get_tmp36_temp(uint16_t v_bat) {
-  IO(Serial.println(analogRead(A1)));
-  IO(Serial.println(get_bandgap()));
+  IO(Serial.print(F("TMP36 raw: ")));
+  IO(Serial.println(analogRead(TMP36)));
   IO(Serial.flush());
 
 #if 0
@@ -535,7 +534,7 @@ int16_t get_tmp36_temp(uint16_t v_bat) {
   (analogRead(TMP36) * ((v_bat * 10)/1024.0)) - ZERO_CROSSING
 #endif
 
-  return (int16_t)((analogRead(TMP36) / 1023.0) * v_bat * 10) - ZERO_CROSSING;
+  return (int16_t)((analogRead(TMP36) / 1023.0) * (v_bat * 10)) - ZERO_CROSSING;
 }
 
 uint16_t get_clock_bat_volatage(uint16_t  v_bat) {
@@ -548,7 +547,8 @@ void loop() {
   uint16_t v_bat = get_bandgap();
 
   send_packet(iso8601_date_time(RTC.now()), (uint16_t)(RTC.getTemp()*100), get_clock_bat_volatage(v_bat), v_bat, get_tmp36_temp(v_bat), get_soil_moisture_value());
-  
+
   blink_times(STATUS, SAMPLE_STATUS, COMPLETED);
-  delay(1000); 
+
+  LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
 }
