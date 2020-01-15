@@ -23,6 +23,7 @@
 #define LEVEL 4
 #define SENSOR_ID "2"
 #define RF95_FREQ 915.0
+#define TX_LEVEL 23
 #define AREF_VOLTAGE_X1000 1080L    // Used to get battery voltage in get_bandgap()
 
 // Singleton instance of the radio driver
@@ -39,7 +40,7 @@ void wake_up() {
 void blink_times(int t) {
   for (int i = 0; i < t; ++i) {
     digitalWrite(LED_BUILTIN, HIGH);
-    delay(5);
+    delay(50);
     digitalWrite(LED_BUILTIN, LOW);
     LowPower.idle(SLEEP_500MS, ADC_ON, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF,
                   SPI_ON, USART0_OFF, TWI_ON);
@@ -52,7 +53,7 @@ void blink_error(int t) {
   while (true) {
     for (int i = 0; i < t; ++i) {
       digitalWrite(LED_BUILTIN, HIGH);
-      delay(5);
+      delay(50);
       digitalWrite(LED_BUILTIN, LOW);
       LowPower.idle(SLEEP_120MS, ADC_ON, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF,
                     SPI_ON, USART0_OFF, TWI_ON);
@@ -133,12 +134,12 @@ void lora_setup() {
   rf95.setSignalBandwidth(125000);
 
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8) (higher == better error correction)
-  rf95.setCodingRate4(8);
+  rf95.setCodingRate4(6);
 
   // The default transmitter power is 13dBm, using PA_BOOST.
   // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
-  rf95.setTxPower(23, false);
+  rf95.setTxPower(TX_LEVEL, false);
 
   // LORA setup success, status on.
   Serial.println(F("RF95 success"));
@@ -235,7 +236,7 @@ void send_packet(char *time_stamp, float clock_temp, float soil_temp, uint16_t s
   Serial.println(F("before rf95.waitPacketSent()"));
   Serial.flush();
 
-  //rf95.waitPacketSent();
+  rf95.waitPacketSent();
 
   Serial.println(F("after rf95.waitPacketSent()"));
   Serial.flush();
@@ -364,7 +365,7 @@ void loop() {
   // use interrupt 0 (pin 2) and run function wake_up when pin 2 gets LOW
   attachInterrupt(digitalPinToInterrupt(INT0_PIN), wake_up, LOW);
 
-  LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF); //arduino enters sleep mode here
+  LowPower.powerDown(/*SLEEP_4S*/ SLEEP_FOREVER, ADC_OFF, BOD_OFF); //arduino enters sleep mode her
 
   Serial.println(F("Woke up!"));
   Serial.flush();
