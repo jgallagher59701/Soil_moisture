@@ -190,27 +190,25 @@ void port_setup() {
 
 // Can be called both when the clock is first powered and when it's been running
 // by setting 'initial_call' to true or false.
-void clock_setup(bool initial_call) 
+void clock_setup() 
 {
-  if (initial_call) {
-    blink_times(STATUS, CLOCK_STATUS, START);
-    // The DS3231 requires the Wire library
-    Wire.begin();
-    
-    if (!RTC.begin()) {
-      IO(Serial.println(F("Couldn't find RTC")));
-      blink_times(STATUS, CLOCK_STATUS, ERROR_OCCURRED);
-    }
+  blink_times(STATUS, CLOCK_STATUS, START);
+  // The DS3231 requires the Wire library
+  Wire.begin();
+  
+  if (!RTC.begin()) {
+    IO(Serial.println(F("Couldn't find RTC")));
+    blink_times(STATUS, CLOCK_STATUS, ERROR_OCCURRED);
+  }
 
-    if (RTC.lostPower()) {
-      IO(Serial.println(F("RTC lost power, lets set the time!")));
-      // following line sets the RTC to the date & time this sketch was compiled
-      RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));
-      // This line sets the RTC with an explicit date & time, for example to set
-      // January 21, 2014 at 3am you would call:
-      // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
-      blink_times(STATUS, CLOCK_STATUS, ERROR_OCCURRED);
-    }
+  if (RTC.lostPower()) {
+    IO(Serial.println(F("RTC lost power, lets set the time!")));
+    // following line sets the RTC to the date & time this sketch was compiled
+    RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    // This line sets the RTC with an explicit date & time, for example to set
+    // January 21, 2014 at 3am you would call:
+    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+    blink_times(STATUS, CLOCK_STATUS, ERROR_OCCURRED);
   }
   
   //clear any pending alarms
@@ -257,10 +255,7 @@ void clock_setup(bool initial_call)
   // RTC setup success, status on.
   IO(Serial.println(F("RTC init OK!")));
   
-  // Only show status on the initial call
-  if (initial_call) {
-    blink_times(STATUS, CLOCK_STATUS, COMPLETED);
-  }
+  blink_times(STATUS, CLOCK_STATUS, COMPLETED);
 }
 
 void setup() {
@@ -277,7 +272,9 @@ void setup() {
   Serial.println(F("boot"));
 #endif
 
-  clock_setup(true);
+  clock_setup();
+
+  set_alarm();
 }
 
 void set_alarm() {
@@ -292,17 +289,26 @@ void set_alarm() {
   RTC.alarmInterrupt(1, true);
 
   IO(Serial.println(F("After reconfiguration")));
+  alarm_status();
+}
+
+void alarm_status() {
   IO(Serial.print(F("Alarm 1: ")));
   IO(Serial.println(RTC.isArmed(1)));
+#if 0
+  IO(Serial.print(F("Alarm 1 status: ")));
+  IO(Serial.println(RTC.alarm(1)));
   IO(Serial.print(F("Alarm 2: ")));
   IO(Serial.println(RTC.isArmed(2)));
+  IO(Serial.print(F("Alarm 2 status: ")));
+  IO(Serial.println(RTC.alarm(2)));
+#endif
   IO(Serial.print(F("RTC Status: ")));
-  IO(Serial.println(RTC.readSqwPinMode(), HEX));
+  IO(Serial.println(RTC.readSqwPinMode(), BIN));
   IO(Serial.print(F("RTC 32kHz: ")));
   IO(Serial.println(RTC.getEN32kHz()));
   IO(Serial.flush());
 }
-
 // Return the TMP36 temperature, as an int16 scaled by 100
 // i.e., 19.0 C --> 190
 //
@@ -326,7 +332,7 @@ int16_t get_tmp36_temp(uint16_t v_bat) {
   (analogRead(TMP36) * ((v_bat * 10)/1024.0)) - ZERO_CROSSING
 #endif
 
-  return (int16_t)((analogRead(TMP36) / 1023.0) * (v_bat * 10)) - ZERO_CROSSING;
+  return (int16_t)((analogRead(TMP36) / 1024.0) * (v_bat * 10)) - ZERO_CROSSING;
 }
 
 uint16_t get_clock_bat_volatage(uint16_t  v_bat) {
@@ -335,17 +341,23 @@ uint16_t get_clock_bat_volatage(uint16_t  v_bat) {
 
 void loop() {
   blink_times(STATUS, SAMPLE_STATUS, START);
-
+  
   uint16_t v_bat = get_bandgap();
   float temp = get_tmp36_temp(v_bat) /10.0;
+
+  alarm_status();
   
   Serial.print(F("Temperature: "));
   Serial.print(temp);
   Serial.print(F(" C, "));
   Serial.print(temp * (9.0/5.0) + 32.0);
   Serial.println(F(" F"));
+  Serial.print(F("Current time: "));
+  Serial.println(iso8601_date_time(RTC.now()));
+  Serial.flush();
   
   blink_times(STATUS, SAMPLE_STATUS, COMPLETED);
 
+  //delay(60000);
   LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
 }
