@@ -1,6 +1,5 @@
 /*
   LoRa Simple Yun Server :
-  Support Devices: LG01. 
   
   Example sketch showing how to create a simple messageing server, 
   with the RH_RF95 class. RH_RF95 class does not provide for addressing or
@@ -12,27 +11,24 @@
   User need to use the modified RadioHead library from:
   https://github.com/dragino/RadioHead
 
-  modified 16 11 2016
-  by Edwin Chen <support@dragino.com>
-  Dragino Technology Co., Limited
+  modified 6/27/2020
+  by jhrg
 */
 
-//If you use Dragino IoT Mesh Firmware, uncomment below lines.
-//For product: LG01. 
-#define BAUDRATE 115200
 
-//If you use Dragino Yun Mesh Firmware , uncomment below lines. 
-//#define BAUDRATE 250000
-
-#include <Console.h>
 #include <SPI.h>
 #include <RH_RF95.h>
 
-// Singleton instance of the radio driver
-RH_RF95 rf95;
+#define BAUDRATE 9600
 
-int led = A2;
-//float frequency = 868.0;
+#define RFM95_INT 3 // INT1
+#define RFM95_CS 5
+#define RFM95_RST 6
+
+// Singleton instance of the radio driver
+RH_RF95 rf95(RFM95_CS, RFM95_INT);
+
+int led = 9;
 float frequency = 915.0;
 
 // Tx should not use the Serial interface except for debugging
@@ -46,13 +42,26 @@ float frequency = 915.0;
 
 void setup() 
 {
-  pinMode(led, OUTPUT);     
-  Bridge.begin(BAUDRATE);
-  Console.begin();
-  while (!Console) ; // Wait for console port to be available
-  Console.println("Start receiveer");
-  if (!rf95.init())
-    Console.println("init failed");
+  pinMode(led, OUTPUT); 
+  pinMode(RFM95_RST, OUTPUT);
+  
+  while (!Serial);
+  Serial.begin(BAUDRATE);
+  Serial.println(F("boot"));
+  
+  Serial.println(F("Start receiveer"));
+
+  // LORA manual reset
+  digitalWrite(RFM95_RST, LOW);
+  delay(20);
+  digitalWrite(RFM95_RST, HIGH);
+  delay(20);
+    
+  if (!rf95.init()) {
+    Serial.println(F("init failed"));
+    while(true);
+  }
+  
   // Setup ISM frequency
   rf95.setFrequency(frequency);
   // Setup Power,dBm
@@ -67,8 +76,8 @@ void setup()
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8) 
   rf95.setCodingRate4(5);
   
-  Console.print("Listening on frequency: ");
-  Console.println(frequency);
+  Serial.print(F("Listening on frequency: "));
+  Serial.println(frequency);
 
 #if 0
   // Set date and time using compiler constants.
@@ -90,27 +99,22 @@ void loop()
       RH_RF95::printBuffer("request: ", buf, len);
 
       // Print received datagram as CSV
-      Console.print((char*)buf);
-      Console.print(",");
-      Console.print(rf95.lastRssi(), DEC);
-      Console.print(",");
-      Console.println(rf95.lastSNR(), DEC);
-      
-      IO(Console.print("got request: "));
-      IO(Console.println((char*)buf));
-      IO(Console.print("RSSI: "));
-      IO(Console.println(rf95.lastRssi(), DEC));
+      Serial.print((char*)buf);
+      Serial.print(F(", RSSI: "));
+      Serial.print(rf95.lastRssi(), DEC);
+      Serial.print(F(", SNR: "));
+      Serial.println(rf95.lastSNR(), DEC);
       
       // Send a reply
       uint8_t data[] = "And hello back to you";
       rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
-      IO(Console.println("Sent a reply"));
+      IO(Serial.println(F("Sent a reply")));
       digitalWrite(led, LOW);
     }
     else
     {
-      Console.println("recv failed");
+      Serial.println(F("recv failed"));
     }
   }
 }
