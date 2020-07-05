@@ -69,12 +69,6 @@ void setup()
   
   Console.print("Listening on frequency: ");
   Console.println(frequency);
-
-#if 0
-  // Set date and time using compiler constants.
-  DateTime(F(__DATE__), F(__TIME__))
-  DateTime(2014, 1, 21, 3, 0, 0)
-#endif
 }
 
 void loop()
