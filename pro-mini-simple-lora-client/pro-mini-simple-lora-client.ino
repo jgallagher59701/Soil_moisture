@@ -18,18 +18,39 @@
 
 #include <SPI.h>
 #include <RH_RF95.h>
+//#include <LowPower.h>
+
+#define RFM95_INT 3
+#define RFM95_CS 5
+#define RFM95_RST 6
+
+#define NODE 1
 
 // Singleton instance of the radio driver
-RH_RF95 rf95;
+RH_RF95 rf95(RFM95_CS, RFM95_INT);
+
 float frequency = 915.0;
 
 void setup() 
 {
   Serial.begin(9600);
   //while (!Serial) ; // Wait for serial port to be available
+
+  // LORA manual reset
+  digitalWrite(RFM95_RST, LOW);
+  delay(15);
+  // LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+  digitalWrite(RFM95_RST, HIGH);
+  delay(15);
+  //LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+
   Serial.println("Start LoRa Client");
-  if (!rf95.init())
+  
+  if (!rf95.init()) {
     Serial.println("init failed");
+    while (true) ;
+  }
+  
   // Setup ISM frequency
   rf95.setFrequency(frequency);
   // Setup Power,dBm
@@ -46,14 +67,24 @@ void setup()
   rf95.setCodingRate4(5);
 }
 
+unsigned long last_tx_time = 0;
+
 void loop()
 {
   Serial.println("Sending to LoRa Server");
   // Send a message to LoRa Server
-  uint8_t data[] = "Hello, this is device 1";
+  
+  unsigned long start_time = millis();
+  
+  uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
+  snprintf(data, sizeof(data), "Hello, this is device %d, tx time %ld ms", NODE, last_tx_time);
   rf95.send(data, sizeof(data));
   
   rf95.waitPacketSent();
+  
+  unsigned long end_time = millis();
+  unsigned long last_tx_time = end_time = start_time;
+  
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
