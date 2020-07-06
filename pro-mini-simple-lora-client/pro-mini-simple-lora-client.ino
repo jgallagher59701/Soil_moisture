@@ -29,10 +29,12 @@
 #define SPREADING_FACTOR 7  // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
-#define NODE 1
+#define NODE 2
 #define DEBUG 0
+#define EXPECT_REPLY 1
 #define WAIT_AVAILABLE 3000 // ms to wait for a response from server
-#define TX_INTERVAL 5000 // ms to wait before next transmission
+#define TX_INTERVAL 6000 // ms to wait before next transmission
+#define CAD_TIMEOUT 3000 // timeout for CAD wait
 
 #if DEBUG
 #define IO(x) do { x; } while (false)
@@ -82,30 +84,35 @@ void setup()
     
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8) 
   rf95.setCodingRate4(CODING_RATE);
+
+  rf95.setCADTimeout(CAD_TIMEOUT);
 }
 
 void loop()
 {
   IO(Serial.println(F("Sending to LoRa Server")));
   static unsigned long last_tx_time = 0;
+  static unsigned long message = 0;
   
   // Send a message to LoRa Server
   
+  ++message;
   unsigned long start_time = millis();
   
   uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
-  snprintf(data, sizeof(data), "Hello, this is device %d, tx time %ld ms", NODE, last_tx_time);
-  rf95.send(data, sizeof(data));
+  snprintf(data, sizeof(data), "Hello, this is device %d, message %ld, tx time %ld ms", NODE, message, last_tx_time);
+  rf95.send(data, sizeof(data));  // This may block for up to CAD_TIMEOUT
   
   rf95.waitPacketSent();  // Block until packet sent
   
   unsigned long end_time = millis();
   last_tx_time = end_time - start_time;   // last_tx_time used next iteration
-  
+
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
+#if EXPECT_REPLY
   if (rf95.waitAvailableTimeout(WAIT_AVAILABLE))
   { 
     // Should be a reply message for us now   
@@ -125,6 +132,7 @@ void loop()
   {
     IO(Serial.println(F("No reply, is LoRa server running?")));
   }
-  
-  delay(TX_INTERVAL);
+#endif  // EXPECT_REPLY
+ 
+  delay(TX_INTERVAL - (millis() - start_time)); // wait here for upto TX_INTERVAL ms
 }
