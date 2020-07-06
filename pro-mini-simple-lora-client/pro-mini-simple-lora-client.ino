@@ -1,20 +1,17 @@
-/*
-  LoRa Simple Client for Arduino :
-  Support Devices: LoRa Shield + Arduino 
-  
-  Example sketch showing how to create a simple messageing client, 
-  with the RH_RF95 class. RH_RF95 class does not provide for addressing or
-  reliability, so you should only use RH_RF95 if you do not need the higher
-  level messaging abilities.
-
-  It is designed to work with the other example LoRa Simple Server
-  User need to use the modified RadioHead library from:
-  https://github.com/dragino/RadioHead
-
-  modified 16 11 2016
-  by Edwin Chen <support@dragino.com>
-  Dragino Technology Co., Limited
-*/
+//
+// Simple lora client. Uses Simple lora server.
+//
+// Test the affectiveness of SemTech/HopeRF Channel Activity Detection
+// to reduce collisions in a simple broadcast transmission protocol.
+//
+// Arduino pin 4 and 8 control CAD and loop delay, resp.
+//
+// Based on LoRa Simple Yun Client by Edwin Chen <support@dragino.com>,
+// Dragino Technology Co., Limited
+//
+//
+// James Gallagher <jgallagher@opendap.org>
+// 7/6/20
 
 #include <SPI.h>
 #include <RH_RF95.h>
@@ -29,12 +26,19 @@
 #define SPREADING_FACTOR 7  // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
-#define NODE 2
+#define NODE 1
 #define DEBUG 0
-#define EXPECT_REPLY 1
+#define EXPECT_REPLY 0
 #define WAIT_AVAILABLE 3000 // ms to wait for a response from server
 #define TX_INTERVAL 6000 // ms to wait before next transmission
 #define CAD_TIMEOUT 3000 // timeout for CAD wait
+
+#define USE_CAD 4   // If pin 4 is high, use CAD
+#define USE_LOOP_DELAY 8  // If pin 8 is high, use a loop delay
+#define STATUS_LED 9
+
+// Without a loop delay, packets will be sent as fast as possible.
+// This should cause maximum collisions.
 
 #if DEBUG
 #define IO(x) do { x; } while (false)
@@ -49,6 +53,11 @@ unsigned int tx_power = 13;   // dBm 5 tp 23 for RF95
 
 void setup() 
 {
+
+  pinMode(USE_CAD, INPUT_PULLUP);
+  pinMode(USE_LOOP_DELAY, INPUT_PULLUP);
+  pinMode(STATUS_LED, OUTPUT);
+  
   IO(Serial.begin(9600));
 #if 0
   while (!Serial) ; // Wait for serial port to be available
@@ -85,7 +94,7 @@ void setup()
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8) 
   rf95.setCodingRate4(CODING_RATE);
 
-  rf95.setCADTimeout(CAD_TIMEOUT);
+  // rf95.setCADTimeout(CAD_TIMEOUT);
 }
 
 void loop()
@@ -97,22 +106,30 @@ void loop()
   // Send a message to LoRa Server
   
   ++message;
-  unsigned long start_time = millis();
+
+  digitalWrite(STATUS_LED, HIGH);
+  
+  if (digitalRead(USE_CAD) == HIGH)
+    rf95.setCADTimeout(CAD_TIMEOUT);
+  else
+    rf95.setCADTimeout(0);
   
   uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
   snprintf(data, sizeof(data), "Hello, this is device %d, message %ld, tx time %ld ms", NODE, message, last_tx_time);
+
+  unsigned long start_time = millis();
+
   rf95.send(data, sizeof(data));  // This may block for up to CAD_TIMEOUT
-  
   rf95.waitPacketSent();  // Block until packet sent
   
   unsigned long end_time = millis();
   last_tx_time = end_time - start_time;   // last_tx_time used next iteration
 
+#if EXPECT_REPLY
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-#if EXPECT_REPLY
   if (rf95.waitAvailableTimeout(WAIT_AVAILABLE))
   { 
     // Should be a reply message for us now   
@@ -133,6 +150,11 @@ void loop()
     IO(Serial.println(F("No reply, is LoRa server running?")));
   }
 #endif  // EXPECT_REPLY
- 
-  delay(TX_INTERVAL - (millis() - start_time)); // wait here for upto TX_INTERVAL ms
+
+  digitalWrite(STATUS_LED, HIGH);
+
+  if (digitalRead(USE_LOOP_DELAY) == HIGH) {
+    unsigned long elapsed_time = millis() - start_time;
+    delay(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL ms
+  }
 }

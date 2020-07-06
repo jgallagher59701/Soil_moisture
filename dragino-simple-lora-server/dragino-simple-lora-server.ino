@@ -1,42 +1,32 @@
-/*
-  LoRa Simple Yun Server :
-  Support Devices: LG01. 
-  
-  Example sketch showing how to create a simple messageing server, 
-  with the RH_RF95 class. RH_RF95 class does not provide for addressing or
-  reliability, so you should only use RH_RF95 if you do not need the higher
-  level messaging abilities.
+//
+// Simple lora server. Uses Simple lora client.
+//
+// Test the affectiveness of SemTech/HopeRF Channel Activity Detection
+// to reduce collisions in a simple broadcast transmission protocol.
+//
+// Based on LoRa Simple Yun Server by Edwin Chen <support@dragino.com>,
+// Dragino Technology Co., Limited
+//
+// James Gallagher <jgallagher@opendap.org>
+// 7/6/20
 
-  It is designed to work with the other example LoRa Simple Client
-
-  User need to use the modified RadioHead library from:
-  https://github.com/dragino/RadioHead
-
-  modified 16 11 2016
-  by Edwin Chen <support@dragino.com>
-  Dragino Technology Co., Limited
-*/
-
-//If you use Dragino IoT Mesh Firmware, uncomment below lines.
-//For product: LG01. 
 #define BAUDRATE 115200
-
-//If you use Dragino Yun Mesh Firmware , uncomment below lines. 
-//#define BAUDRATE 250000
 
 #include <Console.h>
 #include <SPI.h>
 #include <RH_RF95.h>
 
-// Singleton instance of the radio driver
-RH_RF95 rf95;
+#define FREQ 915.0
+#define BANDWIDTH 125000
+#define SPREADING_FACTOR 7  // sf = 6 - 12 --> 2^(sf)
+#define CODING_RATE 5
 
-int led = A2;
-//float frequency = 868.0;
-float frequency = 915.0;
+#define CAD_TIMEOUT 3000 // timeout for CAD wait; zero dsables. Only affects replies
 
 // Tx should not use the Serial interface except for debugging
-#define DEBUG 0
+#define DEBUG 1
+#define REPLY 0
+#define LED A2
 
 #if DEBUG
 #define IO(x) do { x; } while (0)
@@ -44,31 +34,53 @@ float frequency = 915.0;
 #define IO(x)
 #endif
 
+// Singleton instance of the radio driver
+RH_RF95 rf95;
+
+unsigned int tx_power = 13;   // dBm 5 tp 23 for RF95
+
 void setup() 
 {
-  pinMode(led, OUTPUT);     
+  pinMode(LED, OUTPUT);    
+   
   Bridge.begin(BAUDRATE);
   Console.begin();
+
+  
   while (!Console) ; // Wait for console port to be available
-  Console.println("Start receiveer");
-  if (!rf95.init())
-    Console.println("init failed");
+  
+  Console.println(F("Start receiveer"));
+  if (!rf95.init()) {
+    Console.println(F("init failed"));
+    while(true) ;
+  }
+    
+  if (!rf95.init()) {
+    Console.println(F("LoRa init failed."));
+    while (true) ;
+  }
+  
   // Setup ISM frequency
-  rf95.setFrequency(frequency);
-  // Setup Power,dBm
-  rf95.setTxPower(5);
-  
-  // Setup Spreading Factor (6 ~ 12)
-  rf95.setSpreadingFactor(7);
-  
+  rf95.setFrequency(FREQ);
+
   // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
-  rf95.setSignalBandwidth(125000);
-  
+  // Lower BandWidth for longer distance.
+  rf95.setSignalBandwidth(BANDWIDTH);
+
+  // Setup Power,dBm
+  rf95.setTxPower(tx_power);
+
+  // Setup Spreading Factor (6 ~ 12)
+  rf95.setSpreadingFactor(SPREADING_FACTOR);
+    
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8) 
-  rf95.setCodingRate4(5);
+  rf95.setCodingRate4(CODING_RATE);
+
+  // Set up CAD for send() calls. Zero disables CAD. Only affects replies
+  rf95.setCADTimeout(CAD_TIMEOUT); 
   
-  Console.print("Listening on frequency: ");
-  Console.println(frequency);
+  Console.print(F("Listening on frequency: "));
+  Console.println(FREQ);
 }
 
 void loop()
@@ -80,7 +92,7 @@ void loop()
     uint8_t len = sizeof(buf);
     if (rf95.recv(buf, &len))
     {
-      digitalWrite(led, HIGH);
+      digitalWrite(LED, HIGH);
       RH_RF95::printBuffer("request: ", buf, len);
 
       // Print received datagram as CSV
@@ -90,21 +102,23 @@ void loop()
       Console.print(",");
       Console.println(rf95.lastSNR(), DEC);
       
-      IO(Console.print("got request: "));
-      IO(Console.println((char*)buf));
-      IO(Console.print("RSSI: "));
-      IO(Console.println(rf95.lastRssi(), DEC));
-      
+#if REPLY
       // Send a reply
       uint8_t data[] = "And hello back to you";
+      unsigned long start = millis();
       rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
-      IO(Console.println("Sent a reply"));
-      digitalWrite(led, LOW);
+      unsigned long end = millis();
+      IO(Console.print(F("...sent a reply, ")));
+      IO(Console.print(end - start, DEC));
+      IO(Console.println(F("ms")));
+#endif
+
+      digitalWrite(LED, LOW);
     }
     else
     {
-      Console.println("recv failed");
+      Console.println(F("recv failed"));
     }
   }
 }
