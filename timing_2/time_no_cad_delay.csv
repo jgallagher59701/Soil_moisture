@@ -1,0 +1,67 @@
+Reset the nodes at ~2 apart. No CAD but with the 5s loop delay.
+
+16:39:49.630 -> Hello, node 1, message 1, tx time 0 ms, battery 335,-48,9
+16:39:51.480 -> Hello, node 2, message 1, tx time 0 ms, battery 343,-40,9
+16:39:55.699 -> Hello, node 1, message 2, tx time 401 ms, battery 335,-44,9
+16:39:57.559 -> Hello, node 2, message 2, tx time 399 ms, battery 342,-41,8
+16:40:01.763 -> Hello, node 1, message 3, tx time 401 ms, battery 336,-45,9
+16:40:03.633 -> Hello, node 2, message 3, tx time 401 ms, battery 342,-41,9
+16:40:07.826 -> Hello, node 1, message 4, tx time 401 ms, battery 336,-43,9
+16:40:09.710 -> Hello, node 2, message 4, tx time 401 ms, battery 342,-41,9
+16:40:13.890 -> Hello, node 1, message 5, tx time 401 ms, battery 337,-44,9
+16:40:15.790 -> Hello, node 2, message 5, tx time 401 ms, battery 342,-40,9
+16:40:19.955 -> Hello, node 1, message 6, tx time 402 ms, battery 337,-44,9
+16:40:21.868 -> Hello, node 2, message 6, tx time 402 ms, battery 342,-40,9
+16:40:26.022 -> Hello, node 1, message 7, tx time 402 ms, battery 337,-44,9
+16:40:27.942 -> Hello, node 2, message 7, tx time 402 ms, battery 342,-40,9
+16:40:32.083 -> Hello, node 1, message 8, tx time 402 ms, battery 337,-43,9
+16:40:34.024 -> Hello, node 2, message 8, tx time 402 ms, battery 342,-40,9
+16:40:38.147 -> Hello, node 1, message 9, tx time 401 ms, battery 336,-43,9
+16:40:40.099 -> Hello, node 2, message 9, tx time 401 ms, battery 342,-40,9
+16:40:44.216 -> Hello, node 1, message 10, tx time 401 ms, battery 337,-44,9
+16:40:46.172 -> Hello, node 2, message 10, tx time 401 ms, battery 342,-40,9
+16:40:50.276 -> Hello, node 1, message 11, tx time 401 ms, battery 336,-44,9
+16:40:52.248 -> Hello, node 2, message 11, tx time 401 ms, battery 342,-40,9
+16:40:56.341 -> Hello, node 1, message 12, tx time 402 ms, battery 336,-42,9
+16:40:58.328 -> Hello, node 2, message 12, tx time 402 ms, battery 342,-40,9
+16:41:02.406 -> Hello, node 1, message 13, tx time 402 ms, battery 336,-42,9
+16:41:04.406 -> Hello, node 2, message 13, tx time 402 ms, battery 342,-40,9
+16:41:08.468 -> Hello, node 1, message 14, tx time 402 ms, battery 336,-42,9
+16:41:10.482 -> Hello, node 2, message 14, tx time 402 ms, battery 342,-40,9
+16:41:14.533 -> Hello, node 1, message 15, tx time 401 ms, battery 336,-45,9
+16:41:16.561 -> Hello, node 2, message 15, tx time 401 ms, battery 342,-41,9
+16:41:20.600 -> Hello, node 1, message 16, tx time 401 ms, battery 336,-44,8
+16:41:22.637 -> Hello, node 2, message 16, tx time 401 ms, battery 342,-40,9
+16:41:26.661 -> Hello, node 1, message 17, tx time 401 ms, battery 336,-47,9
+16:41:28.714 -> Hello, node 2, message 17, tx time 401 ms, battery 342,-42,9
+
+Reset the nodes at the same time. No CAD but with the 5s loop delay.
+Many collisions and dropped packets until the two nodes' MCUs drift apart
+after ~3+ minutes, then the packets can be received.
+
+16:41:38.668 -> Hello, node 2, message 1, tx time 0 ms, battery 342,-31,1
+16:44:52.727 -> Hello, node 1, message 33, tx time 402 ms, battery 332,-45,9
+16:44:53.136 -> Hello, node 2, message 33, tx time 402 ms, battery 341,-40,9
+16:44:58.790 -> Hello, node 1, message 34, tx time 401 ms, battery 332,-45,9
+16:44:59.216 -> Hello, node 2, message 34, tx time 401 ms, battery 341,-39,10
+16:45:04.855 -> Hello, node 1, message 35, tx time 401 ms, battery 332,-45,9
+16:45:05.289 -> Hello, node 2, message 35, tx time 401 ms, battery 341,-41,9
+16:45:10.920 -> Hello, node 1, message 36, tx time 401 ms, battery 332,-44,9
+16:45:11.368 -> Hello, node 2, message 36, tx time 401 ms, battery 341,-40,9
+16:45:16.984 -> Hello, node 1, message 37, tx time 402 ms, battery 332,-45,9
+16:45:17.442 -> Hello, node 2, message 37, tx time 402 ms, battery 341,-40,9
+16:45:23.050 -> Hello, node 1, message 38, tx time 402 ms, battery 332,-47,10
+16:45:23.521 -> Hello, node 2, message 38, tx time 402 ms, battery 341,-40,9
+16:45:29.111 -> Hello, node 1, message 39, tx time 402 ms, battery 332,-47,9
+16:45:29.602 -> Hello, node 2, message 39, tx time 402 ms, battery 341,-40,9
+16:45:35.176 -> Hello, node 1, message 40, tx time 401 ms, battery 332,-47,9
+16:45:35.677 -> Hello, node 2, message 40, tx time 401 ms, battery 341,-40,9
+16:45:41.244 -> Hello, node 1, message 41, tx time 401 ms, battery 332,-45,9
+16:45:41.752 -> Hello, node 2, message 41, tx time 401 ms, battery 341,-40,9
+16:45:47.305 -> Hello, node 1, message 42, tx time 401 ms, battery 332,-45,9
+16:45:47.830 -> Hello, node 2, message 42, tx time 401 ms, battery 341,-40,9
+16:45:53.366 -> Hello, node 1, message 43, tx time 401 ms, battery 332,-42,9
+16:45:53.904 -> Hello, node 2, message 43, tx time 401 ms, battery 341,-39,9
+16:45:59.432 -> Hello, node 1, message 44, tx time 402 ms, battery 332,-43,9
+16:45:59.982 -> Hello, node 2, message 44, tx time 402 ms, battery 341,-41,8
+16:46:06.060 -> Hello, node 2, message 45, tx time 402 ms, battery 341,-54,10

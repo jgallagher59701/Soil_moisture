@@ -97,10 +97,14 @@ void loop()
 
       // Print received datagram as CSV
       Console.print((char*)buf);
-      Console.print(",");
+      Console.print(", RSSI");
       Console.print(rf95.lastRssi(), DEC);
-      Console.print(",");
-      Console.println(rf95.lastSNR(), DEC);
+      Console.print(" dBm, SNR ");
+      Console.print(rf95.lastSNR(), DEC);
+      Console.print(" dB, good/bad packets: ");
+      Console.print(rf95.rxGood(), DEC);
+      Console.print("/");
+      Console.println(rf95.rxBad(), DEC);
       
 #if REPLY
       // Send a reply
