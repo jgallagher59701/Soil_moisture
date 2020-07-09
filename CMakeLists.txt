@@ -1,0 +1,69 @@
+cmake_minimum_required(VERSION 3.15)
+project(Soil_moisture)
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(.)
+include_directories(DS3231_Alarm_test)
+include_directories(DS3231_Set_time)
+include_directories(getBattVolts)
+include_directories(LoRa_Simple_Server_Yun-3)
+include_directories(old/ds3231)
+include_directories(old/LG01_ThingSpeak_RESTful_Single_Data)
+include_directories(old/LoRa_Simple_Client_Arduino)
+include_directories(old/LoRa_Simple_Server_Yun)
+include_directories(old/LoRa_Simple_Server_Yun2)
+include_directories(old/LoRa_Simple_Server_Yun2/LoRa_Simple_Server_Yun)
+include_directories(old/Soil_moisture)
+include_directories(old/Soil_moisture-0.1)
+include_directories(old/Soil_moisture-0.1/LoRa_Simple_Server_Yun_3)
+include_directories(old/Soil_moisture-0.2)
+include_directories(old/Soil_moisture-0.3)
+include_directories(old/Soil_moisture-0.3/test_str_functions)
+include_directories(old/Soil_moisture-0.4)
+include_directories(old/Soil_moisture-0.5)
+include_directories(old/Soil_moisture-0.6)
+include_directories(old/Soil_moisture-0.65)
+include_directories(old/Soil_moisture-0.7)
+include_directories(old/Soil_moisture_2_sensors)
+include_directories(old/Soil_moisture_logging)
+include_directories(Power_latch_test)
+include_directories(power_test)
+include_directories(power_test_post)
+include_directories(Reduce_avr_power_use)
+include_directories(SD_Card_Info)
+include_directories(Soil_moisture_1.0)
+include_directories(soilsensor_example)
+include_directories(wakeup_alarm)
+
+add_executable(Soil_moisture
+		DS3231_Alarm_test/DS3231_Alarm_test.ino
+		DS3231_Set_time/DS3231_Set_time.ino
+		getBattVolts/getBattVolts.ino
+		LoRa_Simple_Server_Yun-3/LoRa_Simple_Server_Yun-3.ino
+		old/ds3231/ds3231.ino
+		old/LG01_ThingSpeak_RESTful_Single_Data/G01_ThingSpeak_RESTful_Single_Data.ino
+		old/LoRa_Simple_Client_Arduino/LoRa_Simple_Client_Arduino.ino
+		old/LoRa_Simple_Server_Yun/LoRa_Simple_Server_Yun.ino
+		old/LoRa_Simple_Server_Yun2/LoRa_Simple_Server_Yun/LoRa_Simple_Server_Yun.ino
+		old/Soil_moisture/Soil_moisture.ino
+		old/Soil_moisture-0.1/LoRa_Simple_Server_Yun_3/LoRa_Simple_Server_Yun3.ino
+		old/Soil_moisture-0.1/Soil_moisture-0.1.ino
+		old/Soil_moisture-0.2/Soil_moisture-0.2.ino
+		old/Soil_moisture-0.3/test_str_functions/test_str_functions.ino
+		old/Soil_moisture-0.3/Soil_moisture-0.3.ino
+		old/Soil_moisture-0.4/Soil_moisture-0.4.ino
+		old/Soil_moisture-0.5/Soil_moisture-0.5.ino
+		old/Soil_moisture-0.6/Soil_moisture-0.6.ino
+		old/Soil_moisture-0.65/Soil_moisture-0.65.ino
+		old/Soil_moisture-0.7/Soil_moisture-0.7.ino
+		old/Soil_moisture_2_sensors/Soil_moisture_2_sensors.ino
+		old/Soil_moisture_logging/Soil_moisture_logging.ino
+		Power_latch_test/Power_latch_test.ino
+		power_test/power_test.ino
+		power_test_post/power_test_post.ino
+		Reduce_avr_power_use/Reduce_avr_power_use.ino
+		SD_Card_Info/SD_Card_Info.ino
+		Soil_moisture_1.0/Soil_moisture_1.0.ino
+		soilsensor_example/soilsensor_example.ino
+		wakeup_alarm/wakeup_alarm.ino)
