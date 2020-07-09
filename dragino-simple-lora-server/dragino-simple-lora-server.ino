@@ -97,7 +97,7 @@ void loop()
 
       // Print received datagram as CSV
       Console.print((char*)buf);
-      Console.print(", RSSI");
+      Console.print(", RSSI ");
       Console.print(rf95.lastRssi(), DEC);
       Console.print(" dBm, SNR ");
       Console.print(rf95.lastSNR(), DEC);
