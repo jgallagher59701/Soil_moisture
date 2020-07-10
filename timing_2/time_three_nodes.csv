@@ -1,0 +1,46 @@
+Reset three nodes at the same time. Two nodes (1, 2) use CAD and the delay. 
+Node 3 does not use CAD but does use the loop delay (without the loop delay
+on node 3, no other nodes are received by the server).
+
+17:02:33.051 -> Hello, node 3, message 1, tx time 0 ms, battery 335,-41,10
+17:02:33.598 -> Hello, node 2, message 1, tx time 0 ms, battery 326,-39,9
+17:02:34.409 -> Hello, node 1, message 1, tx time 0 ms, battery 350,-43,9
+17:02:39.133 -> Hello, node 3, message 2, tx time 404 ms, battery 334,-41,9
+17:02:39.771 -> Hello, node 1, message 2, tx time 1708 ms, battery 350,-44,9
+17:02:40.580 -> Hello, node 2, message 2, tx time 907 ms, battery 326,-39,9
+17:02:45.209 -> Hello, node 3, message 3, tx time 403 ms, battery 334,-41,9
+17:02:46.042 -> Hello, node 1, message 3, tx time 1005 ms, battery 350,-44,9
+17:02:46.961 -> Hello, node 2, message 3, tx time 1808 ms, battery 326,-39,9
+17:02:51.284 -> Hello, node 3, message 4, tx time 403 ms, battery 334,-40,9
+17:02:52.030 -> Hello, node 2, message 4, tx time 2111 ms, battery 326,-39,9
+17:02:52.908 -> Hello, node 1, message 4, tx time 1208 ms, battery 350,-43,10
+17:02:57.362 -> Hello, node 3, message 5, tx time 403 ms, battery 334,-29,2
+17:02:58.308 -> Hello, node 2, message 5, tx time 1106 ms, battery 326,-40,9
+17:03:03.426 -> Hello, node 1, message 6, tx time 404 ms, battery 350,-43,9
+17:03:03.942 -> Hello, node 3, message 6, tx time 404 ms, battery 334,-39,9
+17:03:04.386 -> Hello, node 2, message 6, tx time 1307 ms, battery 339,-38,9
+17:03:09.491 -> Hello, node 1, message 7, tx time 404 ms, battery 350,-42,10
+17:03:10.322 -> Hello, node 3, message 7, tx time 903 ms, battery 334,-40,10
+17:03:15.554 -> Hello, node 1, message 8, tx time 404 ms, battery 350,-43,9
+17:03:16.199 -> Hello, node 3, message 8, tx time 1206 ms, battery 334,-39,10
+17:03:17.249 -> Hello, node 2, message 8, tx time 1610 ms, battery 339,-38,9
+17:03:21.621 -> Hello, node 1, message 9, tx time 403 ms, battery 350,-43,9
+17:03:22.121 -> Hello, node 2, message 9, tx time 2009 ms, battery 338,-39,9
+17:03:23.389 -> Hello, node 3, message 9, tx time 1003 ms, battery 334,-40,10
+17:03:27.687 -> Hello, node 1, message 10, tx time 403 ms, battery 350,-42,9
+17:03:28.456 -> Hello, node 3, message 10, tx time 2111 ms, battery 334,-41,9
+17:03:29.401 -> Hello, node 2, message 10, tx time 809 ms, battery 339,-39,9
+17:03:33.745 -> Hello, node 1, message 11, tx time 403 ms, battery 350,-42,9
+17:03:34.673 -> Hello, node 2, message 11, tx time 2009 ms, battery 339,-39,9
+17:03:35.640 -> Hello, node 3, message 11, tx time 1106 ms, battery 334,-38,10
+17:03:39.811 -> Hello, node 1, message 12, tx time 404 ms, battery 350,-43,9
+17:03:40.853 -> Hello, node 2, message 12, tx time 1207 ms, battery 339,-39,9
+17:03:41.824 -> Hello, node 3, message 12, tx time 2206 ms, battery 334,-39,10
+17:03:45.876 -> Hello, node 1, message 13, tx time 404 ms, battery 350,-44,9
+17:03:46.327 -> Hello, node 2, message 13, tx time 1309 ms, battery 339,-39,10
+17:03:46.891 -> Hello, node 3, message 13, tx time 2312 ms, battery 334,-39,9
+17:03:51.941 -> Hello, node 1, message 14, tx time 404 ms, battery 350,-43,9
+17:03:52.404 -> Hello, node 2, message 14, tx time 709 ms, battery 339,-37,9
+17:03:53.274 -> Hello, node 3, message 14, tx time 1307 ms, battery 334,-39,10
+17:03:58.009 -> Hello, node 1, message 15, tx time 403 ms, battery 350,-42,9
+17:03:58.679 -> Hello, node 2, message 15, tx time 707 ms, battery 339,-39,9
