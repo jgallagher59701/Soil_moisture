@@ -31,6 +31,8 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 int led = 9;
 float frequency = 915.0;
 
+#define REPLY 0
+
 // Tx should not use the Serial interface except for debugging
 #define DEBUG 0
 
@@ -98,18 +100,29 @@ void loop()
       digitalWrite(led, HIGH);
       RH_RF95::printBuffer("request: ", buf, len);
 
-      // Print received datagram as CSV
+     // Print received datagram as CSV
       Serial.print((char*)buf);
-      Serial.print(F(", RSSI: "));
+      Serial.print(", RSSI ");
       Serial.print(rf95.lastRssi(), DEC);
-      Serial.print(F(", SNR: "));
-      Serial.println(rf95.lastSNR(), DEC);
+      Serial.print(" dBm, SNR ");
+      Serial.print(rf95.lastSNR(), DEC);
+      Serial.print(" dB, good/bad packets: ");
+      Serial.print(rf95.rxGood(), DEC);
+      Serial.print("/");
+      Serial.println(rf95.rxBad(), DEC);
       
+#if REPLY
       // Send a reply
       uint8_t data[] = "And hello back to you";
+      unsigned long start = millis();
       rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
-      IO(Serial.println(F("Sent a reply")));
+      unsigned long end = millis();
+      IO(Serial.print(F("...sent a reply, ")));
+      IO(Serial.print(end - start, DEC));
+      IO(Serial.println(F("ms")));
+#endif
+
       digitalWrite(led, LOW);
     }
     else
