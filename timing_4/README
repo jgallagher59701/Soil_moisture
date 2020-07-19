@@ -1,0 +1,10 @@
+Data from trials at Mt Keokirk, 7/18/20. For these trials, nodes 2 and 3
+were buried in about 2-4 inches of dirt (about the same depth as the Hobo
+TidBit loggers are now buried).
+
+For these trials, the server was also an ATMega328 and the LoRa at HopeRF
+board. The LoRa returned hex values for the packet in addition to the ASCII
+version of the payload. Those raw files are in 'raw' and trimmed versions
+that shows only the ASCII payload are here.
+
+
