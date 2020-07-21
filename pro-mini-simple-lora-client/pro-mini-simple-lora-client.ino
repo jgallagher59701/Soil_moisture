@@ -26,8 +26,8 @@
 #define SPREADING_FACTOR 7  // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
-#define NODE 3
-#define DEBUG 1
+#define NODE 1
+#define DEBUG 0
 #define EXPECT_REPLY 0
 #define WAIT_AVAILABLE 3000 // ms to wait for a response from server
 #define TX_INTERVAL 6000 // ms to wait before next transmission

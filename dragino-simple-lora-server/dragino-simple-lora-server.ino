@@ -46,7 +46,6 @@ void setup()
   Bridge.begin(BAUDRATE);
   Console.begin();
 
-  
   while (!Console) ; // Wait for console port to be available
   
   Console.println(F("Start receiveer"));
