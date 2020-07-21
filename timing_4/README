@@ -2,9 +2,18 @@ Data from trials at Mt Keokirk, 7/18/20. For these trials, nodes 2 and 3
 were buried in about 2-4 inches of dirt (about the same depth as the Hobo
 TidBit loggers are now buried).
 
-For these trials, the server was also an ATMega328 and the LoRa at HopeRF
-board. The LoRa returned hex values for the packet in addition to the ASCII
-version of the payload. Those raw files are in 'raw' and trimmed versions
-that shows only the ASCII payload are here.
+Node 1 was not buried. It used the Adafruit LoRa breakout board, which
+uses the SX1276. Node 2 was buried and also used the Adafruit/SX1276.
+Node 3 was buried at the same location as Node 2, but used a cheaper
+HopeRF 95 LoRa board.
 
+For these trials, the server/receiver was also an ATMega328 and the
+LoRa at HopeRF board. The LoRa returned hex values for the packet in
+addition to the ASCII version of the payload. Those raw files are in
+'raw' and trimmed versions that shows only the ASCII payload are here.
 
+The server was not buried.
+
+Data in raw were captured in the field. Data in raw2 are somewhat
+cooked values. Data here in keokirk-node-N-7.18.20.txt are separated
+values for the three nodes.

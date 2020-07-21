@@ -98,9 +98,15 @@ void loop()
     if (rf95.recv(buf, &len))
     {
       digitalWrite(led, HIGH);
-      RH_RF95::printBuffer("request: ", buf, len);
+      
+#if DEBUG
+      // print the registers
+      Serial.print(F("RF95 registers: "));
+      RH_RF95::printBuffer();
+#endif
 
-     // Print received datagram as CSV
+      // Print received packet
+      Serial.print(F("request: "));
       Serial.print((char*)buf);
       Serial.print(", RSSI ");
       Serial.print(rf95.lastRssi(), DEC);
