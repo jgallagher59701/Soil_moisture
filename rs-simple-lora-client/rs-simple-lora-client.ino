@@ -10,9 +10,11 @@
 // James Gallagher <jgallagher@opendap.org>
 // 7/26/20
 
+#include <string.h>
+#include <time.h>
 #include <SPI.h>
 #include <RH_RF95.h>
-
+#include <RTCZero.h>
 //#include <LowPower.h>
 
 // Pin assignments
@@ -61,6 +63,61 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 unsigned int tx_power = 13;   // dBm 5 tp 23 for RF95
 
+// Singleton for the Real Time Clock
+RTCZero rtc;
+
+void yield(unsigned long ms_delay)
+{
+  unsigned long start = millis();
+  while ((millis() - start) < ms_delay)
+    yield();
+}
+
+/**
+ * @brief Get the current epoch from __DATE__ and __TIME__
+ * This function returns the time i seconds since 1 Jan 1970
+ * using the string values of the compile-time constants
+ * __DATE__ and __TIME_. The formats of these are: mmm dd yyyy 
+ * (e.g. "Jan 14 2012") and hh::mm::ss in 24 hour time 
+ * (e.g. "22:29:12")
+ * @note input must be formatted correctly
+ * @param data The value of __DATE__ or the equiv
+ * @param time The value of __TIME__ or the equiv
+ * @return Seconds since Jan 1, 1970
+ */
+time_t
+get_epoch(const char *date, const char *time)
+{
+    char s_month[5];
+    struct tm t = {0};
+    static const char month_names[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
+
+    sscanf(date, "%s %d %d", s_month, &t.tm_mday, &t.tm_year);
+
+    // pointer math
+    int month = (strstr(month_names, s_month)-month_names)/3;
+
+    t.tm_mon = month;
+    t.tm_year -= 1900;
+    t.tm_isdst = -1;
+
+    sscanf(time, "%d:%d:%d", &t.tm_hour, &t.tm_min, &t.tm_sec);
+
+    return mktime(&t);
+}
+
+/**
+ * @note this version assumes that a voltage divider reduces Vbat by 1/4.3
+ * @return The battery voltage x 100 as an int
+ */
+int get_bat_v()
+{
+  // voltage divider v_bat = 4.3 * vadc
+  // vadc = (raw / 4096)
+  int raw = analogRead(V_BAT);
+  return 430 * (raw / (float)ADC_MAX_VALUE);  // voltage * 100
+}
+
 void setup()
 {
 
@@ -90,6 +147,19 @@ void setup()
 
   IO(Serial.println(F("Start LoRa Client")));
 
+  rtc.begin(/*reset*/true);
+  rtc.setEpoch(get_epoch(__DATE__, __TIME__));
+
+  IO(Serial.print(F("Date, Time: ")));
+  IO(Serial.print(__DATE__));
+  IO(Serial.print(F(", ")));
+  IO(Serial.println(__TIME__));
+  char date_str[32] = {0};
+  snprintf(date_str, sizeof(date_str), "%d/%d/%d T %d:%d:%d", rtc.getMonth(), rtc.getDay(), rtc.getYear(), 
+    rtc.getHours(), rtc.getMinutes(), rtc.getSeconds());
+  IO(Serial.print(F("RTC: ")));
+  IO(Serial.println((const char *)date_str));
+
   if (!rf95.init()) {
     IO(Serial.println(F("LoRa init failed.")));
     // Change this to inifinite blink
@@ -113,31 +183,6 @@ void setup()
   rf95.setCodingRate4(CODING_RATE);
 
   // rf95.setCADTimeout(CAD_TIMEOUT);
-}
-
-void yield(unsigned long ms_delay)
-{
-  unsigned long start = millis();
-  while ((millis() - start) < ms_delay)
-    yield();
-}
-
-// Function created to obtain chip's actual Vcc voltage value, using internal bandgap reference
-// This demonstrates ability to read processors Vcc voltage and the ability to maintain A/D
-// calibration with changing Vcc. Now works for 168/328 and mega boards.
-// Thanks to "Coding Badly" for direct register control for A/D mux
-// 1/9/10 "retrolefty"
-
-/**
- * @note this version assumes that a voltage divider reduces Vbat by 1/4.3
- * @return The battery voltage x 100 as an int
- */
-int get_bat_v()
-{
-  // voltage divider v_bat = 4.3 * vadc
-  // vadc = (raw / 4096)
-  int raw = analogRead(V_BAT);
-  return 430 * (raw / (float)ADC_MAX_VALUE);  // voltage * 100
 }
 
 void loop()
@@ -164,7 +209,8 @@ void loop()
     rf95.setCADTimeout(0);
 
   uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
-  snprintf((char*)data, sizeof(data), "Hello, node %d, message %ld, tx time %ld ms, battery %d", NODE, message, last_tx_time, get_bat_v());
+  snprintf((char*)data, sizeof(data), "Hello, node %d, message %ld, msg time %d, tx time %ld ms, battery %d", 
+    NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v());
 
   IO(Serial.println((const char*)data));
 
