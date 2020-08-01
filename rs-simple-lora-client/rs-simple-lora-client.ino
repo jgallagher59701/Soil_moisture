@@ -15,6 +15,7 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <RTCZero.h>
+#include "SdFat.h"
 //#include <LowPower.h>
 
 // Pin assignments
@@ -23,6 +24,9 @@
 #define RFM95_CS 5      // RF95 SPI CS
 
 #define SD_PWR 3        // HIGH == power on SD card
+#define SD_CS 10        // CS for the SD card, SPI uses dedicated lines
+
+#define FLASH_CS 4      // CS for 2MB onboard flash on the SPI bus
 
 #define USE_CAD 9       // If pin 9 is high, use CAD
 #define USE_LOOP_DELAY 8  // If pin 8 is high, use a loop delay
@@ -52,10 +56,17 @@
 // Without a loop delay, packets will be sent as fast as possible.
 // This should cause maximum collisions.
 
+// Log file name.
+#define FILE_BASE_NAME "Data"
+
+// Error messages stored in flash.
+
 #if DEBUG
 #define IO(x) do { x; } while (false)
+#define error(msg) do { Serial.println(F(msg)); SysCall::halt(); } while (false)
 #else
 #define IO(x)
+#define error(msg) do { SysCall::halt(); } while (false)
 #endif
 
 // Singleton instance of the radio driver
@@ -66,11 +77,36 @@ unsigned int tx_power = 13;   // dBm 5 tp 23 for RF95
 // Singleton for the Real Time Clock
 RTCZero rtc;
 
+// Singletons for the SD card objects
+SdFat sd;     // File system object.
+SdFile file;  // Log file.
+
+/**
+ * @brief delay that enables background tasks
+ */
 void yield(unsigned long ms_delay)
 {
   unsigned long start = millis();
   while ((millis() - start) < ms_delay)
     yield();
+}
+
+/** 
+ *  @brief RF95 off the SPI bus to enable SD card access
+ */
+void yield_spi_to_sd()
+{
+  digitalWrite(RFM95_CS, HIGH);
+  digitalWrite(FLASH_CS, HIGH);
+}
+
+/** 
+ *  @brief RF95 off the SPI bus to enable SD card access
+ */
+void yield_spi_to_rf95()
+{
+  digitalWrite(SD_CS, HIGH);
+  digitalWrite(FLASH_CS, HIGH);
 }
 
 /**
@@ -118,6 +154,83 @@ int get_bat_v()
   return 430 * (raw / (float)ADC_MAX_VALUE);  // voltage * 100
 }
 
+char file_name[13] = FILE_BASE_NAME "00.csv";
+
+/**
+ * @brief get an unused filename for the new log.
+ * This function returns a pointer to local static storage.
+ * @return A pointer to the new file name.
+ */
+const char *
+get_new_log_filename()
+{
+  const uint8_t BASE_NAME_SIZE = sizeof(FILE_BASE_NAME) - 1;
+  
+  // Find an unused file name.
+  if (BASE_NAME_SIZE > 6) {
+    error("FILE_BASE_NAME too long");
+  }
+
+  // Look for a BASE_NAME00.csv. if all are taken return BASE_NAME99.csv
+  while (sd.exists(file_name)) {
+    if (file_name[BASE_NAME_SIZE + 1] != '9') {
+      file_name[BASE_NAME_SIZE + 1]++;
+    } else if (file_name[BASE_NAME_SIZE] != '9') {
+      file_name[BASE_NAME_SIZE + 1] = '0';
+      file_name[BASE_NAME_SIZE]++;
+    } else {
+      break;  
+    }
+  }
+
+  return file_name;
+}
+
+/**
+ * @return The log file name
+ */
+const char *
+get_log_filename()
+{
+  return file_name;
+}
+
+/**
+ * @brief Write a header for the new log file.
+ * @param file_name open/create this file, append if it exists
+ * @note Claim the SPI bus
+ */
+void write_header(const char *file_name) 
+{
+  yield_spi_to_sd();
+  
+  if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    error("Error: file.open()");
+  }
+  
+  file.println(F("# Start Log"));
+  file.close();
+}
+
+/**
+ * @brief log data
+ * write data to the log, append a new line
+ * @param file_name open for append 
+ * @param data write this char string
+ * @note Claim the SPI bus (calls yield_spi_to_sd()().
+ */
+void log_data(const char *file_name, const char *data) 
+{
+  yield_spi_to_sd();
+  
+  if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    error("Error: file.open()");
+  }
+
+  file.println(data);
+  file.close();
+}
+
 void setup()
 {
 
@@ -129,21 +242,14 @@ void setup()
   analogReadResolution(ADC_BITS);
 
   pinMode(SD_PWR, OUTPUT);
-  digitalWrite(SD_PWR, LOW);
+  digitalWrite(SD_PWR, HIGH);   // TODO Leave the card on now, later, toggle power
+
+  pinMode(FLASH_CS, OUTPUT);
+  pinMode(SD_CS, OUTPUT);
+  pinMode(RFM95_CS, OUTPUT);
   
   IO(Serial.begin(9600));
   IO(while (!Serial)); // Wait for serial port to be available
-
-#if 0
-  // I'm not sure if manual reset is supported by the RS. jhrg 7/23/20
-  // LORA manual reset
-  digitalWrite(RFM95_RST, LOW);
-  delay(15);
-  // LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-  digitalWrite(RFM95_RST, HIGH);
-  delay(15);
-  //LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-#endif
 
   IO(Serial.println(F("Start LoRa Client")));
 
@@ -155,11 +261,37 @@ void setup()
   IO(Serial.print(F(", ")));
   IO(Serial.println(__TIME__));
   char date_str[32] = {0};
-  snprintf(date_str, sizeof(date_str), "%d/%d/%d T %d:%d:%d", rtc.getMonth(), rtc.getDay(), rtc.getYear(), 
-    rtc.getHours(), rtc.getMinutes(), rtc.getSeconds());
+  snprintf(date_str, sizeof(date_str), "%d/%d/%dT%d:%d:%d", rtc.getMonth(), rtc.getDay(), rtc.getYear(), 
+           rtc.getHours(), rtc.getMinutes(), rtc.getSeconds());
   IO(Serial.print(F("RTC: ")));
   IO(Serial.println((const char *)date_str));
 
+  yield_spi_to_sd();
+  
+  IO(Serial.print(F("Initializing SD card...")));
+  
+  // Initialize at the highest speed supported by the board that is
+  // not over 50 MHz. Try a lower speed if SPI errors occur.
+  if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
+    Serial.println(F("sd.begin() failure."));
+    error("sd.begin() failure.");
+  }
+
+  Serial.println(F("past sd.begin()."));
+ 
+  const char *file_name = get_new_log_filename();
+
+  Serial.print(F("past get_log_filename() "));
+  Serial.println(file_name);
+  
+  // Write data header.
+  write_header(file_name);
+
+  file.sync();
+
+#if 0
+  yeild_spi_to_rf95();
+  
   if (!rf95.init()) {
     IO(Serial.println(F("LoRa init failed.")));
     // Change this to inifinite blink
@@ -182,7 +314,8 @@ void setup()
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
   rf95.setCodingRate4(CODING_RATE);
 
-  // rf95.setCADTimeout(CAD_TIMEOUT);
+  // rf95.setCADTimeout(CAD_TIMEOUT); // FIXME - always use this?
+#endif
 }
 
 void loop()
@@ -194,15 +327,13 @@ void loop()
   // Send a message to LoRa Server
 
   ++message;
-
-  // Test: SD_PWR on for even messages
-  if (message % 2 == 0)
-    digitalWrite(SD_PWR, HIGH);
-  else
-    digitalWrite(SD_PWR, LOW);
     
   digitalWrite(STATUS_LED, HIGH);
+  unsigned long start_time = millis();  // FIXME; remove
 
+#if 0
+  yield_spi_to_rf95();
+  
   if (digitalRead(USE_CAD) == HIGH)
     rf95.setCADTimeout(CAD_TIMEOUT);
   else
@@ -221,7 +352,7 @@ void loop()
 
   unsigned long end_time = millis();
   last_tx_time = end_time - start_time;   // last_tx_time used next iteration
-
+#endif
 #if EXPECT_REPLY
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
@@ -250,6 +381,8 @@ void loop()
 
   digitalWrite(STATUS_LED, LOW);
 
+  log_data(get_log_filename(), "test log data info");
+  
   if (digitalRead(USE_LOOP_DELAY) == HIGH) {
     unsigned long elapsed_time = millis() - start_time;
     yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL ms

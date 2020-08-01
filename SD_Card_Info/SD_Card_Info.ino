@@ -23,6 +23,8 @@
 #include <SPI.h>
 #include <SD.h>
 
+#define Serial SerialUSB
+
 // set up variables using the SD utility library functions:
 Sd2Card card;
 SdVolume volume;
@@ -33,7 +35,8 @@ SdFile root;
 // Adafruit SD shields and modules: pin 10
 // Sparkfun SD shield: pin 8
 // MKRZero SD: SDCARD_SS_PIN
-const int chipSelect = 5;
+const int chipSelect = 10;
+const int flash_cs = 4;
 
 void setup() {
   // Open serial communications and wait for port to open:
@@ -42,7 +45,9 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
-
+  pinMode(flash_cs, OUTPUT);
+  digitalWrite(flash_cs, HIGH);
+  
   Serial.print("\nInitializing SD card...");
 
   // we'll use the initialization code from the utility libraries
