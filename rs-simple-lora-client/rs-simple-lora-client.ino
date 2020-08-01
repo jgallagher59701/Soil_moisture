@@ -41,7 +41,7 @@
 #define SPREADING_FACTOR 7  // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
-#define DEBUG 1             // Requires USB
+#define DEBUG 0             // Requires USB
 #define Serial SerialUSB    // Needed for RS. jhrg 7/26/20
 
 #define NODE 1
@@ -275,16 +275,11 @@ void setup()
   // Initialize at the highest speed supported by the board that is
   // not over 50 MHz. Try a lower speed if SPI errors occur.
   if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
-    Serial.println(F("sd.begin() failure."));
     error("sd.begin() failure.");
   }
-
-  Serial.println(F("past sd.begin()."));
  
   const char *file_name = get_new_log_filename();
-
-  Serial.print(F("past get_log_filename() "));
-  Serial.println(file_name);
+  IO(Serial.println(file_name));
   
   // Write data header.
   write_header(file_name);
