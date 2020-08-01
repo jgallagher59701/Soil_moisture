@@ -241,9 +241,11 @@ void setup()
 
   analogReadResolution(ADC_BITS);
 
+  // SD card power control
   pinMode(SD_PWR, OUTPUT);
   digitalWrite(SD_PWR, HIGH);   // TODO Leave the card on now, later, toggle power
 
+  // SPI bus control
   pinMode(FLASH_CS, OUTPUT);
   pinMode(SD_CS, OUTPUT);
   pinMode(RFM95_CS, OUTPUT);
@@ -289,8 +291,8 @@ void setup()
 
   file.sync();
 
-#if 0
-  yeild_spi_to_rf95();
+#if 1
+  yield_spi_to_rf95();
   
   if (!rf95.init()) {
     IO(Serial.println(F("LoRa init failed.")));
@@ -329,9 +331,9 @@ void loop()
   ++message;
     
   digitalWrite(STATUS_LED, HIGH);
-  unsigned long start_time = millis();  // FIXME; remove
+  //unsigned long start_time = millis();  // FIXME; remove
 
-#if 0
+#if 1
   yield_spi_to_rf95();
   
   if (digitalRead(USE_CAD) == HIGH)
@@ -381,7 +383,7 @@ void loop()
 
   digitalWrite(STATUS_LED, LOW);
 
-  log_data(get_log_filename(), "test log data info");
+  log_data(get_log_filename(), (const char *)data);
   
   if (digitalRead(USE_LOOP_DELAY) == HIGH) {
     unsigned long elapsed_time = millis() - start_time;
