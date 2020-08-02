@@ -10,12 +10,20 @@
 // James Gallagher <jgallagher@opendap.org>
 // 7/26/20
 
+#include <Arduino.h>
+
 #include <string.h>
 #include <time.h>
+
 #include <SPI.h>
+#include <Wire.h>
+
 #include <RH_RF95.h>
 #include <RTCZero.h>
+
 #include "SdFat.h"
+#include "Adafruit_SHT31.h"   // Uses the BusIO library from Adafruit
+
 //#include <LowPower.h>
 
 // Pin assignments
@@ -76,6 +84,9 @@ unsigned int tx_power = 13;   // dBm 5 tp 23 for RF95
 
 // Singleton for the Real Time Clock
 RTCZero rtc;
+
+// Temp/humidity sensor
+Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
 // Singletons for the SD card objects
 SdFat sd;     // File system object.
@@ -231,6 +242,16 @@ void log_data(const char *file_name, const char *data)
   file.close();
 }
 
+uint16_t get_temperature()
+{
+   return (uint16_t)(sht31.readTemperature() * 100);
+}
+
+uint16_t get_humidity()
+{
+   return (uint16_t)(sht31.readHumidity() * 100);
+}
+
 void setup()
 {
 
@@ -255,6 +276,8 @@ void setup()
 
   IO(Serial.println(F("Start LoRa Client")));
 
+  // Initialize the RTC
+  
   rtc.begin(/*reset*/true);
   rtc.setEpoch(get_epoch(__DATE__, __TIME__));
 
@@ -268,6 +291,17 @@ void setup()
   IO(Serial.print(F("RTC: ")));
   IO(Serial.println((const char *)date_str));
 
+  // Initialize the temp/humidity sensor
+  
+  if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
+    IO(Serial.println(F("Couldn't find SHT31")));
+    while (1) delay(1);
+  }
+
+  // The SHT30D temp/humidity sensor has a heater; it's turned off in setup
+  sht31.heater(false);
+
+  // Initialize the SD card
   yield_spi_to_sd();
   
   IO(Serial.print(F("Initializing SD card...")));
@@ -286,7 +320,6 @@ void setup()
 
   file.sync();
 
-#if 1
   yield_spi_to_rf95();
   
   if (!rf95.init()) {
@@ -312,7 +345,6 @@ void setup()
   rf95.setCodingRate4(CODING_RATE);
 
   // rf95.setCADTimeout(CAD_TIMEOUT); // FIXME - always use this?
-#endif
 }
 
 void loop()
@@ -326,9 +358,7 @@ void loop()
   ++message;
     
   digitalWrite(STATUS_LED, HIGH);
-  //unsigned long start_time = millis();  // FIXME; remove
 
-#if 1
   yield_spi_to_rf95();
   
   if (digitalRead(USE_CAD) == HIGH)
@@ -337,8 +367,8 @@ void loop()
     rf95.setCADTimeout(0);
 
   uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
-  snprintf((char*)data, sizeof(data), "Hello, node %d, message %ld, msg time %d, tx time %ld ms, battery %d", 
-    NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v());
+  snprintf((char*)data, sizeof(data), "Hello, node %d, message %ld, msg time %d, tx time %ld ms, battery %d v, temp %d C, humidity %d %%", 
+    NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity());
 
   IO(Serial.println((const char*)data));
 
@@ -349,7 +379,7 @@ void loop()
 
   unsigned long end_time = millis();
   last_tx_time = end_time - start_time;   // last_tx_time used next iteration
-#endif
+
 #if EXPECT_REPLY
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
