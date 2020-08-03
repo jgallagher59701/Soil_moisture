@@ -1,0 +1,59 @@
+14:49:06.092 -> boot
+14:49:06.092 -> Start receiveer
+14:49:06.162 -> ATTACH
+14:49:06.162 -> 1
+14:49:06.199 -> Listening on frequency: 915.00
+14:49:11.840 -> request: Hello, node 1, message 105, msg time 1596321798, tx time 403 ms, battery 331 v, temp 1488 C, humidity 8824 %, RSSI -103 dBm, SNR 8 dB, good/bad packets: 1/0
+14:49:16.471 -> request: Hello, node 3, message 356, tx time 404 ms, battery 336, RSSI -101 dBm, SNR 9 dB, good/bad packets: 2/0
+14:49:17.276 -> request: Hello, node 2, message 356, tx time 402 ms, battery 329, RSSI -95 dBm, SNR 9 dB, good/bad packets: 3/0
+14:49:17.912 -> request: Hello, node 1, message 106, msg time 1596321804, tx time 403 ms, battery 330 v, temp 1485 C, humidity 8826 %, RSSI -107 dBm, SNR 7 dB, good/bad packets: 4/0
+14:49:23.948 -> request: Hello, node 1, message 107, msg time 1596321810, tx time 403 ms, battery 331 v, temp 1483 C, humidity 8827 %, RSSI -105 dBm, SNR 8 dB, good/bad packets: 5/0
+14:49:29.978 -> request: Hello, node 1, message 108, msg time 1596321816, tx time 403 ms, battery 330 v, temp 1483 C, humidity 8827 %, RSSI -106 dBm, SNR 8 dB, good/bad packets: 6/0
+14:49:34.687 -> request: Hello, node 3, message 359, tx time 401 ms, battery 336, RSSI -103 dBm, SNR 9 dB, good/bad packets: 7/0
+14:49:35.110 -> request: Hello, node 2, message 359, tx time 401 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 8/0
+14:49:36.044 -> request: Hello, node 1, message 109, msg time 1596321822, tx time 403 ms, battery 331 v, temp 1485 C, humidity 8830 %, RSSI -101 dBm, SNR 9 dB, good/bad packets: 9/0
+14:49:40.753 -> request: Hello, node 3, message 360, tx time 401 ms, battery 336, RSSI -105 dBm, SNR 8 dB, good/bad packets: 10/0
+14:49:41.677 -> request: Hello, node 2, message 360, tx time 805 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 11/0
+14:49:42.388 -> request: Hello, node 1, message 110, msg time 1596321828, tx time 403 ms, battery 331 v, temp 1482 C, humidity 8831 %, RSSI -102 dBm, SNR 9 dB, good/bad packets: 12/0
+14:49:46.830 -> request: Hello, node 3, message 361, tx time 403 ms, battery 336, RSSI -104 dBm, SNR 9 dB, good/bad packets: 13/0
+14:49:47.452 -> request: Hello, node 2, message 361, tx time 1306 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 14/0
+14:49:48.126 -> request: Hello, node 1, message 111, msg time 1596321834, tx time 705 ms, battery 331 v, temp 1483 C, humidity 8830 %, RSSI -103 dBm, SNR 9 dB, good/bad packets: 15/0
+14:49:52.919 -> request: Hello, node 3, message 362, tx time 402 ms, battery 336, RSSI -105 dBm, SNR 9 dB, good/bad packets: 16/0
+14:49:53.762 -> request: Hello, node 2, message 362, tx time 1004 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 17/0
+14:49:54.169 -> request: Hello, node 1, message 112, msg time 1596321840, tx time 403 ms, battery 330 v, temp 1483 C, humidity 8835 %, RSSI -102 dBm, SNR 9 dB, good/bad packets: 18/0
+14:49:59.013 -> request: Hello, node 3, message 363, tx time 404 ms, battery 336, RSSI -104 dBm, SNR 9 dB, good/bad packets: 19/0
+14:49:59.726 -> request: Hello, node 2, message 363, tx time 1207 ms, battery 329, RSSI -95 dBm, SNR 9 dB, good/bad packets: 20/0
+14:50:00.216 -> request: Hello, node 1, message 113, msg time 1596321846, tx time 403 ms, battery 331 v, temp 1482 C, humidity 8836 %, RSSI -100 dBm, SNR 9 dB, good/bad packets: 21/0
+14:50:06.261 -> request: Hello, node 1, message 114, msg time 1596321853, tx time 403 ms, battery 331 v, temp 1479 C, humidity 8834 %, RSSI -101 dBm, SNR 9 dB, good/bad packets: 22/0
+14:50:12.314 -> request: Hello, node 1, message 115, msg time 1596321859, tx time 403 ms, battery 331 v, temp 1482 C, humidity 8836 %, RSSI -101 dBm, SNR 9 dB, good/bad packets: 23/0
+14:50:18.386 -> request: Hello, node 1, message 116, msg time 1596321865, tx time 403 ms, battery 331 v, temp 1480 C, humidity 8838 %, RSSI -102 dBm, SNR 9 dB, good/bad packets: 24/0
+14:50:23.327 -> request: Hello, node 3, message 367, tx time 403 ms, battery 336, RSSI -103 dBm, SNR 8 dB, good/bad packets: 25/0
+14:50:24.246 -> request: Hello, node 2, message 367, tx time 401 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 26/0
+14:50:24.816 -> request: Hello, node 1, message 117, msg time 1596321871, tx time 403 ms, battery 331 v, temp 1480 C, humidity 8838 %, RSSI -100 dBm, SNR 9 dB, good/bad packets: 27/0
+14:50:30.469 -> request: Hello, node 1, message 118, msg time 1596321877, tx time 808 ms, battery 331 v, temp 1482 C, humidity 8842 %, RSSI -102 dBm, SNR 9 dB, good/bad packets: 28/0
+14:50:35.456 -> request: Hello, node 3, message 369, tx time 404 ms, battery 336, RSSI -103 dBm, SNR 9 dB, good/bad packets: 29/0
+14:50:36.305 -> request: Hello, node 2, message 369, tx time 402 ms, battery 329, RSSI -95 dBm, SNR 9 dB, good/bad packets: 30/0
+14:50:37.118 -> request: Hello, node 1, message 119, msg time 1596321883, tx time 403 ms, battery 331 v, temp 1480 C, humidity 8840 %, RSSI -100 dBm, SNR 9 dB, good/bad packets: 31/0
+14:50:42.571 -> request: Hello, node 1, message 120, msg time 1596321889, tx time 1005 ms, battery 331 v, temp 1480 C, humidity 8843 %, RSSI -101 dBm, SNR 9 dB, good/bad packets: 32/0
+14:50:48.631 -> request: Hello, node 1, message 121, msg time 1596321895, tx time 403 ms, battery 331 v, temp 1482 C, humidity 8843 %, RSSI -109 dBm, SNR 5 dB, good/bad packets: 33/0
+14:50:54.681 -> request: Hello, node 1, message 122, msg time 1596321901, tx time 403 ms, battery 331 v, temp 1480 C, humidity 8842 %, RSSI -109 dBm, SNR 6 dB, good/bad packets: 34/0
+14:50:59.772 -> request: Hello, node 3, message 373, tx time 403 ms, battery 336, RSSI -107 dBm, SNR 7 dB, good/bad packets: 35/0
+14:51:00.514 -> request: Hello, node 2, message 373, tx time 401 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 36/0
+14:51:01.113 -> request: Hello, node 1, message 123, msg time 1596321907, tx time 403 ms, battery 331 v, temp 1479 C, humidity 8845 %, RSSI -115 dBm, SNR 0 dB, good/bad packets: 37/0
+14:51:05.873 -> request: Hello, node 3, message 374, tx time 401 ms, battery 336, RSSI -107 dBm, SNR 7 dB, good/bad packets: 38/0
+14:51:06.300 -> request: Hello, node 2, message 374, tx time 1105 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 39/0
+14:51:06.761 -> request: Hello, node 1, message 124, msg time 1596321913, tx time 805 ms, battery 331 v, temp 1479 C, humidity 8845 %, RSSI -113 dBm, SNR 4 dB, good/bad packets: 40/0
+14:51:11.931 -> request: Hello, node 3, message 375, tx time 404 ms, battery 336, RSSI -107 dBm, SNR 7 dB, good/bad packets: 41/0
+14:51:12.354 -> request: Hello, node 2, message 375, tx time 809 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 42/0
+14:51:12.810 -> request: Hello, node 1, message 125, msg time 1596321919, tx time 403 ms, battery 331 v, temp 1478 C, humidity 8845 %, RSSI -111 dBm, SNR 5 dB, good/bad packets: 43/0
+14:51:18.026 -> request: Hello, node 3, message 376, tx time 402 ms, battery 336, RSSI -106 dBm, SNR 7 dB, good/bad packets: 44/0
+14:51:18.451 -> request: Hello, node 2, message 376, tx time 805 ms, battery 329, RSSI -93 dBm, SNR 9 dB, good/bad packets: 45/0
+14:51:18.870 -> request: Hello, node 1, message 126, msg time 1596321925, tx time 403 ms, battery 331 v, temp 1478 C, humidity 8848 %, RSSI -104 dBm, SNR 8 dB, good/bad packets: 46/0
+14:51:24.902 -> request: Hello, node 1, message 127, msg time 1596321931, tx time 403 ms, battery 331 v, temp 1476 C, humidity 8847 %, RSSI -103 dBm, SNR 9 dB, good/bad packets: 47/0
+14:51:30.178 -> request: Hello, node 3, message 378, tx time 403 ms, battery 336, RSSI -104 dBm, SNR 8 dB, good/bad packets: 48/0
+14:51:30.779 -> request: Hello, node 2, message 378, tx time 401 ms, battery 329, RSSI -92 dBm, SNR 10 dB, good/bad packets: 49/0
+14:51:31.661 -> request: Hello, node 1, message 128, msg time 1596321937, tx time 403 ms, battery 331 v, temp 1476 C, humidity 8847 %, RSSI -103 dBm, SNR 9 dB, good/bad packets: 50/0
+14:51:36.251 -> request: Hello, node 3, message 379, tx time 401 ms, battery 336, RSSI -105 dBm, SNR 7 dB, good/bad packets: 51/0
+14:51:37.029 -> request: Hello, node 1, message 129, msg time 1596321943, tx time 1106 ms, battery 330 v, temp 1482 C, humidity 8850 %, RSSI -104 dBm, SNR 8 dB, good/bad packets: 52/0
+14:51:37.481 -> request: Hello, node 2, message 379, tx time 1003 ms, battery 329, RSSI -96 dBm, SNR 9 dB, good/bad packets: 53/0
+14:51:42.313 -> request: Hello, node 3, message 380, tx time 401 ms, battery 336, RSSI -107 dBm, SNR 7 dB, good/bad packets: 54/0
