@@ -1,5 +1,5 @@
 14:49:06.092 -> boot
-14:49:06.092 -> Start receiveer
+14:49:06.092 -> Start receiver
 14:49:06.162 -> ATTACH
 14:49:06.162 -> 1
 14:49:06.199 -> Listening on frequency: 915.00
