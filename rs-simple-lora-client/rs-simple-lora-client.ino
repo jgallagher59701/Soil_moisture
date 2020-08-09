@@ -24,8 +24,6 @@
 #include "SdFat.h"
 #include "Adafruit_SHT31.h"   // Uses the BusIO library from Adafruit
 
-//#include <LowPower.h>
-
 // Pin assignments
 
 #define RFM95_INT 2     // RF95 Interrupt
@@ -49,11 +47,12 @@
 #define SPREADING_FACTOR 7  // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
-#define DEBUG 0             // Requires USB
+#define DEBUG 1             // Requires USB
 #define Serial SerialUSB    // Needed for RS. jhrg 7/26/20
 
 #define NODE 1
 #define EXPECT_REPLY 0
+#define USE_RTC_STANDBY_FOR_DELAY 1   // 0 uses yield()
 
 #define WAIT_AVAILABLE 3000 // ms to wait for a response from server
 #define TX_INTERVAL 6000 // ms to wait before next transmission
@@ -252,9 +251,14 @@ uint16_t get_humidity()
    return (uint16_t)(sht31.readHumidity() * 100);
 }
 
+void alarmMatch()
+{
+  // Need to do this?
+  rtc.detachInterrupt();
+}
+
 void setup()
 {
-
   pinMode(USE_CAD, INPUT_PULLUP);
   pinMode(USE_LOOP_DELAY, INPUT_PULLUP);
   
@@ -292,7 +296,7 @@ void setup()
   IO(Serial.println((const char *)date_str));
 
   // Initialize the temp/humidity sensor
-  
+ 
   if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
     IO(Serial.println(F("Couldn't find SHT31")));
     while (1) delay(1);
@@ -345,6 +349,14 @@ void setup()
   rf95.setCodingRate4(CODING_RATE);
 
   // rf95.setCADTimeout(CAD_TIMEOUT); // FIXME - always use this?
+
+  // Because the RS Ultra Pro boards native USB won't work the the standby() mode
+  // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
+  // when using standby() because it will become impossible to upload new/fixed
+  // code. Add a 10s delay here so a coordinated reset/upload will work.
+#if USE_RTC_STANDBY_FOR_DELAY  
+  yield(10000);
+#endif  
 }
 
 void loop()
@@ -411,7 +423,17 @@ void loop()
   log_data(get_log_filename(), (const char *)data);
   
   if (digitalRead(USE_LOOP_DELAY) == HIGH) {
+#if USE_RTC_STANDBY_FOR_DELAY
+    uint8_t offset = max(TX_INTERVAL - (millis() - start_time), 0) / 1000; // convdertd from ms to s
+    IO(Serial.print(F("Alarm offset: ")));
+    IO(Serial.println(offset));
+    rtc.setAlarmEpoch(rtc.getEpoch() + offset);
+    rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
+    rtc.attachInterrupt(alarmMatch); 
+    rtc.standbyMode();
+#else
     unsigned long elapsed_time = millis() - start_time;
     yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL ms
+#endif
   }
 }
