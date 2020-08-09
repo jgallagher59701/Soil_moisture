@@ -322,8 +322,6 @@ void setup()
   // Write data header.
   write_header(file_name);
 
-  file.sync();
-
   yield_spi_to_rf95();
   
   if (!rf95.init()) {
