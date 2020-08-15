@@ -1,7 +1,7 @@
 //
 // Simple lora client. Uses Simple lora server.
 //
-// Modified from the pro-mini version to work with the Rocket Scream 
+// Modified from the pro-mini version to work with the Rocket Scream
 // Mini Ultra Pro, V3, which includes a LoRa module on the RS board.
 //
 // Based on LoRa Simple Yun Client by Edwin Chen <support@dragino.com>,
@@ -20,6 +20,7 @@
 
 #include <RH_RF95.h>
 #include <RTCZero.h>
+#include <SerialFlash.h>
 
 #include "SdFat.h"
 #include "Adafruit_SHT31.h"   // Uses the BusIO library from Adafruit
@@ -34,8 +35,9 @@
 
 #define FLASH_CS 4      // CS for 2MB onboard flash on the SPI bus
 
-#define USE_CAD 9       // If pin 9 is high, use CAD
-#define USE_LOOP_DELAY 8  // If pin 8 is high, use a loop delay
+#define USE_STANDBY 8  // If pin 8 is LOW, use rtc.standbyMode() for delay. Pull HIGH to use yield()
+
+
 #define STATUS_LED 13   // Only for DEBUG mode
 
 #define V_BAT A0
@@ -66,7 +68,7 @@
 // Log file name.
 #define FILE_BASE_NAME "Data"
 
-// Error messages stored in flash.
+// Error messages stored in program memory.
 
 #if DEBUG
 #define IO(x) do { x; } while (false)
@@ -92,8 +94,8 @@ SdFat sd;     // File system object.
 SdFile file;  // Log file.
 
 /**
- * @brief delay that enables background tasks
- */
+   @brief delay that enables background tasks
+*/
 void yield(unsigned long ms_delay)
 {
   unsigned long start = millis();
@@ -101,61 +103,61 @@ void yield(unsigned long ms_delay)
     yield();
 }
 
-/** 
- *  @brief RF95 off the SPI bus to enable SD card access
- */
+/**
+    @brief RF95 off the SPI bus to enable SD card access
+*/
 void yield_spi_to_sd()
 {
   digitalWrite(RFM95_CS, HIGH);
-  digitalWrite(FLASH_CS, HIGH);
+  // TODO remove? digitalWrite(FLASH_CS, HIGH);
 }
 
-/** 
- *  @brief RF95 off the SPI bus to enable SD card access
- */
+/**
+    @brief RF95 off the SPI bus to enable SD card access
+*/
 void yield_spi_to_rf95()
 {
   digitalWrite(SD_CS, HIGH);
-  digitalWrite(FLASH_CS, HIGH);
+  // TODO remove?  digitalWrite(FLASH_CS, HIGH);
 }
 
 /**
- * @brief Get the current epoch from __DATE__ and __TIME__
- * This function returns the time i seconds since 1 Jan 1970
- * using the string values of the compile-time constants
- * __DATE__ and __TIME_. The formats of these are: mmm dd yyyy 
- * (e.g. "Jan 14 2012") and hh::mm::ss in 24 hour time 
- * (e.g. "22:29:12")
- * @note input must be formatted correctly
- * @param data The value of __DATE__ or the equiv
- * @param time The value of __TIME__ or the equiv
- * @return Seconds since Jan 1, 1970
- */
+   @brief Get the current epoch from __DATE__ and __TIME__
+   This function returns the time i seconds since 1 Jan 1970
+   using the string values of the compile-time constants
+   __DATE__ and __TIME_. The formats of these are: mmm dd yyyy
+   (e.g. "Jan 14 2012") and hh::mm::ss in 24 hour time
+   (e.g. "22:29:12")
+   @note input must be formatted correctly
+   @param data The value of __DATE__ or the equiv
+   @param time The value of __TIME__ or the equiv
+   @return Seconds since Jan 1, 1970
+*/
 time_t
 get_epoch(const char *date, const char *time)
 {
-    char s_month[5];
-    struct tm t = {0};
-    static const char month_names[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
+  char s_month[5];
+  struct tm t = {0};
+  static const char month_names[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
 
-    sscanf(date, "%s %d %d", s_month, &t.tm_mday, &t.tm_year);
+  sscanf(date, "%s %d %d", s_month, &t.tm_mday, &t.tm_year);
 
-    // pointer math
-    int month = (strstr(month_names, s_month)-month_names)/3;
+  // pointer math
+  int month = (strstr(month_names, s_month) - month_names) / 3;
 
-    t.tm_mon = month;
-    t.tm_year -= 1900;
-    t.tm_isdst = -1;
+  t.tm_mon = month;
+  t.tm_year -= 1900;
+  t.tm_isdst = -1;
 
-    sscanf(time, "%d:%d:%d", &t.tm_hour, &t.tm_min, &t.tm_sec);
+  sscanf(time, "%d:%d:%d", &t.tm_hour, &t.tm_min, &t.tm_sec);
 
-    return mktime(&t);
+  return mktime(&t);
 }
 
 /**
- * @note this version assumes that a voltage divider reduces Vbat by 1/4.3
- * @return The battery voltage x 100 as an int
- */
+   @note this version assumes that a voltage divider reduces Vbat by 1/4.3
+   @return The battery voltage x 100 as an int
+*/
 int get_bat_v()
 {
   // voltage divider v_bat = 4.3 * vadc
@@ -167,15 +169,15 @@ int get_bat_v()
 char file_name[13] = FILE_BASE_NAME "00.csv";
 
 /**
- * @brief get an unused filename for the new log.
- * This function returns a pointer to local static storage.
- * @return A pointer to the new file name.
- */
+   @brief get an unused filename for the new log.
+   This function returns a pointer to local static storage.
+   @return A pointer to the new file name.
+*/
 const char *
 get_new_log_filename()
 {
   const uint8_t BASE_NAME_SIZE = sizeof(FILE_BASE_NAME) - 1;
-  
+
   // Find an unused file name.
   if (BASE_NAME_SIZE > 6) {
     error("FILE_BASE_NAME too long");
@@ -189,7 +191,7 @@ get_new_log_filename()
       file_name[BASE_NAME_SIZE + 1] = '0';
       file_name[BASE_NAME_SIZE]++;
     } else {
-      break;  
+      break;
     }
   }
 
@@ -197,8 +199,8 @@ get_new_log_filename()
 }
 
 /**
- * @return The log file name
- */
+   @return The log file name
+*/
 const char *
 get_log_filename()
 {
@@ -206,33 +208,33 @@ get_log_filename()
 }
 
 /**
- * @brief Write a header for the new log file.
- * @param file_name open/create this file, append if it exists
- * @note Claim the SPI bus
- */
-void write_header(const char *file_name) 
+   @brief Write a header for the new log file.
+   @param file_name open/create this file, append if it exists
+   @note Claim the SPI bus
+*/
+void write_header(const char *file_name)
 {
   yield_spi_to_sd();
-  
+
   if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
     error("Error: file.open()");
   }
-  
+
   file.println(F("# Start Log"));
   file.close();
 }
 
 /**
- * @brief log data
- * write data to the log, append a new line
- * @param file_name open for append 
- * @param data write this char string
- * @note Claim the SPI bus (calls yield_spi_to_sd()().
- */
-void log_data(const char *file_name, const char *data) 
+   @brief log data
+   write data to the log, append a new line
+   @param file_name open for append
+   @param data write this char string
+   @note Claim the SPI bus (calls yield_spi_to_sd()().
+*/
+void log_data(const char *file_name, const char *data)
 {
   yield_spi_to_sd();
-  
+
   if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
     error("Error: file.open()");
   }
@@ -243,12 +245,12 @@ void log_data(const char *file_name, const char *data)
 
 uint16_t get_temperature()
 {
-   return (uint16_t)(sht31.readTemperature() * 100);
+  return (uint16_t)(sht31.readTemperature() * 100);
 }
 
 uint16_t get_humidity()
 {
-   return (uint16_t)(sht31.readHumidity() * 100);
+  return (uint16_t)(sht31.readHumidity() * 100);
 }
 
 void alarmMatch()
@@ -259,29 +261,32 @@ void alarmMatch()
 
 void setup()
 {
-  pinMode(USE_CAD, INPUT_PULLUP);
-  pinMode(USE_LOOP_DELAY, INPUT_PULLUP);
-  
+  pinMode(USE_STANDBY, INPUT_PULLUP);
+
   pinMode(STATUS_LED, OUTPUT);
+  digitalWrite(STATUS_LED, HIGH); 
 
   analogReadResolution(ADC_BITS);
+
+  SerialFlash.begin(FLASH_CS);
+  SerialFlash.sleep();
 
   // SD card power control
   pinMode(SD_PWR, OUTPUT);
   digitalWrite(SD_PWR, HIGH);   // TODO Leave the card on now, later, toggle power
 
   // SPI bus control
-  pinMode(FLASH_CS, OUTPUT);
+  // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
   pinMode(SD_CS, OUTPUT);
   pinMode(RFM95_CS, OUTPUT);
-  
+
   IO(Serial.begin(9600));
   IO(while (!Serial)); // Wait for serial port to be available
 
   IO(Serial.println(F("Start LoRa Client")));
 
   // Initialize the RTC
-  
+
   rtc.begin(/*reset*/true);
   rtc.setEpoch(get_epoch(__DATE__, __TIME__));
 
@@ -290,13 +295,13 @@ void setup()
   IO(Serial.print(F(", ")));
   IO(Serial.println(__TIME__));
   char date_str[32] = {0};
-  snprintf(date_str, sizeof(date_str), "%d/%d/%dT%d:%d:%d", rtc.getMonth(), rtc.getDay(), rtc.getYear(), 
+  snprintf(date_str, sizeof(date_str), "%d/%d/%dT%d:%d:%d", rtc.getMonth(), rtc.getDay(), rtc.getYear(),
            rtc.getHours(), rtc.getMinutes(), rtc.getSeconds());
   IO(Serial.print(F("RTC: ")));
   IO(Serial.println((const char *)date_str));
 
   // Initialize the temp/humidity sensor
- 
+
   if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
     IO(Serial.println(F("Couldn't find SHT31")));
     while (1) delay(1);
@@ -307,23 +312,23 @@ void setup()
 
   // Initialize the SD card
   yield_spi_to_sd();
-  
+
   IO(Serial.print(F("Initializing SD card...")));
-  
+
   // Initialize at the highest speed supported by the board that is
   // not over 50 MHz. Try a lower speed if SPI errors occur.
   if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
     error("sd.begin() failure.");
   }
- 
+
   const char *file_name = get_new_log_filename();
   IO(Serial.println(file_name));
-  
+
   // Write data header.
   write_header(file_name);
 
   yield_spi_to_rf95();
-  
+
   if (!rf95.init()) {
     IO(Serial.println(F("LoRa init failed.")));
     // Change this to inifinite blink
@@ -346,15 +351,15 @@ void setup()
   // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
   rf95.setCodingRate4(CODING_RATE);
 
-  // rf95.setCADTimeout(CAD_TIMEOUT); // FIXME - always use this?
+  rf95.setCADTimeout(CAD_TIMEOUT);
 
   // Because the RS Ultra Pro boards native USB won't work the the standby() mode
   // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
   // when using standby() because it will become impossible to upload new/fixed
   // code. Add a 10s delay here so a coordinated reset/upload will work.
-#if USE_RTC_STANDBY_FOR_DELAY  
+#if USE_RTC_STANDBY_FOR_DELAY
   yield(10000);
-#endif  
+#endif
 }
 
 void loop()
@@ -366,19 +371,14 @@ void loop()
   // Send a message to LoRa Server
 
   ++message;
-    
+
   digitalWrite(STATUS_LED, HIGH);
 
   yield_spi_to_rf95();
-  
-  if (digitalRead(USE_CAD) == HIGH)
-    rf95.setCADTimeout(CAD_TIMEOUT);
-  else
-    rf95.setCADTimeout(0);
 
   uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
-  snprintf((char*)data, sizeof(data), "Hello, node %d, message %ld, msg time %d, tx time %ld ms, battery %d v, temp %d C, humidity %d %%", 
-    NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity());
+  snprintf((char*)data, sizeof(data), "Hello, node %d, message %ld, msg time %d, tx time %ld ms, battery %d v, temp %d C, humidity %d %%",
+           NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity());
 
   IO(Serial.println((const char*)data));
 
@@ -419,17 +419,19 @@ void loop()
   digitalWrite(STATUS_LED, LOW);
 
   log_data(get_log_filename(), (const char *)data);
-  
-  if (digitalRead(USE_LOOP_DELAY) == HIGH) {
+
+  // Leaving this in guards against bricking the RS when sleeping with the USB detached. 
+  if (digitalRead(USE_STANDBY) == LOW) {
 #if USE_RTC_STANDBY_FOR_DELAY
     uint8_t offset = max(TX_INTERVAL - (millis() - start_time), 0) / 1000; // convdertd from ms to s
     IO(Serial.print(F("Alarm offset: ")));
     IO(Serial.println(offset));
     rtc.setAlarmEpoch(rtc.getEpoch() + offset);
     rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
-    rtc.attachInterrupt(alarmMatch); 
+    rtc.attachInterrupt(alarmMatch);
     rtc.standbyMode();
 #else
+    // TODO attach USB here.
     unsigned long elapsed_time = millis() - start_time;
     yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL ms
 #endif
