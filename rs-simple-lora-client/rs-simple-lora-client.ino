@@ -47,7 +47,7 @@
 #define SPREADING_FACTOR 7  // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
-#define DEBUG 1             // Requires USB
+#define DEBUG 0             // Requires USB
 #define Serial SerialUSB    // Needed for RS. jhrg 7/26/20
 
 #define NODE 1
