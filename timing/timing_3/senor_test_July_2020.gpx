@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="GaiaGPS" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <wpt lat="45.953632" lon="-112.478328">
+    <ele>1676.9</ele>
+    <time>2020-07-08T21:48:42Z</time>
+    <name>S 2,3 7/8/20, 3:48:42 PM</name>
+  </wpt>
+  <wpt lat="45.952602" lon="-112.478627">
+    <ele>1676.3</ele>
+    <time>2020-07-08T21:47:33Z</time>
+    <name>Wpt 7/8/20, 3:47:33 PM</name>
+  </wpt>
+  <wpt lat="45.952856" lon="-112.479909">
+    <ele>1681.8</ele>
+    <time>2020-07-08T21:55:25Z</time>
+    <name>Server 7/8/20, 3:55:25 PM</name>
+  </wpt>
+  <wpt lat="45.952599" lon="-112.479091">
+    <ele>1678.3</ele>
+    <time>2020-07-08T22:14:35Z</time>
+    <name>S 2,3 pos 3 7/8/20, 4:14:35 PM</name>
+  </wpt>
+  <wpt lat="45.952602" lon="-112.478630">
+    <ele>1676.3</ele>
+    <time>2020-07-08T21:47:45Z</time>
+    <name>S1 7/8/20, 3:47:45 PM</name>
+  </wpt>
+</gpx>

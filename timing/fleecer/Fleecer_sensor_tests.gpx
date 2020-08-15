@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="GaiaGPS" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <wpt lat="45.829969" lon="-112.802376">
+    <ele>2779.8</ele>
+    <time>2020-08-02T20:30:54Z</time>
+    <name>Sensors 1,2,3 fleecer</name>
+  </wpt>
+  <wpt lat="45.829982" lon="-112.801969">
+    <ele>2781.4</ele>
+    <time>2020-08-02T20:54:28Z</time>
+    <name>Receiver fleecer</name>
+  </wpt>
+</gpx>
