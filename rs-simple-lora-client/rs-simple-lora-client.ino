@@ -285,19 +285,16 @@ void setup()
 
   // SD card power control
   pinMode(SD_PWR, OUTPUT);
-  digitalWrite(SD_PWR, HIGH);   // TODO Leave the card on now, later, toggle power
+  digitalWrite(SD_PWR, HIGH); // Power down the card and the temp/humidity sensor
 
   // SPI bus control
   // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
   pinMode(SD_CS, OUTPUT);
   pinMode(RFM95_CS, OUTPUT);
 
-#if 0
-  // TODO Remove
-  // Initialize USB and attach to host (not required if not in use)
+  // Initialize USB and attach to host
   USBDevice.init();
   USBDevice.attach();
-#endif
 
   IO(Serial.begin(9600));
   IO(while (!Serial)); // Wait for serial port to be available
@@ -345,7 +342,7 @@ void setup()
 
   // Write data header.
   write_header(file_name);
-
+  
   yield_spi_to_rf95();
 
   if (!rf95.init()) {
@@ -383,6 +380,9 @@ void setup()
 
 void loop()
 {
+  USBDevice.attach();   // TODO we can shut this off permenantly when not debugging
+  digitalWrite(SD_PWR, LOW);    // TODO Can optimize power on/off
+
   IO(Serial.print(F("Sending to LoRa Server.. ")));
   static unsigned long last_tx_time = 0;
   static unsigned long message = 0;
@@ -391,7 +391,7 @@ void loop()
 
   ++message;
 
-  digitalWrite(STATUS_LED, HIGH);
+  digitalWrite(STATUS_LED, HIGH);   // TODO only in DEBUG mode 
 
   yield_spi_to_rf95();
 
@@ -435,16 +435,18 @@ void loop()
   }
 #endif  // EXPECT_REPLY
 
-  digitalWrite(STATUS_LED, LOW);
-
   log_data(get_log_filename(), (const char *)data);
+
+  digitalWrite(STATUS_LED, LOW);
 
   // Leaving this in guards against bricking the RS when sleeping with the USB detached.
   if (digitalRead(USE_STANDBY) == LOW) {
 #if USE_RTC_STANDBY_FOR_DELAY
 
     rf95.sleep();
-
+    USBDevice.detach();
+    digitalWrite(SD_PWR, HIGH);
+    
     uint8_t offset = max(TX_INTERVAL - (millis() - start_time), 0) / 1000; // convdertd from ms to s
     IO(Serial.print(F("Alarm offset: ")));
     IO(Serial.println(offset));
@@ -452,9 +454,10 @@ void loop()
     rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
     rtc.attachInterrupt(alarmMatch);
     rtc.standbyMode();
-
+    
 #else
     // TODO attach USB here.
+    USBDevice.attach();
     unsigned long elapsed_time = millis() - start_time;
     yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL ms
 #endif
