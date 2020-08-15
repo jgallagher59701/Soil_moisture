@@ -261,10 +261,22 @@ void alarmMatch()
 
 void setup()
 {
+  // Blanket pin mode settings
+  // Switch unused pins as input and enabled built-in pullup
+  for (int pinNumber = 0; pinNumber < 23; pinNumber++)
+    pinMode(pinNumber, INPUT_PULLUP);
+
+  pinMode(25, INPUT_PULLUP);
+  pinMode(26, INPUT_PULLUP);
+
+  for (int pinNumber = 32; pinNumber < 42; pinNumber++)
+    pinMode(pinNumber, INPUT_PULLUP);
+
+  // pin mode setting for I/O pins used by this code
   pinMode(USE_STANDBY, INPUT_PULLUP);
 
   pinMode(STATUS_LED, OUTPUT);
-  digitalWrite(STATUS_LED, HIGH); 
+  digitalWrite(STATUS_LED, HIGH);
 
   analogReadResolution(ADC_BITS);
 
@@ -279,6 +291,13 @@ void setup()
   // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
   pinMode(SD_CS, OUTPUT);
   pinMode(RFM95_CS, OUTPUT);
+
+#if 0
+  // TODO Remove
+  // Initialize USB and attach to host (not required if not in use)
+  USBDevice.init();
+  USBDevice.attach();
+#endif
 
   IO(Serial.begin(9600));
   IO(while (!Serial)); // Wait for serial port to be available
@@ -420,9 +439,12 @@ void loop()
 
   log_data(get_log_filename(), (const char *)data);
 
-  // Leaving this in guards against bricking the RS when sleeping with the USB detached. 
+  // Leaving this in guards against bricking the RS when sleeping with the USB detached.
   if (digitalRead(USE_STANDBY) == LOW) {
 #if USE_RTC_STANDBY_FOR_DELAY
+
+    rf95.sleep();
+
     uint8_t offset = max(TX_INTERVAL - (millis() - start_time), 0) / 1000; // convdertd from ms to s
     IO(Serial.print(F("Alarm offset: ")));
     IO(Serial.println(offset));
@@ -430,6 +452,7 @@ void loop()
     rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
     rtc.attachInterrupt(alarmMatch);
     rtc.standbyMode();
+
 #else
     // TODO attach USB here.
     unsigned long elapsed_time = millis() - start_time;
