@@ -372,15 +372,20 @@ void setup()
   // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
   // when using standby() because it will become impossible to upload new/fixed
   // code. Add a 10s delay here so a coordinated reset/upload will work.
-#if USE_RTC_STANDBY_FOR_DELAY
   yield(10000);
+
+#if !DEBUG
+  USBDevice.detach();   // Shut this off permenantly when not debugging
 #endif
+  digitalWrite(SD_PWR, LOW);  // Power on the SD card for the start of loop() 
 }
 
 void loop()
 {
+#if 0
   USBDevice.attach();   // TODO we can shut this off permenantly when not debugging
   digitalWrite(SD_PWR, LOW);    // TODO Can optimize power on/off
+#endif
 
   IO(Serial.print(F("Sending to LoRa Server.. ")));
   static unsigned long last_tx_time = 0;
@@ -413,23 +418,19 @@ void loop()
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-  if (rf95.waitAvailableTimeout(WAIT_AVAILABLE))
-  {
+  if (rf95.waitAvailableTimeout(WAIT_AVAILABLE)) {
     // Should be a reply message for us now
-    if (rf95.recv(buf, &len))
-    {
+    if (rf95.recv(buf, &len)) {
       IO(Serial.print(F("got reply: ")));
       IO(Serial.println((char*)buf));
       IO(Serial.print(F("RSSI: ")));
       IO(Serial.println(rf95.lastRssi(), DEC));
     }
-    else
-    {
+    else {
       IO(Serial.println(F("receive failed")));
     }
   }
-  else
-  {
+  else {
     IO(Serial.println(F("No reply, is LoRa server running?")));
   }
 #endif  // EXPECT_REPLY
@@ -440,12 +441,11 @@ void loop()
 
   // Leaving this in guards against bricking the RS when sleeping with the USB detached.
   if (digitalRead(USE_STANDBY) == LOW) {
-#if USE_RTC_STANDBY_FOR_DELAY
-
-    rf95.sleep();
-    USBDevice.detach();
-    digitalWrite(SD_PWR, HIGH);
-    // TODO Remove? SPI.end();
+    // low-power configuration
+    rf95.sleep(); // Turn off the LoRa
+    digitalWrite(SD_PWR, HIGH); // Turn off the SD card
+    // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
+    SPI.end();
 
     uint8_t offset = max(TX_INTERVAL - max((millis() - start_time_ms) / 1000, 0), 0);
     IO(Serial.print(F("Alarm offset: ")));
@@ -455,13 +455,15 @@ void loop()
     rtc.attachInterrupt(alarmMatch);
     rtc.standbyMode();
 
-    // TODO Remove? SPI.begin();
-    
-#else
-    // TODO attach USB here.
+    // Reverse low-power options
+    SPI.begin();
+    digitalWrite(SD_PWR, LOW);
+    // rf95 wakes up on the first function call.
+  }
+  else { 
+    // If USE_STANDBY is HIGH, ensure the USB is working so code upload is possible
     USBDevice.attach();
     unsigned long elapsed_time = max((millis() - start_time_ms) / 1000, 0);
     yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL seconds
-#endif
   }
 }
