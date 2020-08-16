@@ -36,8 +36,6 @@
 #define FLASH_CS 4      // CS for 2MB onboard flash on the SPI bus
 
 #define USE_STANDBY 8  // If pin 8 is LOW, use rtc.standbyMode() for delay. Pull HIGH to use yield()
-
-
 #define STATUS_LED 13   // Only for DEBUG mode
 
 #define V_BAT A0
@@ -57,8 +55,8 @@
 #define USE_RTC_STANDBY_FOR_DELAY 1   // 0 uses yield()
 
 #define WAIT_AVAILABLE 3000 // ms to wait for a response from server
-#define TX_INTERVAL 6000 // ms to wait before next transmission
-#define CAD_TIMEOUT 3000 // timeout for CAD wait
+#define CAD_TIMEOUT 3000 // ms timeout for CAD wait
+#define TX_INTERVAL 20 // seconds to wait before next transmission
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
@@ -235,12 +233,13 @@ void log_data(const char *file_name, const char *data)
 {
   yield_spi_to_sd();
 
-  if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
-    error("Error: file.open()");
+  if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    file.println(data);
+    file.close();
   }
-
-  file.println(data);
-  file.close();
+  else {
+    // TODO set runtime error status
+  }
 }
 
 uint16_t get_temperature()
@@ -342,7 +341,7 @@ void setup()
 
   // Write data header.
   write_header(file_name);
-  
+
   yield_spi_to_rf95();
 
   if (!rf95.init()) {
@@ -391,7 +390,7 @@ void loop()
 
   ++message;
 
-  digitalWrite(STATUS_LED, HIGH);   // TODO only in DEBUG mode 
+  digitalWrite(STATUS_LED, HIGH);   // TODO only in DEBUG mode
 
   yield_spi_to_rf95();
 
@@ -401,13 +400,13 @@ void loop()
 
   IO(Serial.println((const char*)data));
 
-  unsigned long start_time = millis();
+  unsigned long start_time_ms = millis();
 
   rf95.send(data, sizeof(data));  // This may block for up to CAD_TIMEOUT
   rf95.waitPacketSent();  // Block until packet sent
 
   unsigned long end_time = millis();
-  last_tx_time = end_time - start_time;   // last_tx_time used next iteration
+  last_tx_time = end_time - start_time_ms;   // last_tx_time used next iteration
 
 #if EXPECT_REPLY
   // Now wait for a reply
@@ -446,20 +445,23 @@ void loop()
     rf95.sleep();
     USBDevice.detach();
     digitalWrite(SD_PWR, HIGH);
-    
-    uint8_t offset = max(TX_INTERVAL - (millis() - start_time), 0) / 1000; // convdertd from ms to s
+    // TODO Remove? SPI.end();
+
+    uint8_t offset = max(TX_INTERVAL - max((millis() - start_time_ms) / 1000, 0), 0);
     IO(Serial.print(F("Alarm offset: ")));
     IO(Serial.println(offset));
     rtc.setAlarmEpoch(rtc.getEpoch() + offset);
     rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
     rtc.attachInterrupt(alarmMatch);
     rtc.standbyMode();
+
+    // TODO Remove? SPI.begin();
     
 #else
     // TODO attach USB here.
     USBDevice.attach();
-    unsigned long elapsed_time = millis() - start_time;
-    yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL ms
+    unsigned long elapsed_time = max((millis() - start_time_ms) / 1000, 0);
+    yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL seconds
 #endif
   }
 }
