@@ -281,10 +281,12 @@ void setup()
 
   SerialFlash.begin(FLASH_CS);
   SerialFlash.sleep();
-
+  
+#if 0
   // SD card power control
   pinMode(SD_PWR, OUTPUT);
   digitalWrite(SD_PWR, HIGH); // Power down the card and the temp/humidity sensor
+#endif
 
   // SPI bus control
   // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
@@ -377,16 +379,13 @@ void setup()
 #if !DEBUG
   USBDevice.detach();   // Shut this off permenantly when not debugging
 #endif
+#if 0
   digitalWrite(SD_PWR, LOW);  // Power on the SD card for the start of loop() 
+#endif
 }
 
 void loop()
 {
-#if 0
-  USBDevice.attach();   // TODO we can shut this off permenantly when not debugging
-  digitalWrite(SD_PWR, LOW);    // TODO Can optimize power on/off
-#endif
-
   IO(Serial.print(F("Sending to LoRa Server.. ")));
   static unsigned long last_tx_time = 0;
   static unsigned long message = 0;
@@ -442,8 +441,11 @@ void loop()
   // Leaving this in guards against bricking the RS when sleeping with the USB detached.
   if (digitalRead(USE_STANDBY) == LOW) {
     // low-power configuration
+    // Note that if !DEBUG, the USB is always detached, so no need to call that here
     rf95.sleep(); // Turn off the LoRa
+    #if 0
     digitalWrite(SD_PWR, HIGH); // Turn off the SD card
+    #endif
     // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
     SPI.end();
 
@@ -457,7 +459,9 @@ void loop()
 
     // Reverse low-power options
     SPI.begin();
+    #if 0
     digitalWrite(SD_PWR, LOW);
+    #endif
     // rf95 wakes up on the first function call.
   }
   else { 
