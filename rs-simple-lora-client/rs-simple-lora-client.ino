@@ -35,7 +35,8 @@
 
 #define FLASH_CS 4      // CS for 2MB onboard flash on the SPI bus
 
-#define USE_STANDBY 8  // If pin 8 is LOW, use rtc.standbyMode() for delay. Pull HIGH to use yield()
+#define USE_STANDBY 8   // If pin 8 is LOW, use rtc.standbyMode() for delay. Pull HIGH to use yield()
+#define MAX_POWER 9     // Not used
 #define STATUS_LED 13   // Only for DEBUG mode
 
 #define V_BAT A0
@@ -267,6 +268,7 @@ void setup()
 
   // pin mode setting for I/O pins used by this code
   pinMode(USE_STANDBY, INPUT_PULLUP);
+  pinMode(MAX_POWER, INPUT_PULLUP);
 
   pinMode(STATUS_LED, OUTPUT);
   digitalWrite(STATUS_LED, HIGH);
@@ -276,11 +278,9 @@ void setup()
   SerialFlash.begin(FLASH_CS);
   SerialFlash.sleep();
   
-#if 1
   // SD card power control
   pinMode(SD_PWR, OUTPUT);
   digitalWrite(SD_PWR, HIGH); // Power on the card and the temp/humidity sensor
-#endif
 
   // SPI bus control
   // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
@@ -434,9 +434,7 @@ void loop()
     // low-power configuration
     // Note that if !DEBUG, the USB is always detached, so no need to call that here
     rf95.sleep(); // Turn off the LoRa
-    #if 1
     digitalWrite(SD_PWR, LOW); // Turn off the SD card
-    #endif
     // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
     SPI.end();
 
@@ -450,9 +448,7 @@ void loop()
 
     // Reverse low-power options
     SPI.begin();
-    #if 1
     digitalWrite(SD_PWR, HIGH);
-    #endif
     // rf95 wakes up on the first function call.
   }
   else { 
