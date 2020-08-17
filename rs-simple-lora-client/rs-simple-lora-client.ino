@@ -262,13 +262,7 @@ void setup()
 {
   // Blanket pin mode settings
   // Switch unused pins as input and enabled built-in pullup
-  for (int pinNumber = 0; pinNumber < 23; pinNumber++)
-    pinMode(pinNumber, INPUT_PULLUP);
-
-  pinMode(25, INPUT_PULLUP);
-  pinMode(26, INPUT_PULLUP);
-
-  for (int pinNumber = 32; pinNumber < 42; pinNumber++)
+  for (int pinNumber = 0; pinNumber < NUM_DIGITAL_PINS; pinNumber++)
     pinMode(pinNumber, INPUT_PULLUP);
 
   // pin mode setting for I/O pins used by this code
@@ -282,10 +276,10 @@ void setup()
   SerialFlash.begin(FLASH_CS);
   SerialFlash.sleep();
   
-#if 0
+#if 1
   // SD card power control
   pinMode(SD_PWR, OUTPUT);
-  digitalWrite(SD_PWR, HIGH); // Power down the card and the temp/humidity sensor
+  digitalWrite(SD_PWR, HIGH); // Power on the card and the temp/humidity sensor
 #endif
 
   // SPI bus control
@@ -379,9 +373,6 @@ void setup()
 #if !DEBUG
   USBDevice.detach();   // Shut this off permenantly when not debugging
 #endif
-#if 0
-  digitalWrite(SD_PWR, LOW);  // Power on the SD card for the start of loop() 
-#endif
 }
 
 void loop()
@@ -443,8 +434,8 @@ void loop()
     // low-power configuration
     // Note that if !DEBUG, the USB is always detached, so no need to call that here
     rf95.sleep(); // Turn off the LoRa
-    #if 0
-    digitalWrite(SD_PWR, HIGH); // Turn off the SD card
+    #if 1
+    digitalWrite(SD_PWR, LOW); // Turn off the SD card
     #endif
     // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
     SPI.end();
@@ -459,8 +450,8 @@ void loop()
 
     // Reverse low-power options
     SPI.begin();
-    #if 0
-    digitalWrite(SD_PWR, LOW);
+    #if 1
+    digitalWrite(SD_PWR, HIGH);
     #endif
     // rf95 wakes up on the first function call.
   }
