@@ -263,7 +263,7 @@ void setup()
 {
   // Blanket pin mode settings
   // Switch unused pins as input and enabled built-in pullup
-  for (int pinNumber = 0; pinNumber < NUM_DIGITAL_PINS; pinNumber++)
+  for (unsigned int pinNumber = 0; pinNumber < NUM_DIGITAL_PINS; pinNumber++)
     pinMode(pinNumber, INPUT_PULLUP);
 
   // pin mode setting for I/O pins used by this code
