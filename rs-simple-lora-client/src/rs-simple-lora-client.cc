@@ -453,6 +453,7 @@ void loop()
   }
   else { 
     // If USE_STANDBY is HIGH, ensure the USB is working so code upload is possible
+    // FIXME yield() takes ms, not s. But... make this loop last only 1 s for testing, etc.
     USBDevice.attach();
     unsigned long elapsed_time = max((millis() - start_time_ms) / 1000, 0);
     yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL seconds
