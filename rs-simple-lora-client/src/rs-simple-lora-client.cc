@@ -22,7 +22,13 @@
 #include <RTCZero.h>
 #include <SerialFlash.h>
 
+#define USE_SD 1
+#if USE_SD
+#include <SD.h>
+#else
 #include "SdFat.h"
+#endif
+
 #include "Adafruit_SHT31.h"   // Uses the BusIO library from Adafruit
 
 // Pin assignments
@@ -72,10 +78,10 @@
 
 #if DEBUG
 #define IO(x) do { x; } while (false)
-#define error(msg) do { Serial.println(F(msg)); SysCall::halt(); } while (false)
+#define error(msg) do { Serial.println(F(msg)); while(true); } while (false)
 #else
 #define IO(x)
-#define error(msg) do { SysCall::halt(); } while (false)
+#define error(msg) do { while(true); } while (false)
 #endif
 
 // Singleton instance of the radio driver
@@ -90,8 +96,11 @@ RTCZero rtc;
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
 // Singletons for the SD card objects
+#if USE_SD
+#else
 SdFat sd;     // File system object.
 SdFile file;  // Log file.
+#endif
 
 /**
    @brief delay that enables background tasks
@@ -184,7 +193,7 @@ get_new_log_filename()
   }
 
   // Look for a BASE_NAME00.csv. if all are taken return BASE_NAME99.csv
-  while (sd.exists(file_name)) {
+  while (SD.exists(file_name)) {
     if (file_name[BASE_NAME_SIZE + 1] != '9') {
       file_name[BASE_NAME_SIZE + 1]++;
     } else if (file_name[BASE_NAME_SIZE] != '9') {
@@ -216,12 +225,26 @@ void write_header(const char *file_name)
 {
   yield_spi_to_sd();
 
+#if USE_SD
+  File dataFile = SD.open(file_name, FILE_WRITE);
+
+  // if the file is available, write to it:
+  if (dataFile) {
+    dataFile.println(F("# Start Log"));
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    error("Error: SD.open()");
+  }
+#else
   if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
     error("Error: file.open()");
   }
 
   file.println(F("# Start Log"));
   file.close();
+#endif
 }
 
 /**
@@ -235,6 +258,19 @@ void log_data(const char *file_name, const char *data)
 {
   yield_spi_to_sd();
 
+#if USE_SD
+  File dataFile = SD.open(file_name, FILE_WRITE);
+
+  // if the file is available, write to it:
+  if (dataFile) {
+    dataFile.println(data);
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    // TODO set runtime error status
+  }
+#else
   if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
     file.println(data);
     file.close();
@@ -242,6 +278,7 @@ void log_data(const char *file_name, const char *data)
   else {
     // TODO set runtime error status
   }
+#endif
 }
 
 uint16_t get_temperature()
@@ -341,12 +378,17 @@ void setup()
 
   IO(Serial.print(F("Initializing SD card...")));
 
+#if USE_SD
+ if (!SD.begin(SD_CS)) {
+   error("SD.begin() failure.");
+ }
+#else
   // Initialize at the highest speed supported by the board that is
   // not over 50 MHz. Try a lower speed if SPI errors occur.
   if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
     error("sd.begin() failure.");
   }
-
+#endif
   const char *file_name = get_new_log_filename();
   IO(Serial.println(file_name));
 
