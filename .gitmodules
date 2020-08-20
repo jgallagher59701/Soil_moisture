@@ -1,0 +1,6 @@
+[submodule "rs-simple-lora-client/lib/Adafruit_BusIO"]
+	path = rs-simple-lora-client/lib/Adafruit_BusIO
+	url = https://github.com/adafruit/Adafruit_BusIO
+[submodule "rs-simple-lora-client/lib/Adafruit_SHT31"]
+	path = rs-simple-lora-client/lib/Adafruit_SHT31
+	url = https://github.com/adafruit/Adafruit_SHT31
