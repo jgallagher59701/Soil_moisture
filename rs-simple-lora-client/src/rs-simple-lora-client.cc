@@ -22,7 +22,7 @@
 #include <RTCZero.h>
 #include <SerialFlash.h>
 
-#define USE_SD 1
+#define USE_SD 0
 #if USE_SD
 #include <SD.h>
 #else
@@ -95,12 +95,25 @@ RTCZero rtc;
 // Temp/humidity sensor
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
-// Singletons for the SD card objects
 #if USE_SD
 #else
+// Singletons for the SD card objects
 SdFat sd;     // File system object.
 SdFile file;  // Log file.
 #endif
+
+#define STATUS_OK 0x00
+
+#define SD_NO_MORE_NAMES 0x01   // means it will use "Data99.csv"
+#define SD_FILE_ENTRY_WRITE_ERROR 0x02
+#define SD_CARD_WAKEUP_ERROR 0x04
+
+#define RFM95_NO_REPLY 0x10
+#define RFM95_SEND_QUEUE_ERROR 0x20
+#define RFM95_SEND_ERROR 0x40
+#define RFM95_RECEIVE_FAILED 0x80
+
+uint8_t status = STATUS_OK;
 
 /**
    @brief delay that enables background tasks
@@ -193,13 +206,14 @@ get_new_log_filename()
   }
 
   // Look for a BASE_NAME00.csv. if all are taken return BASE_NAME99.csv
-  while (SD.exists(file_name)) {
+  while (sd.exists(file_name)) {
     if (file_name[BASE_NAME_SIZE + 1] != '9') {
       file_name[BASE_NAME_SIZE + 1]++;
     } else if (file_name[BASE_NAME_SIZE] != '9') {
       file_name[BASE_NAME_SIZE + 1] = '0';
       file_name[BASE_NAME_SIZE]++;
     } else {
+      status |= SD_NO_MORE_NAMES;
       break;
     }
   }
@@ -235,10 +249,12 @@ void write_header(const char *file_name)
   }
   // if the file isn't open, pop up an error:
   else {
+    // TODO error_blink()
     error("Error: SD.open()");
   }
 #else
   if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    // TODO error_blink()
     error("Error: file.open()");
   }
 
@@ -266,9 +282,8 @@ void log_data(const char *file_name, const char *data)
     dataFile.println(data);
     dataFile.close();
   }
-  // if the file isn't open, pop up an error:
   else {
-    // TODO set runtime error status
+    status |= SD_FILE_ENTRY_WRITE_ERROR;
   }
 #else
   if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
@@ -276,7 +291,7 @@ void log_data(const char *file_name, const char *data)
     file.close();
   }
   else {
-    // TODO set runtime error status
+    status |= SD_FILE_ENTRY_WRITE_ERROR;
   }
 #endif
 }
@@ -365,9 +380,10 @@ void setup()
 
   // Initialize the temp/humidity sensor
 
-  if (! sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
+  if (!sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
     IO(Serial.println(F("Couldn't find SHT31")));
     while (1) delay(1);
+    // TODO error_blink()
   }
 
   // The SHT30D temp/humidity sensor has a heater; it's turned off in setup
@@ -381,6 +397,7 @@ void setup()
 #if USE_SD
  if (!SD.begin(SD_CS)) {
    error("SD.begin() failure.");
+   // TODO error_blink()
  }
 #else
   // Initialize at the highest speed supported by the board that is
@@ -392,14 +409,14 @@ void setup()
   const char *file_name = get_new_log_filename();
   IO(Serial.println(file_name));
 
-  // Write data header.
+  // Write data header. This may call error_blink()
   write_header(file_name);
 
   yield_spi_to_rf95();
 
   if (!rf95.init()) {
     IO(Serial.println(F("LoRa init failed.")));
-    // Change this to inifinite blink
+    // TODO error_blink()
     while (true) ;
   }
 
@@ -424,12 +441,11 @@ void setup()
   // Because the RS Ultra Pro boards native USB won't work the the standby() mode
   // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
   // when using standby() because it will become impossible to upload new/fixed
-  // code. Add a 10s delay here so a coordinated reset/upload will work.
+  // code. Add a 10s delay here so a coordinated reset/upload will work. This is 
+  // not strictly needed for this code - the short delay loop option has the USB
+  // attached, but this is convenient because the node's mode does not have to be 
+  // changed.
   yield(10000);
-
-#if !DEBUG
-  USBDevice.detach();   // Shut this off permenantly when not debugging
-#endif
 }
 
 void loop()
@@ -448,15 +464,24 @@ void loop()
 
   uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
   snprintf((char*)data, sizeof(data), 
-          "Hello, node %d, message %ld, msg time %ld, tx time %ld ms, battery %d v, temp %d C, humidity %d %%",
-           NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity());
+          "Hello, node %d, message %ld, msg time %ld, tx time %ld ms, battery %d v, temp %d C, humidity %d %%, status 0x%02x",
+           NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity(), status);
 
   IO(Serial.println((const char*)data));
 
   unsigned long start_time_ms = millis();
+  status = STATUS_OK;   // clear status for the next sample interval
 
-  rf95.send(data, sizeof(data));  // This may block for up to CAD_TIMEOUT
-  rf95.waitPacketSent();  // Block until packet sent
+  // This may block for up to CAD_TIMEOUT
+  if (!rf95.send(data, sizeof(data))) {
+    status |= RFM95_SEND_QUEUE_ERROR;
+  }
+  // Block until packet sent. The code could run the SD card and radio in parallel,
+  // but the potential current draw could strain the batteries. Wait for the radio
+  // to finish, then write to the SD card.
+  if (!rf95.waitPacketSent()) {
+    status |= RFM95_SEND_ERROR;
+  }  
 
   unsigned long end_time = millis();
   last_tx_time = end_time - start_time_ms;   // last_tx_time used next iteration
@@ -476,10 +501,12 @@ void loop()
     }
     else {
       IO(Serial.println(F("receive failed")));
+      status |= RFM95_RECEIVE_FAILED;
     }
   }
   else {
     IO(Serial.println(F("No reply, is LoRa server running?")));
+    status |= RFM95_NO_REPLY;
   }
 #endif  // EXPECT_REPLY
 
@@ -490,7 +517,7 @@ void loop()
   // Leaving this in guards against bricking the RS when sleeping with the USB detached.
   if (digitalRead(USE_STANDBY) == LOW) {
     // low-power configuration
-    // Note that if !DEBUG, the USB is always detached, so no need to call that here
+    USBDevice.detach();
     rf95.sleep(); // Turn off the LoRa
     digitalWrite(SD_PWR, LOW); // Turn off the SD card
     // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
@@ -508,10 +535,14 @@ void loop()
     SPI.begin();
     digitalWrite(SD_PWR, HIGH);
     // rf95 wakes up on the first function call.
-  }
+    // TODO add rf95.mode()
+    if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
+      status |= SD_CARD_WAKEUP_ERROR;
+    }
+   }
   else { 
     // If USE_STANDBY is HIGH, ensure the USB is working so code upload is possible
-    // FIXME yield() takes ms, not s. But... make this loop last only 1 s for testing, etc.
+    // NB: This call to attach() borks DEBUG Serial output, at least with platformio.
     USBDevice.attach();
     unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);
     yield(max(FAST_TX_INTERVAL_MS - elapsed_time_ms, 0)); // wait here for upto TX_INTERVAL seconds
