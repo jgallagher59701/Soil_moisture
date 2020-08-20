@@ -30,7 +30,7 @@
 #define RFM95_INT 2     // RF95 Interrupt
 #define RFM95_CS 5      // RF95 SPI CS
 
-#define SD_PWR 3        // HIGH == power on SD card
+#define SD_PWR 11        // HIGH == power on SD card
 #define SD_CS 10        // CS for the SD card, SPI uses dedicated lines
 
 #define FLASH_CS 4      // CS for 2MB onboard flash on the SPI bus
@@ -57,7 +57,8 @@
 
 #define WAIT_AVAILABLE 3000 // ms to wait for a response from server
 #define CAD_TIMEOUT 3000 // ms timeout for CAD wait
-#define TX_INTERVAL 20 // seconds to wait before next transmission
+#define FAST_TX_INTERVAL_MS 2000 // ms to wait before next transmission when not sleeping
+#define STANDBY_INTERVAL_S 20 // seconds to wait before next transmission when sleeping
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
@@ -263,8 +264,22 @@ void setup()
 {
   // Blanket pin mode settings
   // Switch unused pins as input and enabled built-in pullup
+#if 0
   for (unsigned int pinNumber = 0; pinNumber < NUM_DIGITAL_PINS; pinNumber++)
     pinMode(pinNumber, INPUT_PULLUP);
+#endif
+
+// Switch unused pins as input and enabled built-in pullup 
+ for (unsigned int pinNumber = 0; pinNumber < 23; pinNumber++){
+ pinMode(pinNumber, INPUT_PULLUP);
+ }
+
+ for (unsigned int pinNumber = 32; pinNumber < 42; pinNumber++){
+ pinMode(pinNumber, INPUT_PULLUP);
+ }
+
+ pinMode(25, INPUT_PULLUP);
+ pinMode(26, INPUT_PULLUP);
 
   // pin mode setting for I/O pins used by this code
   pinMode(USE_STANDBY, INPUT_PULLUP);
@@ -390,7 +405,8 @@ void loop()
   yield_spi_to_rf95();
 
   uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
-  snprintf((char*)data, sizeof(data), "Hello, node %d, message %ld, msg time %d, tx time %ld ms, battery %d v, temp %d C, humidity %d %%",
+  snprintf((char*)data, sizeof(data), 
+          "Hello, node %d, message %ld, msg time %ld, tx time %ld ms, battery %d v, temp %d C, humidity %d %%",
            NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity());
 
   IO(Serial.println((const char*)data));
@@ -438,7 +454,7 @@ void loop()
     // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
     SPI.end();
 
-    uint8_t offset = max(TX_INTERVAL - max((millis() - start_time_ms) / 1000, 0), 0);
+    uint8_t offset = max(STANDBY_INTERVAL_S - max((millis() - start_time_ms) / 1000, 0), 0);
     IO(Serial.print(F("Alarm offset: ")));
     IO(Serial.println(offset));
     rtc.setAlarmEpoch(rtc.getEpoch() + offset);
@@ -455,7 +471,7 @@ void loop()
     // If USE_STANDBY is HIGH, ensure the USB is working so code upload is possible
     // FIXME yield() takes ms, not s. But... make this loop last only 1 s for testing, etc.
     USBDevice.attach();
-    unsigned long elapsed_time = max((millis() - start_time_ms) / 1000, 0);
-    yield(max(TX_INTERVAL - elapsed_time, 0)); // wait here for upto TX_INTERVAL seconds
+    unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);
+    yield(max(FAST_TX_INTERVAL_MS - elapsed_time_ms, 0)); // wait here for upto TX_INTERVAL seconds
   }
 }

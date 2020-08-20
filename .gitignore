@@ -1,6 +1,4 @@
 *~
 old/
-.cproject
-.project
-.settings/
+.vscode/
 .DS_Store
