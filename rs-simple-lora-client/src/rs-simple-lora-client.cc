@@ -31,6 +31,8 @@
 
 #include "Adafruit_SHT31.h"   // Uses the BusIO library from Adafruit
 
+#include "blink.h"
+
 // Pin assignments
 
 #define RFM95_INT 2     // RF95 Interrupt
@@ -78,10 +80,10 @@
 
 #if DEBUG
 #define IO(x) do { x; } while (false)
-#define error(msg) do { Serial.println(F(msg)); while(true); } while (false)
+// #define error(msg) do { Serial.println(F(msg)); while(true); } while (false)
 #else
 #define IO(x)
-#define error(msg) do { while(true); } while (false)
+// #define error(msg) do { while(true); } while (false)
 #endif
 
 // Singleton instance of the radio driver
@@ -101,6 +103,15 @@ Adafruit_SHT31 sht31 = Adafruit_SHT31();
 SdFat sd;     // File system object.
 SdFile file;  // Log file.
 #endif
+
+// setup() error codes. Any of these error the boot of the node
+// and flash the status led 2, 3, ..., n times.
+#define SHT31_BEGIN_FAIL 2
+#define SD_BEGIN_FAIL 3
+#define SD_WRITE_HEADER_FAIL 4
+#define RFM95_INIT_FAIL 5
+#define RFM95_SET_FREQ_FAIL 6
+#define SD_LOG_FILE_NAME_FAIL 7
 
 #define STATUS_OK 0x00
 
@@ -202,7 +213,7 @@ get_new_log_filename()
 
   // Find an unused file name.
   if (BASE_NAME_SIZE > 6) {
-    error("FILE_BASE_NAME too long");
+    error_blink(STATUS_LED, SD_LOG_FILE_NAME_FAIL);
   }
 
   // Look for a BASE_NAME00.csv. if all are taken return BASE_NAME99.csv
@@ -249,13 +260,13 @@ void write_header(const char *file_name)
   }
   // if the file isn't open, pop up an error:
   else {
-    // TODO error_blink()
+  
     error("Error: SD.open()");
   }
 #else
   if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
-    // TODO error_blink()
-    error("Error: file.open()");
+    IO(Serial.println(F("Couldn't write file header")));
+    error_blink(STATUS_LED, SD_WRITE_HEADER_FAIL);
   }
 
   file.println(F("# Start Log"));
@@ -312,116 +323,116 @@ void alarmMatch()
   rtc.detachInterrupt();
 }
 
-void setup()
-{
-  // Blanket pin mode settings
-  // Switch unused pins as input and enabled built-in pullup
+void setup() {
+    // Blanket pin mode settings
+    // Switch unused pins as input and enabled built-in pullup
 #if 0
   for (unsigned int pinNumber = 0; pinNumber < NUM_DIGITAL_PINS; pinNumber++)
     pinMode(pinNumber, INPUT_PULLUP);
 #endif
 
-// Switch unused pins as input and enabled built-in pullup 
- for (unsigned int pinNumber = 0; pinNumber < 23; pinNumber++){
- pinMode(pinNumber, INPUT_PULLUP);
- }
+    // Switch unused pins as input and enabled built-in pullup
+    for (unsigned int pinNumber = 0; pinNumber < 23; pinNumber++) {
+        pinMode(pinNumber, INPUT_PULLUP);
+    }
 
- for (unsigned int pinNumber = 32; pinNumber < 42; pinNumber++){
- pinMode(pinNumber, INPUT_PULLUP);
- }
+    for (unsigned int pinNumber = 32; pinNumber < 42; pinNumber++) {
+        pinMode(pinNumber, INPUT_PULLUP);
+    }
 
- pinMode(25, INPUT_PULLUP);
- pinMode(26, INPUT_PULLUP);
+    pinMode(25, INPUT_PULLUP);
+    pinMode(26, INPUT_PULLUP);
 
-  // pin mode setting for I/O pins used by this code
-  pinMode(USE_STANDBY, INPUT_PULLUP);
-  pinMode(MAX_POWER, INPUT_PULLUP);
+    // pin mode setting for I/O pins used by this code
+    pinMode(USE_STANDBY, INPUT_PULLUP);
+    pinMode(MAX_POWER, INPUT_PULLUP);
 
-  pinMode(STATUS_LED, OUTPUT);
-  digitalWrite(STATUS_LED, HIGH);
+    pinMode(STATUS_LED, OUTPUT);
+    digitalWrite(STATUS_LED, HIGH);
 
-  analogReadResolution(ADC_BITS);
+    analogReadResolution(ADC_BITS);
 
-  SerialFlash.begin(FLASH_CS);
-  SerialFlash.sleep();
-  
-  // SD card power control
-  pinMode(SD_PWR, OUTPUT);
-  digitalWrite(SD_PWR, HIGH); // Power on the card and the temp/humidity sensor
+    SerialFlash.begin(FLASH_CS);
+    SerialFlash.sleep();
 
-  // SPI bus control
-  // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
-  pinMode(SD_CS, OUTPUT);
-  pinMode(RFM95_CS, OUTPUT);
+    // SD card power control
+    pinMode(SD_PWR, OUTPUT);
+    digitalWrite(SD_PWR, HIGH); // Power on the card and the temp/humidity sensor
 
-  // Initialize USB and attach to host
-  USBDevice.init();
-  USBDevice.attach();
+    // SPI bus control
+    // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
+    pinMode(SD_CS, OUTPUT);
+    pinMode(RFM95_CS, OUTPUT);
 
-  IO(Serial.begin(9600));
-  IO(while (!Serial)); // Wait for serial port to be available
+    // Initialize USB and attach to host
+    USBDevice.init();
+    USBDevice.attach();
 
-  IO(Serial.println(F("Start LoRa Client")));
+    IO(Serial.begin(9600));
+    IO(while (!Serial)); // Wait for serial port to be available
 
-  // Initialize the RTC
+    IO(Serial.println(F("Start LoRa Client")));
 
-  rtc.begin(/*reset*/true);
-  rtc.setEpoch(get_epoch(__DATE__, __TIME__));
+    // Initialize the RTC
 
-  IO(Serial.print(F("Date, Time: ")));
-  IO(Serial.print(__DATE__));
-  IO(Serial.print(F(", ")));
-  IO(Serial.println(__TIME__));
-  char date_str[32] = {0};
-  snprintf(date_str, sizeof(date_str), "%d/%d/%dT%d:%d:%d", rtc.getMonth(), rtc.getDay(), rtc.getYear(),
-           rtc.getHours(), rtc.getMinutes(), rtc.getSeconds());
-  IO(Serial.print(F("RTC: ")));
-  IO(Serial.println((const char *)date_str));
+    rtc.begin(/*reset*/ true);
+    rtc.setEpoch(get_epoch(__DATE__, __TIME__));
 
-  // Initialize the temp/humidity sensor
+    IO(Serial.print(F("Date, Time: ")));
+    IO(Serial.print(__DATE__));
+    IO(Serial.print(F(", ")));
+    IO(Serial.println(__TIME__));
+    char date_str[32] = {0};
+    snprintf(date_str, sizeof(date_str), "%d/%d/%dT%d:%d:%d", rtc.getMonth(), rtc.getDay(), rtc.getYear(),
+             rtc.getHours(), rtc.getMinutes(), rtc.getSeconds());
+    IO(Serial.print(F("RTC: ")));
+    IO(Serial.println((const char *)date_str));
 
-  if (!sht31.begin(0x44)) {   // Set to 0x45 for alternate i2c addr
-    IO(Serial.println(F("Couldn't find SHT31")));
-    while (1) delay(1);
-    // TODO error_blink()
-  }
+    // Initialize the temp/humidity sensor
 
-  // The SHT30D temp/humidity sensor has a heater; it's turned off in setup
-  sht31.heater(false);
+    if (!sht31.begin(0x44)) { // Set to 0x45 for alternate i2c addr
+        IO(Serial.println(F("Couldn't find SHT31")));
+        error_blink(STATUS_LED, SHT31_BEGIN_FAIL);
+    }
 
-  // Initialize the SD card
-  yield_spi_to_sd();
+    // The SHT30D temp/humidity sensor has a heater; it's turned off in setup
+    sht31.heater(false);
 
-  IO(Serial.print(F("Initializing SD card...")));
+    // Initialize the SD card
+    yield_spi_to_sd();
+
+    IO(Serial.print(F("Initializing SD card...")));
 
 #if USE_SD
  if (!SD.begin(SD_CS)) {
    error("SD.begin() failure.");
-   // TODO error_blink()
  }
 #else
   // Initialize at the highest speed supported by the board that is
   // not over 50 MHz. Try a lower speed if SPI errors occur.
   if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
-    error("sd.begin() failure.");
+        IO(Serial.println(F("Couldn't init the SD Card")));
+        error_blink(STATUS_LED, SD_BEGIN_FAIL);
   }
 #endif
   const char *file_name = get_new_log_filename();
   IO(Serial.println(file_name));
 
-  // Write data header. This may call error_blink()
+  // Write data header. This may call error_blink() if it fails.
   write_header(file_name);
 
   yield_spi_to_rf95();
 
   if (!rf95.init()) {
     IO(Serial.println(F("LoRa init failed.")));
-    // TODO error_blink()
-    while (true) ;
+    error_blink(STATUS_LED, RFM95_INIT_FAIL);
   }
 
   // Setup ISM frequency
-  rf95.setFrequency(FREQ);
+  if (!rf95.setFrequency(FREQ)) {
+      IO(Serial.println(F("LoRa frequency out of range.")));
+      error_blink(STATUS_LED, RFM95_SET_FREQ_FAIL);
+  }
 
   // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
   // Lower BandWidth for longer distance.

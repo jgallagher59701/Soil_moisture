@@ -2,8 +2,8 @@
 // Created by James Gallagher on 2/1/20.
 //
 
-#include <Arduino.h>
 #include "blink.h"
+#include <Arduino.h>
 
 #define one_second 1000
 #define quarter_second 250
@@ -20,7 +20,9 @@
  * @param N One cycle should flash this many times
  * @return Never returns
  */
-void error_blink_times(int pin, int N) {
+void error_blink(int pin, int N) {
+    blink(pin, N, 0);
+#if 0
     while (true) {
         digitalWrite(pin, HIGH);
         delay(one_second);
@@ -33,6 +35,7 @@ void error_blink_times(int pin, int N) {
         digitalWrite(pin, LOW);
         delay(one_second);
     }
+#endif
 }
 
 /**
@@ -47,7 +50,7 @@ void error_blink_times(int pin, int N) {
  * @param N One cycle should flash this many times
  * @param M Number of cycles. If 0, cycle forever
  */
-void blink_times(int pin, int N, int M) {
+void blink(int pin, int N, int M) {
     int count = 0;
     while ((M == 0) ? 1 : count < M) {
         count++;
