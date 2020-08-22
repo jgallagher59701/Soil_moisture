@@ -475,10 +475,12 @@ void loop() {
         SPI.begin();
         digitalWrite(SD_PWR, HIGH);
         // rf95 wakes up on the first function call.
-        // TODO add rf95.mode()
         if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
             status |= SD_CARD_WAKEUP_ERROR;
         }
+        // wait 250ms for the SD card. Maybe this is not needed in most iterations because
+        // the radio blocks for a while, but in some cases it might be needed.
+        yield(250);
     } else {
         // If USE_STANDBY is HIGH, ensure the USB is working so code upload is possible
         // NB: This call to attach() borks DEBUG Serial output, at least with platformio.
