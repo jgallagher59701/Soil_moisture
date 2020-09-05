@@ -78,15 +78,12 @@ unsigned int tx_power = 13; // dBm 5 tp 23 for RF95
 // Singleton for the Real Time Clock
 RTCZero rtc;
 
-// Temp/humidity sensor
-Adafruit_SHT31 sht31 = Adafruit_SHT31();
+// Temp/humidity sensor. Use the SHT31 code. We actually have the 30-D sensor.
+Adafruit_SHT31 sht30d = Adafruit_SHT31();
 
-#if USE_SD
-#else
 // Singletons for the SD card objects
 SdFat sd;    // File system object.
 SdFile file; // Log file.
-#endif
 
 // setup() error codes. Any of these error the boot of the node
 // and flash the status led 2, 3, ..., n times.
@@ -253,14 +250,25 @@ void log_data(const char *file_name, const char *data) {
     }
 }
 
+/**
+ * @brief Get the temperature from the SHT-3
+ * @return the temperature * 100 as a 16-bit unsigned int
+ */
 uint16_t get_temperature() {
-    return (uint16_t)(sht31.readTemperature() * 100);
+    return (uint16_t)(sht30d.readTemperature() * 100);
 }
 
+/**
+ * @brief Get the humidity from the SHT-3
+ * @return the humidity * 100 as a 16-bit unsigned int
+ */
 uint16_t get_humidity() {
-    return (uint16_t)(sht31.readHumidity() * 100);
+    return (uint16_t)(sht30d.readHumidity() * 100);
 }
 
+/** 
+ * @brief Call back for the sleep alarm
+ */
 void alarmMatch() {
     // Need to do this?
     rtc.detachInterrupt();
@@ -282,29 +290,30 @@ void setup() {
 
     // pin mode setting for I/O pins used by this code
     pinMode(USE_STANDBY, INPUT_PULLUP);
-    pinMode(MAX_POWER, INPUT_PULLUP);
+    pinMode(MAX_POWER, INPUT_PULLUP); // not used
 
     pinMode(STATUS_LED, OUTPUT);
     digitalWrite(STATUS_LED, HIGH);
 
     analogReadResolution(ADC_BITS);
 
+    // RocketScream's built-in flash not used
     SerialFlash.begin(FLASH_CS);
     SerialFlash.sleep();
 
-    // SD card power control
+    // SD card power control (low-side switching)
     pinMode(SD_PWR, OUTPUT);
-    digitalWrite(SD_PWR, HIGH); // Power on the card and the temp/humidity sensor
+    digitalWrite(SD_PWR, HIGH); // Power on the card
 
     // SPI bus control
-    // TODO REMOVE? pinMode(FLASH_CS, OUTPUT);
     pinMode(SD_CS, OUTPUT);
     pinMode(RFM95_CS, OUTPUT);
 
-    // Initialize USB and attach to host
+    // Initialize USB and attach to host. Needed because code will detach for sleep
     USBDevice.init();
     USBDevice.attach();
 
+    // Only start the Serial interface when DEBUG is 1
     IO(Serial.begin(9600));
     IO(while (!Serial)); // Wait for serial port to be available
 
@@ -327,13 +336,13 @@ void setup() {
 
     // Initialize the temp/humidity sensor
 
-    if (!sht31.begin(0x44)) { // Set to 0x45 for alternate i2c addr
+    if (!sht30d.begin(0x44)) { // Set to 0x45 for alternate i2c addr
         IO(Serial.println(F("Couldn't find SHT31")));
         error_blink(STATUS_LED, SHT31_BEGIN_FAIL);
     }
 
-    // The SHT30D temp/humidity sensor has a heater; it's turned off in setup
-    sht31.heater(false);
+    // The SHT30-D temp/humidity sensor has a heater; turned it off
+    sht30d.heater(false);
 
     // Initialize the SD card
     yield_spi_to_sd();
@@ -350,7 +359,7 @@ void setup() {
     const char *file_name = get_new_log_filename();
     IO(Serial.println(file_name));
 
-    // Write data header. This may call error_blink() if it fails.
+    // Write data header. This will call error_blink() if it fails.
     write_header(file_name);
 
     yield_spi_to_rf95();
@@ -381,9 +390,9 @@ void setup() {
 
     rf95.setCADTimeout(CAD_TIMEOUT);
 
-    // Because the RS Ultra Pro boards native USB won't work the the standby() mode
+    // Because the RS Ultra Pro boards native USB won't work with the standby() mode
     // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
-    // when using standby() because it will become impossible to upload new/fixed
+    // when using standby(). It will then become impossible to upload new/fixed
     // code. Add a 10s delay here so a coordinated reset/upload will work. This is
     // not strictly needed for this code - the short delay loop option has the USB
     // attached, but this is convenient because the node's mode does not have to be
@@ -392,6 +401,9 @@ void setup() {
 }
 
 void loop() {
+    // FIXME - grab the time here and then use that time plus an offset (STANDBY_INTERVAL_S)
+    // to determine when to wake up so that the node will wake up on the hour, etc.
+    // Set the initial time so some sensible value.
     IO(Serial.print(F("Sending to LoRa Server.. ")));
     static unsigned long last_tx_time = 0;
     static unsigned long message = 0;
