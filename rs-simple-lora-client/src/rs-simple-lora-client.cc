@@ -26,6 +26,7 @@
 #include "SdFat.h"
 
 #include "blink.h"
+#include "data_packet.h"
 
 #define DEBUG 0          // Requires USB
 #define Serial SerialUSB // Needed for RS. jhrg 7/26/20
@@ -50,18 +51,20 @@
 
 // Constants
 
+// Channel 0 is 902.3, others are + 200KHz for BW = 125 KHz. There are 64 channels.
+// 915.0 MHz is the no-channel nominal freq
 #define FREQ 915.0
 #define BANDWIDTH 125000
 #define SPREADING_FACTOR 7 // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
-#define NODE 2
+#define NODE 1
 #define EXPECT_REPLY 0
 #define USE_RTC_STANDBY_FOR_DELAY 1 // 0 uses yield()
 
 #define WAIT_AVAILABLE 3000      // ms to wait for a response from server
 #define CAD_TIMEOUT 3000         // ms timeout for CAD wait
-#define FAST_TX_INTERVAL_MS 2000 // ms to wait before next transmission when in non-sleeping mode
+#define FAST_TX_INTERVAL_MS 5000 // ms to wait before next transmission when in non-sleeping mode
 #define STANDBY_INTERVAL_S 20    // seconds to wait before next transmission when sleeping
 
 #define ADC_BITS 12
@@ -104,6 +107,12 @@ SdFile file; // Log file.
 #define RFM95_SEND_QUEUE_ERROR 0x20
 #define RFM95_SEND_ERROR 0x40
 #define RFM95_RECEIVE_FAILED 0x80
+
+#if DEBUG
+#define SHT30D 0
+#else
+#define SHT30D 1
+#endif
 
 uint8_t status = STATUS_OK;
 
@@ -242,6 +251,9 @@ void write_header(const char *file_name) {
 void log_data(const char *file_name, const char *data) {
     yield_spi_to_sd();
 
+    SerialUSB.print("data to SD card: ");
+    SerialUSB.println(data);
+
     if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         file.println(data);
         file.close();
@@ -255,7 +267,11 @@ void log_data(const char *file_name, const char *data) {
  * @return the temperature * 100 as a 16-bit unsigned int
  */
 uint16_t get_temperature() {
+#if SHT30D
     return (uint16_t)(sht30d.readTemperature() * 100);
+#else
+    return 0;
+#endif
 }
 
 /**
@@ -263,7 +279,11 @@ uint16_t get_temperature() {
  * @return the humidity * 100 as a 16-bit unsigned int
  */
 uint16_t get_humidity() {
+#if SHT30D
     return (uint16_t)(sht30d.readHumidity() * 100);
+#else
+    return 0;
+#endif
 }
 
 /** 
@@ -335,7 +355,7 @@ void setup() {
     IO(Serial.println((const char *)date_str));
 
     // Initialize the temp/humidity sensor
-
+#if SHT30D
     if (!sht30d.begin(0x44)) { // Set to 0x45 for alternate i2c addr
         IO(Serial.println(F("Couldn't find SHT31")));
         error_blink(STATUS_LED, SHT31_BEGIN_FAIL);
@@ -343,6 +363,7 @@ void setup() {
 
     // The SHT30-D temp/humidity sensor has a heater; turned it off
     sht30d.heater(false);
+#endif // SHT30D
 
     // Initialize the SD card
     yield_spi_to_sd();
@@ -416,18 +437,25 @@ void loop() {
 
     yield_spi_to_rf95();
 
-    uint8_t data[RH_RF95_MAX_MESSAGE_LEN];
+#if 0
+    uint8_t data[DATA_PACKET_SIZE];
     snprintf((char *)data, sizeof(data),
              "Hello, node %d, message %ld, msg time %ld, tx time %ld ms, battery %d v, temp %d C, humidity %d %%, status 0x%02x",
              NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity(), status);
+#endif
 
-    IO(Serial.println((const char *)data));
+    // New packet encoding
+    packet_t data;
+    build_data_packet(&data, NODE, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
+                      get_temperature(), get_humidity(), status);
+
+    IO(Serial.println(data_packet_to_string(&data, true)));
 
     unsigned long start_time_ms = millis();
     status = STATUS_OK; // clear status for the next sample interval
 
-    // This may block for up to CAD_TIMEOUT
-    if (!rf95.send(data, sizeof(data))) {
+    // This may block for up to CAD_TIMEOUT s
+    if (!rf95.send((const uint8_t *)&data, DATA_PACKET_SIZE)) {
         status |= RFM95_SEND_QUEUE_ERROR;
     }
     // Block until packet sent. The code could run the SD card and radio in parallel,
@@ -462,7 +490,7 @@ void loop() {
     }
 #endif // EXPECT_REPLY
 
-    log_data(get_log_filename(), (const char *)data);
+    log_data(get_log_filename(), data_packet_to_string(&data));
 
     digitalWrite(STATUS_LED, LOW);
 
@@ -494,9 +522,6 @@ void loop() {
         // the radio blocks for a while, but in some cases it might be needed.
         yield(250);
     } else {
-        // If USE_STANDBY is HIGH, ensure the USB is working so code upload is possible
-        // NB: This call to attach() borks DEBUG Serial output, at least with platformio.
-        USBDevice.attach();
         unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);
         yield(max(FAST_TX_INTERVAL_MS - elapsed_time_ms, 0)); // wait here for upto TX_INTERVAL seconds
     }
