@@ -59,6 +59,7 @@ const char *file_name = "Sensor_data.csv";
     @brief RF95 off the SPI bus to enable SD card access
 */
 void yield_spi_to_sd() {
+    digitalWrite(SD_CS, LOW);
     digitalWrite(RFM95_CS, HIGH);
 }
 
@@ -67,6 +68,7 @@ void yield_spi_to_sd() {
 */
 void yield_spi_to_rf95() {
     digitalWrite(SD_CS, HIGH);
+    digitalWrite(RFM95_CS, LOW);
 }
 
 /**
