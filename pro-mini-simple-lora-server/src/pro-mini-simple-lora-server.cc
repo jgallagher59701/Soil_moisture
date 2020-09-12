@@ -48,7 +48,8 @@ const char *file_name = "Sensor_data.csv";
 
 #if DEBUG
 #define IO(x) \
-    do {      \
+    do        \
+    {         \
         x;    \
     } while (0)
 #else
@@ -58,7 +59,8 @@ const char *file_name = "Sensor_data.csv";
 /**
     @brief RF95 off the SPI bus to enable SD card access
 */
-void yield_spi_to_sd() {
+void yield_spi_to_sd()
+{
     digitalWrite(SD_CS, LOW);
     digitalWrite(RFM95_CS, HIGH);
 }
@@ -66,7 +68,8 @@ void yield_spi_to_sd() {
 /**
     @brief RF95 off the SPI bus to enable SD card access
 */
-void yield_spi_to_rf95() {
+void yield_spi_to_rf95()
+{
     digitalWrite(SD_CS, HIGH);
     digitalWrite(RFM95_CS, LOW);
 }
@@ -76,10 +79,12 @@ void yield_spi_to_rf95() {
    @param file_name open/create this file, append if it exists
    @note Claim the SPI bus
 */
-void write_header(const char *file_name) {
+void write_header(const char *file_name)
+{
     yield_spi_to_sd();
 
-    if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
+    {
         IO(Serial.println(F("Couldn't write file header")));
 #if 0
         error_blink(STATUS_LED, SD_WRITE_HEADER_FAIL);
@@ -98,10 +103,12 @@ void write_header(const char *file_name) {
    @param data write this char string
    @note Claim the SPI bus (calls yield_spi_to_sd()().
 */
-void log_data(const char *file_name, const char *data) {
+void log_data(const char *file_name, const char *data)
+{
     yield_spi_to_sd();
 
-    if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
+    {
         file.println(data);
         file.close();
     }
@@ -112,7 +119,8 @@ void log_data(const char *file_name, const char *data) {
 #endif
 }
 
-void setup() {
+void setup()
+{
     pinMode(led, OUTPUT);
     pinMode(RFM95_RST, OUTPUT);
     pinMode(SD_CS, OUTPUT);
@@ -130,7 +138,8 @@ void setup() {
 
     // Initialize at the highest speed supported by the board that is
     // not over 50 MHz. Try a lower speed if SPI errors occur.
-    if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
+    if (!sd.begin(SD_CS, SD_SCK_MHZ(50)))
+    {
         IO(Serial.println(F("Couldn't init the SD Card")));
 #if 0
         error_blink(STATUS_LED, SD_BEGIN_FAIL);
@@ -150,7 +159,8 @@ void setup() {
     digitalWrite(RFM95_RST, HIGH);
     delay(20);
 
-    if (!rf95.init()) {
+    if (!rf95.init())
+    {
         Serial.println(F("init failed"));
         while (true)
             ;
@@ -180,18 +190,16 @@ void setup() {
 #endif
 }
 
-void loop() {
+void loop()
+{
     yield_spi_to_rf95();
 
-    if (rf95.available()) {
-#if 0
-        // Should be a message for us now   
-        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-#else
+    if (rf95.available())
+    {
         packet_t buf;
-#endif
         uint8_t len = sizeof(buf);
-        if (rf95.recv((uint8_t *)&buf, &len)) {
+        if (rf95.recv((uint8_t *)&buf, &len))
+        {
             digitalWrite(led, HIGH);
 
             // Print received packet
@@ -223,7 +231,9 @@ void loop() {
 #endif
 
             digitalWrite(led, LOW);
-        } else {
+        }
+        else
+        {
             Serial.println(F("recv failed"));
         }
     }
