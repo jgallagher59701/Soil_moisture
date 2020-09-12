@@ -53,7 +53,7 @@
 
 // Channel 0 is 902.3, others are + 200KHz for BW = 125 KHz. There are 64 channels.
 // 915.0 MHz is the no-channel nominal freq
-#define FREQ 915.0
+#define FREQ 902.3
 #define BANDWIDTH 125000
 #define SPREADING_FACTOR 7 // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
