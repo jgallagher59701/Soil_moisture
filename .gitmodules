@@ -7,3 +7,6 @@
 [submodule "rs-simple-lora-client/lib/soil_sensor_common"]
 	path = rs-simple-lora-client/lib/soil_sensor_common
 	url = https://github.com/jgallagher59701/soil_sensor_common
+[submodule "pro-mini-simple-lora-server/lib/soil_sensor_common"]
+	path = pro-mini-simple-lora-server/lib/soil_sensor_common
+	url = https://github.com/jgallagher59701/soil_sensor_common
