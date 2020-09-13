@@ -216,7 +216,7 @@ void loop()
 
             yield_spi_to_sd();
 
-            log_data(file_name, data_packet_to_string(&buf));
+            log_data(file_name, data_packet_to_string(&buf, false));
 
 #if REPLY
             // Send a reply
