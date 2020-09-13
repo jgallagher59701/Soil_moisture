@@ -18,6 +18,9 @@
 #include <RH_RF95.h>
 #include <SPI.h>
 #include <SdFat.h>
+#if 0
+#include <LiquidCrystal.h>
+#endif
 
 #include "data_packet.h"
 
@@ -40,6 +43,10 @@ SdFat sd;    // File system object.
 SdFile file; // Log file.
 
 const char *file_name = "Sensor_data.csv";
+
+#if 0
+LiquidCrystal lcd(7, 8, 9, A0, A1, A2);
+#endif
 
 #define REPLY 0
 
@@ -151,7 +158,7 @@ void setup()
 
     yield_spi_to_rf95();
 
-    Serial.println(F("Start receiveer"));
+    Serial.println(F("Start receiver"));
 
     // LORA manual reset
     digitalWrite(RFM95_RST, LOW);
@@ -188,6 +195,7 @@ void setup()
     DateTime(F(__DATE__), F(__TIME__))
     DateTime(2014, 1, 21, 3, 0, 0)
 #endif
+
 }
 
 void loop()
@@ -205,22 +213,28 @@ void loop()
             // Print received packet
             Serial.print(F("request: "));
             Serial.print(data_packet_to_string(&buf, /* pretty */ true));
-            Serial.print(", RSSI ");
+            Serial.print(F(", RSSI "));
             Serial.print(rf95.lastRssi(), DEC);
-            Serial.print(" dBm, SNR ");
+            Serial.print(F(" dBm, SNR "));
             Serial.print(rf95.lastSNR(), DEC);
-            Serial.print(" dB, good/bad packets: ");
+            Serial.print(F(" dB, good/bad packets: "));
             Serial.print(rf95.rxGood(), DEC);
-            Serial.print("/");
+            Serial.print(F("/"));
             Serial.println(rf95.rxBad(), DEC);
-
+#if 0
             yield_spi_to_sd();
-
-            log_data(file_name, data_packet_to_string(&buf, false));
-
+#endif
+            const char *pretty_buf = data_packet_to_string(&buf, false);
+            
+            // log reading to the SD card
+            log_data(file_name, pretty_buf);
+#if 0
+            // Update display
+            lcd.print(pretty_buf);
+#endif
 #if REPLY
-            // Send a reply
-            uint8_t data[] = "And hello back to you";
+                // Send a reply
+                uint8_t data[] = "And hello back to you";
             unsigned long start = millis();
             rf95.send(data, sizeof(data));
             rf95.waitPacketSent();
