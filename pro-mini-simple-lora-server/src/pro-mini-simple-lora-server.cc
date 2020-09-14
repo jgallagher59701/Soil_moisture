@@ -18,6 +18,9 @@
 #include <RH_RF95.h>
 #include <SPI.h>
 #include <SdFat.h>
+#if 0
+#include <LiquidCrystal.h>
+#endif
 
 #include "data_packet.h"
 
@@ -41,6 +44,10 @@ SdFile file; // Log file.
 
 const char *file_name = "Sensor_data.csv";
 
+#if 0
+LiquidCrystal lcd(7, 8, 9, A0, A1, A2);
+#endif
+
 #define REPLY 0
 
 // Tx should not use the Serial interface except for debugging
@@ -48,7 +55,8 @@ const char *file_name = "Sensor_data.csv";
 
 #if DEBUG
 #define IO(x) \
-    do {      \
+    do        \
+    {         \
         x;    \
     } while (0)
 #else
@@ -58,15 +66,19 @@ const char *file_name = "Sensor_data.csv";
 /**
     @brief RF95 off the SPI bus to enable SD card access
 */
-void yield_spi_to_sd() {
+void yield_spi_to_sd()
+{
+    digitalWrite(SD_CS, LOW);
     digitalWrite(RFM95_CS, HIGH);
 }
 
 /**
     @brief RF95 off the SPI bus to enable SD card access
 */
-void yield_spi_to_rf95() {
+void yield_spi_to_rf95()
+{
     digitalWrite(SD_CS, HIGH);
+    digitalWrite(RFM95_CS, LOW);
 }
 
 /**
@@ -74,10 +86,12 @@ void yield_spi_to_rf95() {
    @param file_name open/create this file, append if it exists
    @note Claim the SPI bus
 */
-void write_header(const char *file_name) {
+void write_header(const char *file_name)
+{
     yield_spi_to_sd();
 
-    if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
+    {
         IO(Serial.println(F("Couldn't write file header")));
 #if 0
         error_blink(STATUS_LED, SD_WRITE_HEADER_FAIL);
@@ -96,10 +110,12 @@ void write_header(const char *file_name) {
    @param data write this char string
    @note Claim the SPI bus (calls yield_spi_to_sd()().
 */
-void log_data(const char *file_name, const char *data) {
+void log_data(const char *file_name, const char *data)
+{
     yield_spi_to_sd();
 
-    if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
+    {
         file.println(data);
         file.close();
     }
@@ -110,7 +126,8 @@ void log_data(const char *file_name, const char *data) {
 #endif
 }
 
-void setup() {
+void setup()
+{
     pinMode(led, OUTPUT);
     pinMode(RFM95_RST, OUTPUT);
     pinMode(SD_CS, OUTPUT);
@@ -128,7 +145,8 @@ void setup() {
 
     // Initialize at the highest speed supported by the board that is
     // not over 50 MHz. Try a lower speed if SPI errors occur.
-    if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
+    if (!sd.begin(SD_CS, SD_SCK_MHZ(50)))
+    {
         IO(Serial.println(F("Couldn't init the SD Card")));
 #if 0
         error_blink(STATUS_LED, SD_BEGIN_FAIL);
@@ -140,7 +158,7 @@ void setup() {
 
     yield_spi_to_rf95();
 
-    Serial.println(F("Start receiveer"));
+    Serial.println(F("Start receiver"));
 
     // LORA manual reset
     digitalWrite(RFM95_RST, LOW);
@@ -148,7 +166,8 @@ void setup() {
     digitalWrite(RFM95_RST, HIGH);
     delay(20);
 
-    if (!rf95.init()) {
+    if (!rf95.init())
+    {
         Serial.println(F("init failed"));
         while (true)
             ;
@@ -176,41 +195,46 @@ void setup() {
     DateTime(F(__DATE__), F(__TIME__))
     DateTime(2014, 1, 21, 3, 0, 0)
 #endif
+
 }
 
-void loop() {
+void loop()
+{
     yield_spi_to_rf95();
 
-    if (rf95.available()) {
-#if 0
-        // Should be a message for us now   
-        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-#else
+    if (rf95.available())
+    {
         packet_t buf;
-#endif
         uint8_t len = sizeof(buf);
-        if (rf95.recv((uint8_t *)&buf, &len)) {
+        if (rf95.recv((uint8_t *)&buf, &len))
+        {
             digitalWrite(led, HIGH);
 
             // Print received packet
             Serial.print(F("request: "));
             Serial.print(data_packet_to_string(&buf, /* pretty */ true));
-            Serial.print(", RSSI ");
+            Serial.print(F(", RSSI "));
             Serial.print(rf95.lastRssi(), DEC);
-            Serial.print(" dBm, SNR ");
+            Serial.print(F(" dBm, SNR "));
             Serial.print(rf95.lastSNR(), DEC);
-            Serial.print(" dB, good/bad packets: ");
+            Serial.print(F(" dB, good/bad packets: "));
             Serial.print(rf95.rxGood(), DEC);
-            Serial.print("/");
+            Serial.print(F("/"));
             Serial.println(rf95.rxBad(), DEC);
-
+#if 0
             yield_spi_to_sd();
-
-            log_data(file_name, data_packet_to_string(&buf));
-
+#endif
+            const char *pretty_buf = data_packet_to_string(&buf, false);
+            
+            // log reading to the SD card
+            log_data(file_name, pretty_buf);
+#if 0
+            // Update display
+            lcd.print(pretty_buf);
+#endif
 #if REPLY
-            // Send a reply
-            uint8_t data[] = "And hello back to you";
+                // Send a reply
+                uint8_t data[] = "And hello back to you";
             unsigned long start = millis();
             rf95.send(data, sizeof(data));
             rf95.waitPacketSent();
@@ -221,7 +245,9 @@ void loop() {
 #endif
 
             digitalWrite(led, LOW);
-        } else {
+        }
+        else
+        {
             Serial.println(F("recv failed"));
         }
     }
