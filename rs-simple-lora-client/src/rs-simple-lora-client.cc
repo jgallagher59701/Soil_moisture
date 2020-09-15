@@ -490,7 +490,7 @@ void loop() {
     }
 #endif // EXPECT_REPLY
 
-    log_data(get_log_filename(), data_packet_to_string(&data));
+    log_data(get_log_filename(), data_packet_to_string(&data, false));
 
     digitalWrite(STATUS_LED, LOW);
 
