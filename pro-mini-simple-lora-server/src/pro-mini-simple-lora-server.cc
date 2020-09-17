@@ -131,10 +131,10 @@ void setup()
     pinMode(led, OUTPUT);
     pinMode(RFM95_RST, OUTPUT);
     pinMode(SD_CS, OUTPUT);
-
+#if 0
     while (!Serial)
         ;
-
+#endif
     Serial.begin(BAUDRATE);
     Serial.println(F("boot"));
 
@@ -179,7 +179,7 @@ void setup()
     rf95.setTxPower(13);
 
     // Setup Spreading Factor (6 ~ 12)
-    rf95.setSpreadingFactor(12);
+    rf95.setSpreadingFactor(10);
 
     // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
     rf95.setSignalBandwidth(125000);

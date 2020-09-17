@@ -55,7 +55,7 @@
 // 915.0 MHz is the no-channel nominal freq
 #define FREQ 902.3
 #define BANDWIDTH 125000
-#define SPREADING_FACTOR 12 // sf = 6 - 12 --> 2^(sf)
+#define SPREADING_FACTOR 10 // sf = 6 - 12 --> 2^(sf)
 #define CODING_RATE 5
 
 #define NODE 1
