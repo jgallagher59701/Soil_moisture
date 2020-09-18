@@ -205,10 +205,14 @@ void loop()
     if (rf95.available())
     {
         packet_t buf;
-        uint8_t len = sizeof(buf);
-        if (rf95.recv((uint8_t *)&buf, &len))
-        {
+        uint8_t len = sizeof(packet_t);
+        if (rf95.recv((uint8_t *)&buf, &len)) {
             digitalWrite(led, HIGH);
+
+            Serial.print(F("Received length: "));
+            Serial.println(len, DEC);
+
+            if (len == sizeof(packet_t)) {
 
             // Print received packet
             Serial.print(F("request: "));
@@ -221,17 +225,11 @@ void loop()
             Serial.print(rf95.rxGood(), DEC);
             Serial.print(F("/"));
             Serial.println(rf95.rxBad(), DEC);
-#if 0
-            yield_spi_to_sd();
-#endif
+
             const char *pretty_buf = data_packet_to_string(&buf, false);
             
             // log reading to the SD card
             log_data(file_name, pretty_buf);
-#if 0
-            // Update display
-            lcd.print(pretty_buf);
-#endif
 #if REPLY
                 // Send a reply
                 uint8_t data[] = "And hello back to you";
@@ -243,7 +241,17 @@ void loop()
             IO(Serial.print(end - start, DEC));
             IO(Serial.println(F("ms")));
 #endif
-
+            }
+            else if (len == 3) { // The  "OK" message after the SD card write
+                Serial.print(F("Got: "));
+                Serial.println((char*)&buf);
+                log_data(file_name, (char*)&buf);
+            }
+            else {
+                Serial.println(F("Bad packet"));
+                log_data(file_name, "Bad packet");
+            }
+            
             digitalWrite(led, LOW);
         }
         else

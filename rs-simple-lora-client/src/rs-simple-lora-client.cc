@@ -28,6 +28,7 @@
 #include "blink.h"
 #include "data_packet.h"
 
+#define WRITE_DEBUG 1    // Debug the SD card possible fail
 #define DEBUG 0          // Requires USB
 #define Serial SerialUSB // Needed for RS. jhrg 7/26/20
 
@@ -64,8 +65,9 @@
 
 #define WAIT_AVAILABLE 3000      // ms to wait for a response from server
 #define CAD_TIMEOUT 3000         // ms timeout for CAD wait
+#define SD_CARD_TIME_BUFFER 1000 // ms to wait for the SD card once the file is closed
 #define FAST_TX_INTERVAL_MS 5000 // ms to wait before next transmission when in non-sleeping mode
-#define STANDBY_INTERVAL_S 20    // seconds to wait before next transmission when sleeping
+#define STANDBY_INTERVAL_S 10    // seconds to wait before next transmission when sleeping
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
@@ -437,13 +439,6 @@ void loop() {
 
     yield_spi_to_rf95();
 
-#if 0
-    uint8_t data[DATA_PACKET_SIZE];
-    snprintf((char *)data, sizeof(data),
-             "Hello, node %d, message %ld, msg time %ld, tx time %ld ms, battery %d v, temp %d C, humidity %d %%, status 0x%02x",
-             NODE, message, rtc.getEpoch(), last_tx_time, get_bat_v(), get_temperature(), get_humidity(), status);
-#endif
-
     // New packet encoding
     packet_t data;
     build_data_packet(&data, NODE, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
@@ -461,7 +456,7 @@ void loop() {
     // Block until packet sent. The code could run the SD card and radio in parallel,
     // but the potential current draw could strain the batteries. Wait for the radio
     // to finish, then write to the SD card.
-    if (!rf95.waitPacketSent()) {
+    if (!rf95.waitPacketSent(WAIT_AVAILABLE)) {
         status |= RFM95_SEND_ERROR;
     }
 
@@ -492,7 +487,24 @@ void loop() {
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
 
+    // wait 1000ms for the SD card.
+    yield(1000);
+
     digitalWrite(STATUS_LED, LOW);
+
+#if WRITE_DEBUG
+    // This may block for up to CAD_TIMEOUT s
+    const char ok[3] = "OK";
+    if (!rf95.send((const uint8_t *)ok, sizeof(ok))) {
+        status |= RFM95_SEND_QUEUE_ERROR;
+    }
+    // Block until packet sent. The code could run the SD card and radio in parallel,
+    // but the potential current draw could strain the batteries. Wait for the radio
+    // to finish, then write to the SD card.
+    if (!rf95.waitPacketSent(WAIT_AVAILABLE)) {
+        status |= RFM95_SEND_ERROR;
+    }
+#endif
 
     // Leaving this in guards against bricking the RS when sleeping with the USB detached.
     if (digitalRead(USE_STANDBY) == LOW) {
@@ -503,7 +515,11 @@ void loop() {
         // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
         SPI.end();
 
+        // TODO Fix this so that the times are on the hour.
         uint8_t offset = max(STANDBY_INTERVAL_S - max((millis() - start_time_ms) / 1000, 0), 0);
+        // remove 1 to account for a rounding error
+        if (offset > 0)
+            offset -= 1; 
         IO(Serial.print(F("Alarm offset: ")));
         IO(Serial.println(offset));
         rtc.setAlarmEpoch(rtc.getEpoch() + offset);
@@ -518,9 +534,8 @@ void loop() {
         if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
             status |= SD_CARD_WAKEUP_ERROR;
         }
-        // wait 250ms for the SD card. Maybe this is not needed in most iterations because
-        // the radio blocks for a while, but in some cases it might be needed.
-        yield(250);
+        // wait 250ms for the SD card.
+        // yield(250); Nope, move up to before sleep and make 1s. 9/17/20
     } else {
         unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);
         yield(max(FAST_TX_INTERVAL_MS - elapsed_time_ms, 0)); // wait here for upto TX_INTERVAL seconds
