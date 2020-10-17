@@ -498,9 +498,6 @@ void loop() {
     if (!rf95.send((const uint8_t *)ok, sizeof(ok))) {
         status |= RFM95_SEND_QUEUE_ERROR;
     }
-    // Block until packet sent. The code could run the SD card and radio in parallel,
-    // but the potential current draw could strain the batteries. Wait for the radio
-    // to finish, then write to the SD card.
     if (!rf95.waitPacketSent(WAIT_AVAILABLE)) {
         status |= RFM95_SEND_ERROR;
     }
@@ -519,7 +516,7 @@ void loop() {
         uint8_t offset = max(STANDBY_INTERVAL_S - max((millis() - start_time_ms) / 1000, 0), 0);
         // remove 1 to account for a rounding error
         if (offset > 0)
-            offset -= 1; 
+            offset -= 1;
         IO(Serial.print(F("Alarm offset: ")));
         IO(Serial.println(offset));
         rtc.setAlarmEpoch(rtc.getEpoch() + offset);

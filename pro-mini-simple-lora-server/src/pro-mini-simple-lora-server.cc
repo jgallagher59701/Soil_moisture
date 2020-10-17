@@ -36,7 +36,7 @@
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 const int led = 9;
-const float frequency = 902.3; // was 915.0;
+const float frequency = 915.0;//902.3; // was 
 
 // Singletons for the SD card objects
 SdFat sd;    // File system object.
@@ -179,7 +179,7 @@ void setup()
     rf95.setTxPower(13);
 
     // Setup Spreading Factor (6 ~ 12)
-    rf95.setSpreadingFactor(10);
+    rf95.setSpreadingFactor(7);
 
     // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
     rf95.setSignalBandwidth(125000);
