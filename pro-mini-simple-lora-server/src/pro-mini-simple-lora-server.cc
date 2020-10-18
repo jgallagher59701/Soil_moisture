@@ -1,4 +1,6 @@
 /*
+  Main node for teh HAST project's leaf node sensor. Based on:
+  
   LoRa Simple Yun Server :
   
   Example sketch showing how to create a simple messageing server, 
@@ -35,14 +37,16 @@
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-const int led = 9;
-const float frequency = 915.0;//902.3; // was 
+#define LED 9
+#define FREQUENCY 915.0 //902.3
 
 // Singletons for the SD card objects
 SdFat sd;    // File system object.
 SdFile file; // Log file.
 
-const char *file_name = "Sensor_data.csv";
+#define FILE_NAME "Sensor_data.csv"
+
+bool sd_card_status = false;    // true == SD card init'd
 
 #if 0
 LiquidCrystal lcd(7, 8, 9, A0, A1, A2);
@@ -51,7 +55,7 @@ LiquidCrystal lcd(7, 8, 9, A0, A1, A2);
 #define REPLY 0
 
 // Tx should not use the Serial interface except for debugging
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG
 #define IO(x) \
@@ -88,14 +92,14 @@ void yield_spi_to_rf95()
 */
 void write_header(const char *file_name)
 {
+    if (!sd_card_status)
+        return;
+
     yield_spi_to_sd();
 
     if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
     {
         IO(Serial.println(F("Couldn't write file header")));
-#if 0
-        error_blink(STATUS_LED, SD_WRITE_HEADER_FAIL);
-#endif
     }
 
     file.println(F("# Start Log"));
@@ -112,6 +116,9 @@ void write_header(const char *file_name)
 */
 void log_data(const char *file_name, const char *data)
 {
+    if (!sd_card_status)
+        return;
+
     yield_spi_to_sd();
 
     if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
@@ -119,46 +126,43 @@ void log_data(const char *file_name, const char *data)
         file.println(data);
         file.close();
     }
-#if 0
-    else {
-        status |= SD_FILE_ENTRY_WRITE_ERROR;
+    else 
+    {
+        Serial.print(F("Failed to log data."));
     }
-#endif
 }
 
 void setup()
 {
-    pinMode(led, OUTPUT);
+    pinMode(LED, OUTPUT);
     pinMode(RFM95_RST, OUTPUT);
     pinMode(SD_CS, OUTPUT);
-#if 0
-    while (!Serial)
-        ;
-#endif
+
     Serial.begin(BAUDRATE);
     Serial.println(F("boot"));
 
     // Initialize the SD card
     yield_spi_to_sd();
 
-    IO(Serial.print(F("Initializing SD card...")));
+    Serial.print(F("Initializing SD card..."));
 
     // Initialize at the highest speed supported by the board that is
     // not over 50 MHz. Try a lower speed if SPI errors occur.
-    if (!sd.begin(SD_CS, SD_SCK_MHZ(50)))
+    if (sd.begin(SD_CS, SD_SCK_MHZ(50)))
     {
-        IO(Serial.println(F("Couldn't init the SD Card")));
-#if 0
-        error_blink(STATUS_LED, SD_BEGIN_FAIL);
-#endif
+        sd_card_status = true;
+    }
+    else {
+        Serial.println(F("Couldn't init the SD Card"));
+        sd_card_status = false;
     }
 
     // Write data header. This will call error_blink() if it fails.
-    write_header(file_name);
+    write_header(FILE_NAME);
 
     yield_spi_to_rf95();
 
-    Serial.println(F("Start receiver"));
+    Serial.println(F("Starting receiver"));
 
     // LORA manual reset
     digitalWrite(RFM95_RST, LOW);
@@ -168,13 +172,11 @@ void setup()
 
     if (!rf95.init())
     {
-        Serial.println(F("init failed"));
-        while (true)
-            ;
+        Serial.println(F("Receiver initialization failed"));
     }
 
-    // Setup ISM frequency
-    rf95.setFrequency(frequency);
+    // Setup ISM FREQUENCY
+    rf95.setFrequency(FREQUENCY);
     // Setup Power,dBm
     rf95.setTxPower(13);
 
@@ -188,14 +190,9 @@ void setup()
     rf95.setCodingRate4(5);
 
     Serial.print(F("Listening on frequency: "));
-    Serial.println(frequency);
+    Serial.println(FREQUENCY);
 
-#if 0
-    // Set date and time using compiler constants.
-    DateTime(F(__DATE__), F(__TIME__))
-    DateTime(2014, 1, 21, 3, 0, 0)
-#endif
-
+    Serial.flush();
 }
 
 void loop()
@@ -204,55 +201,64 @@ void loop()
 
     if (rf95.available())
     {
+#if 0
         packet_t buf;
         uint8_t len = sizeof(packet_t);
-        if (rf95.recv((uint8_t *)&buf, &len)) {
-            digitalWrite(led, HIGH);
+#else
+        uint8_t buf[128];
+        uint8_t len = 128;
+#endif
+        if (rf95.recv((uint8_t*)&buf[0], &len)) {
+            digitalWrite(LED, HIGH);
 
             Serial.print(F("Received length: "));
             Serial.println(len, DEC);
+            Serial.flush();
 
             if (len == sizeof(packet_t)) {
 
-            // Print received packet
-            Serial.print(F("request: "));
-            Serial.print(data_packet_to_string(&buf, /* pretty */ true));
-            Serial.print(F(", RSSI "));
-            Serial.print(rf95.lastRssi(), DEC);
-            Serial.print(F(" dBm, SNR "));
-            Serial.print(rf95.lastSNR(), DEC);
-            Serial.print(F(" dB, good/bad packets: "));
-            Serial.print(rf95.rxGood(), DEC);
-            Serial.print(F("/"));
-            Serial.println(rf95.rxBad(), DEC);
+                // Print received packet
+                Serial.print(F("Data: "));
+                Serial.print(data_packet_to_string((packet_t *)&buf, /* pretty */ true));
+                Serial.print(F(", RSSI "));
+                Serial.print(rf95.lastRssi(), DEC);
+                Serial.print(F(" dBm, SNR "));
+                Serial.print(rf95.lastSNR(), DEC);
+                Serial.print(F(" dB, good/bad packets: "));
+                Serial.print(rf95.rxGood(), DEC);
+                Serial.print(F("/"));
+                Serial.println(rf95.rxBad(), DEC);
 
-            const char *pretty_buf = data_packet_to_string(&buf, false);
-            
-            // log reading to the SD card
-            log_data(file_name, pretty_buf);
+                // log reading to the SD card
+                const char *pretty_buf = data_packet_to_string((packet_t *)&buf, false);
+                log_data(FILE_NAME, pretty_buf);
 #if REPLY
                 // Send a reply
                 uint8_t data[] = "And hello back to you";
-            unsigned long start = millis();
-            rf95.send(data, sizeof(data));
-            rf95.waitPacketSent();
-            unsigned long end = millis();
-            IO(Serial.print(F("...sent a reply, ")));
-            IO(Serial.print(end - start, DEC));
-            IO(Serial.println(F("ms")));
+                unsigned long start = millis();
+                rf95.send(data, sizeof(data));
+                rf95.waitPacketSent();
+                unsigned long end = millis();
+                IO(Serial.print(F("...sent a reply, ")));
+                IO(Serial.print(end - start, DEC));
+                IO(Serial.println(F("ms")));
 #endif
             }
+            // TODO this
             else if (len == 3) { // The  "OK" message after the SD card write
                 Serial.print(F("Got: "));
                 Serial.println((char*)&buf);
-                log_data(file_name, (char*)&buf);
+                log_data(FILE_NAME, (char*)&buf);
             }
             else {
-                Serial.println(F("Bad packet"));
-                log_data(file_name, "Bad packet");
+                Serial.print(F("Got: "));
+                // Add a null to the end of the packet and print as text
+                //buf[len] = 0;
+                Serial.println((char*)&buf);
+                log_data(FILE_NAME, (char*)&buf);
             }
             
-            digitalWrite(led, LOW);
+            digitalWrite(LED, LOW);
         }
         else
         {

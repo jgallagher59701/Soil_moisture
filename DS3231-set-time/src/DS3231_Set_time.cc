@@ -8,15 +8,15 @@
 
 #include <Arduino.h>
 
-#include <Wire.h>
 #include <RTClibExtended.h>
+#include <Wire.h>
 
-// pin for the LED to blink indicating various clock status 'codes.'
-#define STATUS 13
+// Set using platformio.ini 
+// #define BUILD_ESP8266_NODEMCU
+// #define BUILD_PRO_MINI
 
-// Blink three times to indicate clock status
-#define CLOCK_STATUS 3
-#define ERROR_OCCURRED 0
+#define GPIO04 4
+#define GPIO05 5
 
 // Number opf seconds it takes to compile, upload and run this program
 // at 9600 baud. Used to adjust the clock
@@ -24,10 +24,18 @@
 
 // If ADJUST_TIME is 1, set the clock using the values from the time the
 // program was compiled. If 0, just read the DS3231 chip's time.
-#define ADJUST_TIME 0
+// 
+// Set using platformio.ini
+// #define ADJUST_TIME 
+
+#if BUILD_ESP8266_NODEMCU
+#define BAUD_RATE 115200
+#else
+#define BAUD_RATE 9600
+#endif
 
 // Real time clock
-RTC_DS3231 RTC;      // we are using the DS3231 RTC
+RTC_DS3231 RTC; // we are using the DS3231 RTC
 
 // It would be better to use the blink.cpp/h code in src.
 
@@ -60,19 +68,24 @@ char *iso8601_date_time(DateTime t) {
     date_time_str[0] = '\0';
     strncat(date_time_str, itoa(t.year(), val, 10), sizeof(date_time_str) - 1);
     strncat(date_time_str, "-", sizeof(date_time_str) - 1);
-    if (t.month() < 10) strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    if (t.month() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
     strncat(date_time_str, itoa(t.month(), val, 10), sizeof(date_time_str) - 1);
     strncat(date_time_str, "-", sizeof(date_time_str) - 1);
-    if (t.day() < 10) strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    if (t.day() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
     strncat(date_time_str, itoa(t.day(), val, 10), sizeof(date_time_str) - 1);
     strncat(date_time_str, "T", sizeof(date_time_str) - 1);
-    if (t.hour() < 10) strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    if (t.hour() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
     strncat(date_time_str, itoa(t.hour(), val, 10), sizeof(date_time_str) - 1);
     strncat(date_time_str, ":", sizeof(date_time_str) - 1);
-    if (t.minute() < 10) strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    if (t.minute() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
     strncat(date_time_str, itoa(t.minute(), val, 10), sizeof(date_time_str) - 1);
     strncat(date_time_str, ":", sizeof(date_time_str) - 1);
-    if (t.second() < 10) strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    if (t.second() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
     strncat(date_time_str, itoa(t.second(), val, 10), sizeof(date_time_str) - 1);
 
     return date_time_str;
@@ -80,37 +93,45 @@ char *iso8601_date_time(DateTime t) {
 
 void setup() {
     // The DS3231 requires the Wire library
+#if BUILD_ESP8266_NODEMCU
+    //begin(int sda, int scl, uint8_t address)
+    // On the NodeMCU, GPIOR04 is D2, GPIOR05 is D1
+    int sda = GPIO04;
+    int scl = GPIO05;
+    Wire.begin(sda, scl);
+#else
     Wire.begin();
-
-    if (!RTC.begin()) {
-        blink_times(STATUS, CLOCK_STATUS, ERROR_OCCURRED);
-    }
-
+#endif
+ 
 #if ADJUST_TIME
+    // Run this here, before serial configuration to shorten the delay
+    // between the compiled-in times and the set operation.
     RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
     DateTime adjusted_time(RTC.now() + TIME_OFFSET);
     RTC.adjust(adjusted_time);
-#endif\
+#endif
     // This line sets the RTC with an explicit date & time, for example to set
     // January 21, 2014 at 3am you would call:
-    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));  // Start the serial port
+    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));  // Start the serial port       
+    Serial.begin(BAUD_RATE);
 
-    while (!Serial);
-    Serial.begin(9600);
-
+#if ADJUST_TIME
     Serial.print(F("Set the time to: "));
     Serial.print(F(__DATE__));
     Serial.print(F(", "));
     Serial.println(F(__TIME__));
+#endif
 
     Serial.print(F("Current time: "));
     Serial.println(iso8601_date_time(RTC.now()));
 }
 
-
 void loop() {
-    delay(5000);
+    long start = millis();
+    do {
+        yield();
+    } while (millis() - start < 5000);
 
     Serial.print(F("Current time: "));
     Serial.println(iso8601_date_time(RTC.now()));
