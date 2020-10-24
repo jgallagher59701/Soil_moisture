@@ -1,56 +1,68 @@
 /*
-  Main node for teh HAST project's leaf node sensor. Based on:
-  
-  LoRa Simple Yun Server :
-  
-  Example sketch showing how to create a simple messageing server, 
-  with the RH_RF95 class. RH_RF95 class does not provide for addressing or
-  reliability, so you should only use RH_RF95 if you do not need the higher
-  level messaging abilities.
-
-  It is designed to work with the other example LoRa Simple Client
-
-  User need to use the modified RadioHead library from:
-  https://github.com/dragino/RadioHead
-
-  modified 6/27/2020
+  Main node for the HAST project's leaf node sensor.
+  6/27/2020
   by jhrg
+
+  Modified to use the ESP8266 'NodeMCU' board since the AT328 does not
+  have enough memory for the SD card, LoRa dn DS3231 clock.
+  10/24/20
 */
+
+#include <Arduino.h>
 
 #include <RH_RF95.h>
 #include <SPI.h>
 #include <SdFat.h>
-#if 0
-#include <LiquidCrystal.h>
-#endif
+
+#include <RTClibExtended.h>
+#include <Wire.h>
 
 #include "data_packet.h"
 
-#define BAUDRATE 9600
+#define BUILD_ESP8266_NODEMCU 1
 
+#if BUILD_ESP8266_NODEMCU
+#define RFM95_RST D0 // GPIO 16
+#define RFM95_INT D2 // GPIO 4
+#define RFM95_CS D8  // GPIO 15
+#define BAUD_RATE 115200
+//#define LED LED_BUILTIN
+#elif BUILD_PRO_MINI
 #define RFM95_INT 3 // INT1
 #define RFM95_CS 5
 #define RFM95_RST 6
+#define BAUD_RATE 9600
+#else
+#error "Must define on of BUILD_PRO_MINI or BUILD_ESP8266_NODEMCU"
+#endif
+
+#define I2C_SDA D3 // GPIO 0
+#define I2C_SCL D1 // GPIO 5
 
 #define SD_CS 10
 
+#define SD 1
+#define LORA 1
+
+// Real time clock
+RTC_DS3231 RTC; // we are using the DS3231 RTC
+
+#if LORA
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
+#endif
 
-#define LED 9
 #define FREQUENCY 915.0 //902.3
 
+#if SD
 // Singletons for the SD card objects
 SdFat sd;    // File system object.
 SdFile file; // Log file.
+#endif
 
 #define FILE_NAME "Sensor_data.csv"
 
-bool sd_card_status = false;    // true == SD card init'd
-
-#if 0
-LiquidCrystal lcd(7, 8, 9, A0, A1, A2);
-#endif
+bool sd_card_status = false; // true == SD card init'd
 
 #define REPLY 0
 
@@ -59,19 +71,50 @@ LiquidCrystal lcd(7, 8, 9, A0, A1, A2);
 
 #if DEBUG
 #define IO(x) \
-    do        \
-    {         \
+    do {      \
         x;    \
     } while (0)
 #else
 #define IO(x)
 #endif
 
+// Given a DateTime instance, return a pointer to static string that holds
+// an ISO 8601 print representation of the object.
+
+char *iso8601_date_time(DateTime t) {
+    static char date_time_str[32];
+
+    char val[12];
+    date_time_str[0] = '\0';
+    strncat(date_time_str, itoa(t.year(), val, 10), sizeof(date_time_str) - 1);
+    strncat(date_time_str, "-", sizeof(date_time_str) - 1);
+    if (t.month() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    strncat(date_time_str, itoa(t.month(), val, 10), sizeof(date_time_str) - 1);
+    strncat(date_time_str, "-", sizeof(date_time_str) - 1);
+    if (t.day() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    strncat(date_time_str, itoa(t.day(), val, 10), sizeof(date_time_str) - 1);
+    strncat(date_time_str, "T", sizeof(date_time_str) - 1);
+    if (t.hour() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    strncat(date_time_str, itoa(t.hour(), val, 10), sizeof(date_time_str) - 1);
+    strncat(date_time_str, ":", sizeof(date_time_str) - 1);
+    if (t.minute() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    strncat(date_time_str, itoa(t.minute(), val, 10), sizeof(date_time_str) - 1);
+    strncat(date_time_str, ":", sizeof(date_time_str) - 1);
+    if (t.second() < 10)
+        strncat(date_time_str, "0", sizeof(date_time_str) - 1);
+    strncat(date_time_str, itoa(t.second(), val, 10), sizeof(date_time_str) - 1);
+
+    return date_time_str;
+}
+
 /**
     @brief RF95 off the SPI bus to enable SD card access
 */
-void yield_spi_to_sd()
-{
+void yield_spi_to_sd() {
     digitalWrite(SD_CS, LOW);
     digitalWrite(RFM95_CS, HIGH);
 }
@@ -79,8 +122,7 @@ void yield_spi_to_sd()
 /**
     @brief RF95 off the SPI bus to enable SD card access
 */
-void yield_spi_to_rf95()
-{
+void yield_spi_to_rf95() {
     digitalWrite(SD_CS, HIGH);
     digitalWrite(RFM95_CS, LOW);
 }
@@ -90,15 +132,13 @@ void yield_spi_to_rf95()
    @param file_name open/create this file, append if it exists
    @note Claim the SPI bus
 */
-void write_header(const char *file_name)
-{
+void write_header(const char *file_name) {
     if (!sd_card_status)
         return;
 
     yield_spi_to_sd();
 
-    if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
-    {
+    if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         IO(Serial.println(F("Couldn't write file header")));
     }
 
@@ -114,33 +154,63 @@ void write_header(const char *file_name)
    @param data write this char string
    @note Claim the SPI bus (calls yield_spi_to_sd()().
 */
-void log_data(const char *file_name, const char *data)
-{
+void log_data(const char *file_name, const char *data) {
     if (!sd_card_status)
         return;
 
     yield_spi_to_sd();
 
-    if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND))
-    {
+    if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         file.println(data);
         file.close();
-    }
-    else 
-    {
+    } else {
         Serial.print(F("Failed to log data."));
     }
 }
 
-void setup()
-{
-    pinMode(LED, OUTPUT);
+void status_on() {
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
+void status_off() {
+    digitalWrite(LED_BUILTIN, HIGH);
+}
+
+void yield(unsigned long duration_ms) {
+    unsigned long start = millis();
+    do {
+        yield();
+    } while (millis() - start < duration_ms);
+}
+
+void print_rfm95_info() {
+    Serial.print(F("RSSI "));
+    Serial.print(rf95.lastRssi(), DEC);
+    Serial.print(F(" dBm, SNR "));
+    Serial.print(rf95.lastSNR(), DEC);
+    Serial.print(F(" dB, good/bad packets: "));
+    Serial.print(rf95.rxGood(), DEC);
+    Serial.print(F("/"));
+    Serial.println(rf95.rxBad(), DEC);
+}
+
+void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
     pinMode(RFM95_RST, OUTPUT);
+    pinMode(RFM95_CS, OUTPUT); // TODO not need once RFM works
     pinMode(SD_CS, OUTPUT);
 
-    Serial.begin(BAUDRATE);
-    Serial.println(F("boot"));
+    digitalWrite(RFM95_RST, HIGH);
 
+    Serial.begin(BAUD_RATE);
+    Serial.println(F("boot"));
+    Serial.flush();
+
+    int sda = I2C_SDA;
+    int scl = I2C_SCL;
+    Wire.begin(sda, scl);
+
+#if SD
     // Initialize the SD card
     yield_spi_to_sd();
 
@@ -148,21 +218,23 @@ void setup()
 
     // Initialize at the highest speed supported by the board that is
     // not over 50 MHz. Try a lower speed if SPI errors occur.
-    if (sd.begin(SD_CS, SD_SCK_MHZ(50)))
-    {
+    if (sd.begin(SD_CS, SD_SCK_MHZ(50))) {
+        Serial.println(F(" OK"));
         sd_card_status = true;
-    }
-    else {
-        Serial.println(F("Couldn't init the SD Card"));
+    } else {
+        Serial.println(F(" Couldn't init the SD Card"));
         sd_card_status = false;
     }
 
+    Serial.flush();
+#endif
     // Write data header. This will call error_blink() if it fails.
     write_header(FILE_NAME);
 
+#if LORA
     yield_spi_to_rf95();
 
-    Serial.println(F("Starting receiver"));
+    Serial.print(F("Starting receiver..."));
 
     // LORA manual reset
     digitalWrite(RFM95_RST, LOW);
@@ -170,46 +242,50 @@ void setup()
     digitalWrite(RFM95_RST, HIGH);
     delay(20);
 
-    if (!rf95.init())
-    {
-        Serial.println(F("Receiver initialization failed"));
+    if (rf95.init()) {
+        Serial.println(F(" OK"));
+
+        // Setup ISM FREQUENCY
+        rf95.setFrequency(FREQUENCY);
+        // Setup Power,dBm
+        rf95.setTxPower(13);
+        // Setup Spreading Factor (6 ~ 12)
+        rf95.setSpreadingFactor(7);
+        // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
+        rf95.setSignalBandwidth(125000);
+        // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
+        rf95.setCodingRate4(5);
+
+        Serial.print(F("Listening on frequency: "));
+        Serial.println(FREQUENCY);
+    } else {
+        Serial.println(F(" receiver initialization failed"));
     }
+#endif
 
-    // Setup ISM FREQUENCY
-    rf95.setFrequency(FREQUENCY);
-    // Setup Power,dBm
-    rf95.setTxPower(13);
-
-    // Setup Spreading Factor (6 ~ 12)
-    rf95.setSpreadingFactor(7);
-
-    // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
-    rf95.setSignalBandwidth(125000);
-
-    // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
-    rf95.setCodingRate4(5);
-
-    Serial.print(F("Listening on frequency: "));
-    Serial.println(FREQUENCY);
+    Serial.print(F("Current time: "));
+    Serial.println(iso8601_date_time(RTC.now()));
 
     Serial.flush();
 }
 
-void loop()
-{
+void loop() {
     yield_spi_to_rf95();
+#if LORA
+    if (rf95.available()) {
+        status_on();
 
-    if (rf95.available())
-    {
+        Serial.print(F("Current time: "));
+        Serial.println(iso8601_date_time(RTC.now()));
+
 #if 0
         packet_t buf;
         uint8_t len = sizeof(packet_t);
 #else
-        uint8_t buf[128];
-        uint8_t len = 128;
+        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+        uint8_t len = sizeof(buf);
 #endif
-        if (rf95.recv((uint8_t*)&buf[0], &len)) {
-            digitalWrite(LED, HIGH);
+        if (rf95.recv(buf, &len)) {
 
             Serial.print(F("Received length: "));
             Serial.println(len, DEC);
@@ -220,6 +296,9 @@ void loop()
                 // Print received packet
                 Serial.print(F("Data: "));
                 Serial.print(data_packet_to_string((packet_t *)&buf, /* pretty */ true));
+
+                // TODO Use: print_rfm95_info()
+
                 Serial.print(F(", RSSI "));
                 Serial.print(rf95.lastRssi(), DEC);
                 Serial.print(F(" dBm, SNR "));
@@ -243,26 +322,23 @@ void loop()
                 IO(Serial.print(end - start, DEC));
                 IO(Serial.println(F("ms")));
 #endif
-            }
-            // TODO this
-            else if (len == 3) { // The  "OK" message after the SD card write
-                Serial.print(F("Got: "));
-                Serial.println((char*)&buf);
-                log_data(FILE_NAME, (char*)&buf);
-            }
-            else {
+            } else {
                 Serial.print(F("Got: "));
                 // Add a null to the end of the packet and print as text
                 //buf[len] = 0;
-                Serial.println((char*)&buf);
-                log_data(FILE_NAME, (char*)&buf);
+                Serial.println((char *)&buf);
+
+                Serial.print(F("RFM95 info: "));
+                print_rfm95_info();
+
+                log_data(FILE_NAME, (char *)&buf);
             }
-            
-            digitalWrite(LED, LOW);
-        }
-        else
-        {
+        } 
+        else {
             Serial.println(F("recv failed"));
         }
+
+        status_off();
     }
+#endif
 }

@@ -11,7 +11,7 @@
 #include <RTClibExtended.h>
 #include <Wire.h>
 
-// Set using platformio.ini 
+// Set using platformio.ini
 // #define BUILD_ESP8266_NODEMCU
 // #define BUILD_PRO_MINI
 
@@ -24,9 +24,9 @@
 
 // If ADJUST_TIME is 1, set the clock using the values from the time the
 // program was compiled. If 0, just read the DS3231 chip's time.
-// 
+//
 // Set using platformio.ini
-// #define ADJUST_TIME 
+// #define ADJUST_TIME
 
 #if BUILD_ESP8266_NODEMCU
 #define BAUD_RATE 115200
@@ -102,7 +102,7 @@ void setup() {
 #else
     Wire.begin();
 #endif
- 
+
 #if ADJUST_TIME
     // Run this here, before serial configuration to shorten the delay
     // between the compiled-in times and the set operation.
@@ -113,7 +113,7 @@ void setup() {
 #endif
     // This line sets the RTC with an explicit date & time, for example to set
     // January 21, 2014 at 3am you would call:
-    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));  // Start the serial port       
+    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));  // Start the serial port
     Serial.begin(BAUD_RATE);
 
 #if ADJUST_TIME
