@@ -52,7 +52,13 @@ RTC_DS3231 RTC; // we are using the DS3231 RTC
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 #endif
 
-#define FREQUENCY 915.0 //902.3
+// #define FREQUENCY 915.0 
+#define FREQUENCY 902.3 
+#define BANDWIDTH 125000 // Hz
+// #define SPREADING_FACTOR 7 
+#define SPREADING_FACTOR 10
+#define CODING_RATE 5
+#define SIGNAL_STRENTH 13 // dBm
 
 #if SD
 // Singletons for the SD card objects
@@ -228,7 +234,7 @@ void setup() {
 
     Serial.flush();
 #endif
-    // Write data header. This will call error_blink() if it fails.
+    // Write data header.
     write_header(FILE_NAME);
 
 #if LORA
@@ -248,13 +254,13 @@ void setup() {
         // Setup ISM FREQUENCY
         rf95.setFrequency(FREQUENCY);
         // Setup Power,dBm
-        rf95.setTxPower(13);
+        rf95.setTxPower(SIGNAL_STRENTH);
         // Setup Spreading Factor (6 ~ 12)
-        rf95.setSpreadingFactor(7);
+        rf95.setSpreadingFactor(SPREADING_FACTOR);
         // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
-        rf95.setSignalBandwidth(125000);
+        rf95.setSignalBandwidth(BANDWIDTH);
         // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
-        rf95.setCodingRate4(5);
+        rf95.setCodingRate4(CODING_RATE);
 
         Serial.print(F("Listening on frequency: "));
         Serial.println(FREQUENCY);
@@ -333,8 +339,7 @@ void loop() {
 
                 log_data(FILE_NAME, (char *)&buf);
             }
-        } 
-        else {
+        } else {
             Serial.println(F("recv failed"));
         }
 

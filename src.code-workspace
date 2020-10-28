@@ -1,0 +1,20 @@
+{
+    "folders": [
+		{
+			"path": "rs-simple-lora-client"
+		},
+		{
+			"name": "pro-mini-simple-lora-server",
+			"path": "pro-mini-simple-lora-server"
+		},
+		{
+			"name": "DS3231-set-time",
+			"path": "DS3231-set-time"
+		},
+		{
+			"name": "simple-web-interface-esp12e",
+			"path": "../simple-web-interface-esp12e"
+		}
+	],
+    "settings": {}
+}

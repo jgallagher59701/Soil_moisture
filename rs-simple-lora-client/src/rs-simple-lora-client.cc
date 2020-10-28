@@ -363,7 +363,7 @@ void setup() {
         error_blink(STATUS_LED, SHT31_BEGIN_FAIL);
     }
 
-    // The SHT30-D temp/humidity sensor has a heater; turned it off
+    // The SHT30-D temp/humidity sensor has a heater; turn it off
     sht30d.heater(false);
 #endif // SHT30D
 
