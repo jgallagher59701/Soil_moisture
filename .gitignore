@@ -1,5 +1,6 @@
+.vscode/
+.DS_Store
 *~
 old/
 SDR_Recordings/
-.vscode/
-.DS_Store
+test_data.csv
