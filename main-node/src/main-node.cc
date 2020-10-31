@@ -39,7 +39,7 @@
 #define I2C_SDA D3 // GPIO 0
 #define I2C_SCL D1 // GPIO 5
 
-#define SD_CS 10
+#define SD_CS 10 // SDD3
 
 #define SD 1
 #define LORA 1
@@ -52,10 +52,10 @@ RTC_DS3231 RTC; // we are using the DS3231 RTC
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 #endif
 
-// #define FREQUENCY 915.0 
-#define FREQUENCY 902.3 
+// #define FREQUENCY 915.0
+#define FREQUENCY 902.3
 #define BANDWIDTH 125000 // Hz
-// #define SPREADING_FACTOR 7 
+// #define SPREADING_FACTOR 7
 #define SPREADING_FACTOR 10
 #define CODING_RATE 5
 #define SIGNAL_STRENTH 13 // dBm

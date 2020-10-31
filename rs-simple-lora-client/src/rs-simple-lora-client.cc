@@ -63,7 +63,7 @@
 #define EXPECT_REPLY 0
 #define USE_RTC_STANDBY_FOR_DELAY 1 // 0 uses yield()
 
-#define WAIT_AVAILABLE 3000      // ms to wait for a response from server
+#define WAIT_AVAILABLE 3000      // ms to wait for transmission to complete
 #define CAD_TIMEOUT 3000         // ms timeout for CAD wait
 #define SD_CARD_TIME_BUFFER 1000 // ms to wait for the SD card once the file is closed
 #define FAST_TX_INTERVAL_MS 5000 // ms to wait before next transmission when in non-sleeping mode
@@ -416,11 +416,17 @@ void setup() {
     // Because the RS Ultra Pro boards native USB won't work with the standby() mode
     // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
     // when using standby(). It will then become impossible to upload new/fixed
-    // code. Add a 10s delay here so a coordinated reset/upload will work. This is
+    // code. Add a 15s delay here so a coordinated reset/upload will work. This is
     // not strictly needed for this code - the short delay loop option has the USB
     // attached, but this is convenient because the node's mode does not have to be
     // changed.
-    yield(10000);
+    yield(15000);
+
+    // Once past setup(), the USB cannot be used unless DEBUG is on. Then it must 
+    // be toggled during the sleep period.
+#if !DEBUG
+    USBDevice.detach();
+#endif
 }
 
 void loop() {
@@ -487,8 +493,9 @@ void loop() {
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
 
-    // wait 1000ms for the SD card.
-    yield(1000);
+    // wait 1000ms for the SD card. See below where I expanded this time to 5s
+    // spent sleeping. jhrg 10/29/20
+    // yield(1000);
 
     digitalWrite(STATUS_LED, LOW);
 
@@ -506,8 +513,18 @@ void loop() {
     // Leaving this in guards against bricking the RS when sleeping with the USB detached.
     if (digitalRead(USE_STANDBY) == LOW) {
         // low-power configuration
-        USBDevice.detach();
+#if DEBUG
+        USBDevice.detach();        // This is needed only for DEBUG == 1
+#endif
         rf95.sleep();              // Turn off the LoRa
+
+        // Wait 5s for the SD card to settle. Do this here to save power by turning the
+        // LORA off.
+        rtc.setAlarmEpoch(rtc.getEpoch() + 5);
+        rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
+        rtc.attachInterrupt(alarmMatch);
+        rtc.standbyMode();
+
         digitalWrite(SD_PWR, LOW); // Turn off the SD card
         // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
         SPI.end();
@@ -533,6 +550,9 @@ void loop() {
         }
         // wait 250ms for the SD card.
         // yield(250); Nope, move up to before sleep and make 1s. 9/17/20
+#if DEBUG
+        USBDevice.attach();        // Needed only for DEBUG == 1
+#endif
     } else {
         unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);
         yield(max(FAST_TX_INTERVAL_MS - elapsed_time_ms, 0)); // wait here for upto TX_INTERVAL seconds
