@@ -19,6 +19,7 @@
 #include <Wire.h>
 
 #include <RHReliableDatagram.h>
+#include <RHDatagram.h>
 #include <RH_RF95.h>
 #include <RTCZero.h>
 #include <SerialFlash.h>
@@ -29,7 +30,6 @@
 #include "blink.h"
 #include "data_packet.h"
 
-#define WRITE_DEBUG 0    // Debug the SD card possible fail
 #define DEBUG 0          // Requires USB
 #define Serial SerialUSB // Needed for RS. jhrg 7/26/20
 
@@ -58,9 +58,10 @@
 #define FREQUENCY 902.3
 
 // Use these settings:
-// RH_RF95_SPREADING_FACTOR_1024CPS
-// RH_RF95_BW_125KHZ
-// RH_RF95_CODING_RATE_4_5
+#define BANDWIDTH 125000
+#define SPREADING_FACTOR 10
+#define CODING_RATE 5
+
 // RH_CAD_DEFAULT_TIMEOUT 10seconds
 
 #define MAIN_NODE_ADDRESS 0
@@ -70,7 +71,7 @@
 
 #define WAIT_AVAILABLE 3000      // ms to wait for transmission to complete
 #define FAST_TX_INTERVAL_MS 5000 // ms to wait before next transmission when in non-sleeping mode
-#define STANDBY_INTERVAL_S 20    // seconds to wait before next transmission when sleeping
+#define STANDBY_INTERVAL_S 10    // seconds to wait before next transmission when sleeping
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
@@ -82,6 +83,7 @@
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 // Singleton instance for the reliable datagram manager
 RHReliableDatagram rf95_manager(rf95, NODE_ADDRESS);
+//RHDatagram rf95_manager(rf95, NODE_ADDRESS);
 
 unsigned int tx_power = 13; // dBm 5 tp 23 for RF95
 
@@ -397,21 +399,25 @@ void setup() {
         error_blink(STATUS_LED, RFM95_INIT_FAIL);
     }
 
+    // The default values
+    rf95_manager.setRetries(3);
+    rf95_manager.setTimeout(200);
+ 
     // Setup ISM frequency
     if (!rf95.setFrequency(FREQUENCY)) {
         IO(Serial.println(F("LoRa frequency out of range.")));
         error_blink(STATUS_LED, RFM95_SET_FREQ_FAIL);
     }
 
-    // Setup Power,dBm
+   // Setup Power,dBm
     rf95.setTxPower(tx_power);
     // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
     // Lower BandWidth for longer distance.
-    rf95.setSignalBandwidth(RH_RF95_BW_125KHZ);
+    rf95.setSignalBandwidth(BANDWIDTH);
     // Setup Spreading Factor (6 ~ 12)
-    rf95.setSpreadingFactor(RH_RF95_SPREADING_FACTOR_1024CPS);
+    rf95.setSpreadingFactor(SPREADING_FACTOR);
     // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
-    rf95.setCodingRate4(RH_RF95_CODING_RATE_4_5);
+    rf95.setCodingRate4(CODING_RATE);
     // 10 seconds
     rf95.setCADTimeout(RH_CAD_DEFAULT_TIMEOUT);
 
@@ -422,13 +428,16 @@ void setup() {
     // not strictly needed for this code - the short delay loop option has the USB
     // attached, but this is convenient because the node's mode does not have to be
     // changed.
-    yield(15000);
-
+#if !DEBUG
+    yield(10000);
+#endif
     // Once past setup(), the USB cannot be used unless DEBUG is on. Then it must
     // be toggled during the sleep period.
 #if !DEBUG
     USBDevice.detach();
 #endif
+
+    digitalWrite(STATUS_LED, LOW);
 }
 
 // Used to hold any reply from the main node
@@ -443,7 +452,6 @@ void loop() {
     static unsigned long message = 0;
 
     unsigned long start_time_ms = millis();
-    status = STATUS_OK; // clear status for the next sample interval
 
     // Send a message to LoRa Server
 
@@ -458,13 +466,21 @@ void loop() {
     build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
                       get_temperature(), get_humidity(), status);
 
+    status = STATUS_OK; // clear status for the next sample interval
+
     IO(Serial.println(data_packet_to_string(&data, true)));
 
-    // This may block for up to CAD_TIMEOUT s
-    if (!rf95_manager.sendtoWait((uint8_t *)&data, DATA_PACKET_SIZE, MAIN_NODE_ADDRESS)) {
+    // Broadcast. This may block for up to CAD_TIMEOUT seconds
+    if (!rf95_manager.sendtoWait((uint8_t *)&data, DATA_PACKET_SIZE, RH_BROADCAST_ADDRESS)) {
         status |= RFM95_SEND_QUEUE_ERROR;
+        IO(Serial.println(F("Could not queue data packet")));
     }
-
+#if 0
+    if (!rf95_manager.waitPacketSent(WAIT_AVAILABLE)) {
+        status |= RFM95_SEND_ERROR;
+        IO(Serial.println(F("Could not send data packet")));
+    }
+#endif
     last_tx_time = millis() - start_time_ms; // last_tx_time used next iteration
 
 #if EXPECT_REPLY
@@ -472,7 +488,7 @@ void loop() {
     uint8_t len = sizeof(rf95_buf);
     uint8_t from;
 
-    if (rf95.waitAvailableTimeout(WAIT_AVAILABLE)) {
+    if (rf95_manager.waitAvailableTimeout(WAIT_AVAILABLE)) {
         // Should be a reply message for us now
         if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) { //rf95.recv(buf, &len)) {
             uint32_t main_node_time = 0;
@@ -504,9 +520,7 @@ void loop() {
     // Leaving this in guards against bricking the RS when sleeping with the USB detached.
     if (digitalRead(USE_STANDBY) == LOW) {
         // low-power configuration
-#if DEBUG
-        USBDevice.detach(); // This is needed only for DEBUG == 1
-#endif
+
         rf95.sleep(); // Turn off the LoRa
 
         // Wait 5s for the SD card to settle. Do this here to save power by turning the
@@ -541,11 +555,11 @@ void loop() {
         }
         // wait 250ms for the SD card.
         // yield(250); Nope, move up to before sleep and make 1s. 9/17/20
-#if DEBUG
-        USBDevice.attach(); // Needed only for DEBUG == 1
-#endif
-    } else {
+    } 
+#if 0
+    else {
         unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);
         yield(max(FAST_TX_INTERVAL_MS - elapsed_time_ms, 0)); // wait here for upto TX_INTERVAL seconds
     }
+#endif
 }
