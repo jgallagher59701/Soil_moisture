@@ -18,6 +18,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
+#include <RHReliableDatagram.h>
 #include <RH_RF95.h>
 #include <RTCZero.h>
 #include <SerialFlash.h>
@@ -28,7 +29,7 @@
 #include "blink.h"
 #include "data_packet.h"
 
-#define WRITE_DEBUG 1    // Debug the SD card possible fail
+#define WRITE_DEBUG 0    // Debug the SD card possible fail
 #define DEBUG 0          // Requires USB
 #define Serial SerialUSB // Needed for RS. jhrg 7/26/20
 
@@ -54,20 +55,22 @@
 
 // Channel 0 is 902.3, others are + 200KHz for BW = 125 KHz. There are 64 channels.
 // 915.0 MHz is the no-channel nominal freq
-#define FREQ 902.3
-#define BANDWIDTH 125000
-#define SPREADING_FACTOR 10 // sf = 6 - 12 --> 2^(sf)
-#define CODING_RATE 5
+#define FREQUENCY 902.3
 
-#define NODE 1
-#define EXPECT_REPLY 0
+// Use these settings:
+// RH_RF95_SPREADING_FACTOR_1024CPS
+// RH_RF95_BW_125KHZ
+// RH_RF95_CODING_RATE_4_5
+// RH_CAD_DEFAULT_TIMEOUT 10seconds
+
+#define MAIN_NODE_ADDRESS 0
+#define NODE_ADDRESS 1
+#define EXPECT_REPLY 1
 #define USE_RTC_STANDBY_FOR_DELAY 1 // 0 uses yield()
 
 #define WAIT_AVAILABLE 3000      // ms to wait for transmission to complete
-#define CAD_TIMEOUT 3000         // ms timeout for CAD wait
-#define SD_CARD_TIME_BUFFER 1000 // ms to wait for the SD card once the file is closed
 #define FAST_TX_INTERVAL_MS 5000 // ms to wait before next transmission when in non-sleeping mode
-#define STANDBY_INTERVAL_S 10    // seconds to wait before next transmission when sleeping
+#define STANDBY_INTERVAL_S 20    // seconds to wait before next transmission when sleeping
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
@@ -77,6 +80,8 @@
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
+// Singleton instance for the reliable datagram manager
+RHReliableDatagram rf95_manager(rf95, NODE_ADDRESS);
 
 unsigned int tx_power = 13; // dBm 5 tp 23 for RF95
 
@@ -387,31 +392,28 @@ void setup() {
 
     yield_spi_to_rf95();
 
-    if (!rf95.init()) {
+    if (!rf95_manager.init()) {
         IO(Serial.println(F("LoRa init failed.")));
         error_blink(STATUS_LED, RFM95_INIT_FAIL);
     }
 
     // Setup ISM frequency
-    if (!rf95.setFrequency(FREQ)) {
+    if (!rf95.setFrequency(FREQUENCY)) {
         IO(Serial.println(F("LoRa frequency out of range.")));
         error_blink(STATUS_LED, RFM95_SET_FREQ_FAIL);
     }
 
-    // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
-    // Lower BandWidth for longer distance.
-    rf95.setSignalBandwidth(BANDWIDTH);
-
     // Setup Power,dBm
     rf95.setTxPower(tx_power);
-
+    // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
+    // Lower BandWidth for longer distance.
+    rf95.setSignalBandwidth(RH_RF95_BW_125KHZ); 
     // Setup Spreading Factor (6 ~ 12)
-    rf95.setSpreadingFactor(SPREADING_FACTOR);
-
+    rf95.setSpreadingFactor(RH_RF95_SPREADING_FACTOR_1024CPS);
     // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
-    rf95.setCodingRate4(CODING_RATE);
-
-    rf95.setCADTimeout(CAD_TIMEOUT);
+    rf95.setCodingRate4(RH_RF95_CODING_RATE_4_5);
+    // 10 seconds
+    rf95.setCADTimeout(RH_CAD_DEFAULT_TIMEOUT);
 
     // Because the RS Ultra Pro boards native USB won't work with the standby() mode
     // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
@@ -422,12 +424,15 @@ void setup() {
     // changed.
     yield(15000);
 
-    // Once past setup(), the USB cannot be used unless DEBUG is on. Then it must 
+    // Once past setup(), the USB cannot be used unless DEBUG is on. Then it must
     // be toggled during the sleep period.
 #if !DEBUG
     USBDevice.detach();
 #endif
 }
+
+// Used to hold any reply from the main node
+uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
 
 void loop() {
     // FIXME - grab the time here and then use that time plus an offset (STANDBY_INTERVAL_S)
@@ -436,6 +441,9 @@ void loop() {
     IO(Serial.print(F("Sending to LoRa Server.. ")));
     static unsigned long last_tx_time = 0;
     static unsigned long message = 0;
+
+    unsigned long start_time_ms = millis();
+    status = STATUS_OK; // clear status for the next sample interval
 
     // Send a message to LoRa Server
 
@@ -447,38 +455,46 @@ void loop() {
 
     // New packet encoding
     packet_t data;
-    build_data_packet(&data, NODE, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
+    build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
                       get_temperature(), get_humidity(), status);
 
     IO(Serial.println(data_packet_to_string(&data, true)));
 
-    unsigned long start_time_ms = millis();
-    status = STATUS_OK; // clear status for the next sample interval
 
     // This may block for up to CAD_TIMEOUT s
-    if (!rf95.send((const uint8_t *)&data, DATA_PACKET_SIZE)) {
+    if (!rf95_manager.sendtoWait((uint8_t *)&data, DATA_PACKET_SIZE, MAIN_NODE_ADDRESS)) {
         status |= RFM95_SEND_QUEUE_ERROR;
     }
+
+#if 0
     // Block until packet sent. The code could run the SD card and radio in parallel,
     // but the potential current draw could strain the batteries. Wait for the radio
     // to finish, then write to the SD card.
     if (!rf95.waitPacketSent(WAIT_AVAILABLE)) {
         status |= RFM95_SEND_ERROR;
     }
-
-    unsigned long end_time = millis();
-    last_tx_time = end_time - start_time_ms; // last_tx_time used next iteration
+#endif
+    
+    last_tx_time = millis() - start_time_ms; // last_tx_time used next iteration
 
 #if EXPECT_REPLY
     // Now wait for a reply
-    uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-    uint8_t len = sizeof(buf);
+    uint8_t len = sizeof(rf95_buf);
+    uint8_t from;
 
     if (rf95.waitAvailableTimeout(WAIT_AVAILABLE)) {
         // Should be a reply message for us now
-        if (rf95.recv(buf, &len)) {
-            IO(Serial.print(F("got reply: ")));
-            IO(Serial.println((char *)buf));
+        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) {//rf95.recv(buf, &len)) {
+            uint32_t main_node_time = 0;
+            if (len == sizeof(uint32_t)) { // time code?
+                memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
+            }
+            // Update the current time
+
+            IO(Serial.print(F("got reply ")));
+            IO(Serial.print(main_node_time));
+            IO(Serial.print(F(" from ")));
+            IO(Serial.println(from, DEC)); // (char *)buf));
             IO(Serial.print(F("RSSI: ")));
             IO(Serial.println(rf95.lastRssi(), DEC));
         } else {
@@ -486,16 +502,12 @@ void loop() {
             status |= RFM95_RECEIVE_FAILED;
         }
     } else {
-        IO(Serial.println(F("No reply, is LoRa server running?")));
+        IO(Serial.println(F("No reply, is a main node running?")));
         status |= RFM95_NO_REPLY;
     }
 #endif // EXPECT_REPLY
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
-
-    // wait 1000ms for the SD card. See below where I expanded this time to 5s
-    // spent sleeping. jhrg 10/29/20
-    // yield(1000);
 
     digitalWrite(STATUS_LED, LOW);
 
@@ -514,18 +526,18 @@ void loop() {
     if (digitalRead(USE_STANDBY) == LOW) {
         // low-power configuration
 #if DEBUG
-        USBDevice.detach();        // This is needed only for DEBUG == 1
+        USBDevice.detach(); // This is needed only for DEBUG == 1
 #endif
-        rf95.sleep();              // Turn off the LoRa
+        rf95.sleep(); // Turn off the LoRa
 
         // Wait 5s for the SD card to settle. Do this here to save power by turning the
-        // LORA off.
+        // LORA off and sleeping the RS
         rtc.setAlarmEpoch(rtc.getEpoch() + 5);
         rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
         rtc.attachInterrupt(alarmMatch);
         rtc.standbyMode();
 
-        digitalWrite(SD_PWR, LOW); // Turn off the SD card
+        digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
         // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
         SPI.end();
 
@@ -551,7 +563,7 @@ void loop() {
         // wait 250ms for the SD card.
         // yield(250); Nope, move up to before sleep and make 1s. 9/17/20
 #if DEBUG
-        USBDevice.attach();        // Needed only for DEBUG == 1
+        USBDevice.attach(); // Needed only for DEBUG == 1
 #endif
     } else {
         unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);

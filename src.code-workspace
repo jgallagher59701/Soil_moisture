@@ -1,21 +1,10 @@
 {
     "folders": [
         {
-            "path": "rs-simple-lora-client"
-        },
-        {
-            "name": "DS3231-set-time",
-            "path": "DS3231-set-time"
-        },
-        {
-            "name": "simple-web-interface-esp12e",
-            "path": "../simple-web-interface-esp12e"
-        },
-        {
             "path": "main-node"
         },
         {
-            "path": "../soil_data_packet"
+            "path": "rs-simple-lora-client"
         }
     ],
     "settings": {}
