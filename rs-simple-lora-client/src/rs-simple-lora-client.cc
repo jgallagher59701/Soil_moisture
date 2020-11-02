@@ -407,7 +407,7 @@ void setup() {
     rf95.setTxPower(tx_power);
     // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
     // Lower BandWidth for longer distance.
-    rf95.setSignalBandwidth(RH_RF95_BW_125KHZ); 
+    rf95.setSignalBandwidth(RH_RF95_BW_125KHZ);
     // Setup Spreading Factor (6 ~ 12)
     rf95.setSpreadingFactor(RH_RF95_SPREADING_FACTOR_1024CPS);
     // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
@@ -460,21 +460,11 @@ void loop() {
 
     IO(Serial.println(data_packet_to_string(&data, true)));
 
-
     // This may block for up to CAD_TIMEOUT s
     if (!rf95_manager.sendtoWait((uint8_t *)&data, DATA_PACKET_SIZE, MAIN_NODE_ADDRESS)) {
         status |= RFM95_SEND_QUEUE_ERROR;
     }
 
-#if 0
-    // Block until packet sent. The code could run the SD card and radio in parallel,
-    // but the potential current draw could strain the batteries. Wait for the radio
-    // to finish, then write to the SD card.
-    if (!rf95.waitPacketSent(WAIT_AVAILABLE)) {
-        status |= RFM95_SEND_ERROR;
-    }
-#endif
-    
     last_tx_time = millis() - start_time_ms; // last_tx_time used next iteration
 
 #if EXPECT_REPLY
@@ -484,7 +474,7 @@ void loop() {
 
     if (rf95.waitAvailableTimeout(WAIT_AVAILABLE)) {
         // Should be a reply message for us now
-        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) {//rf95.recv(buf, &len)) {
+        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) { //rf95.recv(buf, &len)) {
             uint32_t main_node_time = 0;
             if (len == sizeof(uint32_t)) { // time code?
                 memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
@@ -510,17 +500,6 @@ void loop() {
     log_data(get_log_filename(), data_packet_to_string(&data, false));
 
     digitalWrite(STATUS_LED, LOW);
-
-#if WRITE_DEBUG
-    // This may block for up to CAD_TIMEOUT s
-    const char ok[3] = "OK";
-    if (!rf95.send((const uint8_t *)ok, sizeof(ok))) {
-        status |= RFM95_SEND_QUEUE_ERROR;
-    }
-    if (!rf95.waitPacketSent(WAIT_AVAILABLE)) {
-        status |= RFM95_SEND_ERROR;
-    }
-#endif
 
     // Leaving this in guards against bricking the RS when sleeping with the USB detached.
     if (digitalRead(USE_STANDBY) == LOW) {
