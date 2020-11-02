@@ -10,6 +10,7 @@
 
 #include <Arduino.h>
 
+#include <RHReliableDatagram.h>
 #include <RH_RF95.h>
 #include <SPI.h>
 #include <SdFat.h>
@@ -48,17 +49,23 @@
 RTC_DS3231 RTC; // we are using the DS3231 RTC
 
 #if LORA
+#define MAIN_NODE_ADDRESS 0
+
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
+// Singleton instance for the reliable datagram manager
+RHReliableDatagram rf95_manager(rf95, MAIN_NODE_ADDRESS);
 #endif
 
 // #define FREQUENCY 915.0
 #define FREQUENCY 902.3
-#define BANDWIDTH 125000 // Hz
-// #define SPREADING_FACTOR 7
-#define SPREADING_FACTOR 10
-#define CODING_RATE 5
 #define SIGNAL_STRENTH 13 // dBm
+
+// Use these settings:
+// RH_RF95_SPREADING_FACTOR_1024CPS
+// RH_RF95_BW_125KHZ
+// RH_RF95_CODING_RATE_4_5
+// RH_CAD_DEFAULT_TIMEOUT 10seconds
 
 #if SD
 // Singletons for the SD card objects
@@ -70,19 +77,7 @@ SdFile file; // Log file.
 
 bool sd_card_status = false; // true == SD card init'd
 
-#define REPLY 0
-
-// Tx should not use the Serial interface except for debugging
-#define DEBUG 0
-
-#if DEBUG
-#define IO(x) \
-    do {      \
-        x;    \
-    } while (0)
-#else
-#define IO(x)
-#endif
+#define REPLY 1
 
 // Given a DateTime instance, return a pointer to static string that holds
 // an ISO 8601 print representation of the object.
@@ -145,7 +140,9 @@ void write_header(const char *file_name) {
     yield_spi_to_sd();
 
     if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
-        IO(Serial.println(F("Couldn't write file header")));
+        Serial.println(F("Couldn't write file header"));
+        sd_card_status = false;
+        return;
     }
 
     file.println(F("# Start Log"));
@@ -248,19 +245,21 @@ void setup() {
     digitalWrite(RFM95_RST, HIGH);
     delay(20);
 
-    if (rf95.init()) {
+    if (rf95_manager.init()) {
         Serial.println(F(" OK"));
 
         // Setup ISM FREQUENCY
         rf95.setFrequency(FREQUENCY);
         // Setup Power,dBm
         rf95.setTxPower(SIGNAL_STRENTH);
-        // Setup Spreading Factor (6 ~ 12)
-        rf95.setSpreadingFactor(SPREADING_FACTOR);
+        // Setup Spreading Factor (CPS == 2^n, N is 6 ~ 12)
+        rf95.setSpreadingFactor(RH_RF95_SPREADING_FACTOR_1024CPS);
         // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
-        rf95.setSignalBandwidth(BANDWIDTH);
+        rf95.setSignalBandwidth(RH_RF95_BW_125KHZ);
         // Setup Coding Rate:5(4/5),6(4/6),7(4/7),8(4/8)
-        rf95.setCodingRate4(CODING_RATE);
+        rf95.setCodingRate4(RH_RF95_CODING_RATE_4_5);
+        // Set the CAD timeout to 10s
+        rf95.setCADTimeout(RH_CAD_DEFAULT_TIMEOUT);
 
         Serial.print(F("Listening on frequency: "));
         Serial.println(FREQUENCY);
@@ -275,6 +274,8 @@ void setup() {
     Serial.flush();
 }
 
+uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
+
 void loop() {
     yield_spi_to_rf95();
 #if LORA
@@ -284,14 +285,10 @@ void loop() {
         Serial.print(F("Current time: "));
         Serial.println(iso8601_date_time(RTC.now()));
 
-#if 0
-        packet_t buf;
-        uint8_t len = sizeof(packet_t);
-#else
-        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-        uint8_t len = sizeof(buf);
-#endif
-        if (rf95.recv(buf, &len)) {
+        uint8_t len = sizeof(rf95_buf);
+        uint8_t from;
+
+        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) {
 
             Serial.print(F("Received length: "));
             Serial.println(len, DEC);
@@ -301,10 +298,11 @@ void loop() {
 
                 // Print received packet
                 Serial.print(F("Data: "));
-                Serial.print(data_packet_to_string((packet_t *)&buf, /* pretty */ true));
+                Serial.print(data_packet_to_string((packet_t *)&rf95_buf, /* pretty */ true));
 
-                // TODO Use: print_rfm95_info()
-
+                Serial.print(F(", "));
+                print_rfm95_info();
+#if 0
                 Serial.print(F(", RSSI "));
                 Serial.print(rf95.lastRssi(), DEC);
                 Serial.print(F(" dBm, SNR "));
@@ -313,31 +311,37 @@ void loop() {
                 Serial.print(rf95.rxGood(), DEC);
                 Serial.print(F("/"));
                 Serial.println(rf95.rxBad(), DEC);
-
+#endif
                 // log reading to the SD card
-                const char *pretty_buf = data_packet_to_string((packet_t *)&buf, false);
+                const char *pretty_buf = data_packet_to_string((packet_t *)&rf95_buf, false);
                 log_data(FILE_NAME, pretty_buf);
 #if REPLY
-                // Send a reply
-                uint8_t data[] = "And hello back to you";
+                // Send a reply that includes a time code (unixtime)
+                uint32_t now = RTC.now().unixtime();
                 unsigned long start = millis();
-                rf95.send(data, sizeof(data));
-                rf95.waitPacketSent();
-                unsigned long end = millis();
-                IO(Serial.print(F("...sent a reply, ")));
-                IO(Serial.print(end - start, DEC));
-                IO(Serial.println(F("ms")));
+                if (rf95_manager.sendtoWait((uint8_t *)&now, sizeof(now), from)) {
+                    // rf95.waitPacketSent();
+                    unsigned long end = millis();
+                    Serial.print(F("...sent a reply, "));
+                    Serial.print(end - start, DEC);
+                    Serial.println(F("ms"));
+                } else {
+                    unsigned long end = millis();
+                    Serial.print(F("...reply failed, "));
+                    Serial.print(end - start, DEC);
+                    Serial.println(F("ms"));
+                }
 #endif
             } else {
                 Serial.print(F("Got: "));
                 // Add a null to the end of the packet and print as text
-                //buf[len] = 0;
-                Serial.println((char *)&buf);
+                //rf95_buf[len] = 0;
+                Serial.println((char *)&rf95_buf);
 
                 Serial.print(F("RFM95 info: "));
                 print_rfm95_info();
 
-                log_data(FILE_NAME, (char *)&buf);
+                log_data(FILE_NAME, (char *)&rf95_buf);
             }
         } else {
             Serial.println(F("recv failed"));

@@ -13,6 +13,9 @@
         },
         {
             "path": "main-node"
+        },
+        {
+            "path": "../soil_data_packet"
         }
     ],
     "settings": {}
