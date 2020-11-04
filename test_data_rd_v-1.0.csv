@@ -1,0 +1,1612 @@
+1604294722.219669,Current time: 2020-11-01T23:25:22
+1604294722.221514,Received length: 20
+1604294722.231099,"Data: node: 1, message: 16, time: 1604269492, Vbat 353 v, Tx dur 435 ms, T: 1908 C, RH: 3527 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 4/0"
+1604294722.7720609,"...sent a reply, 538ms"
+1604294738.2153752,Current time: 2020-11-01T23:25:38
+1604294738.2184498,Received length: 20
+1604294738.230622,"Data: node: 1, message: 17, time: 1604269508, Vbat 353 v, Tx dur 434 ms, T: 1908 C, RH: 3534 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 6/0"
+1604294741.1627488,"...reply failed, 2930ms"
+1604294754.2151859,Current time: 2020-11-01T23:25:54
+1604294754.217582,Received length: 20
+1604294754.2310731,"Data: node: 1, message: 18, time: 1604269524, Vbat 353 v, Tx dur 434 ms, T: 1910 C, RH: 3515 %, status: 0x00, RSSI -57 dBm, SNR 12 dB, good/bad packets: 7/0"
+1604294756.589164,"...reply failed, 2356ms"
+1604294770.2151182,Current time: 2020-11-01T23:26:10
+1604294770.217341,Received length: 20
+1604294770.2302542,"Data: node: 1, message: 19, time: 1604269540, Vbat 353 v, Tx dur 435 ms, T: 1908 C, RH: 3518 %, status: 0x00, RSSI -57 dBm, SNR 13 dB, good/bad packets: 8/0"
+1604294773.436427,"...reply failed, 3204ms"
+1604294786.214889,Current time: 2020-11-01T23:26:26
+1604294786.217053,Received length: 20
+1604294786.230965,"Data: node: 1, message: 20, time: 1604269556, Vbat 353 v, Tx dur 435 ms, T: 1908 C, RH: 3513 %, status: 0x00, RSSI -56 dBm, SNR 14 dB, good/bad packets: 9/0"
+1604294786.7739258,"...sent a reply, 538ms"
+1604294802.215317,Current time: 2020-11-01T23:26:42
+1604294802.2166028,Received length: 20
+1604294802.230577,"Data: node: 1, message: 21, time: 1604269572, Vbat 353 v, Tx dur 435 ms, T: 1908 C, RH: 3516 %, status: 0x00, RSSI -58 dBm, SNR 12 dB, good/bad packets: 11/0"
+1604294802.771329,"...sent a reply, 539ms"
+1604294818.215109,Current time: 2020-11-01T23:26:58
+1604294818.216733,Received length: 20
+1604294818.230688,"Data: node: 1, message: 22, time: 1604269588, Vbat 353 v, Tx dur 435 ms, T: 1907 C, RH: 3514 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 13/0"
+1604294820.659349,"...reply failed, 2187ms"
+1604294834.4538538,Current time: 2020-11-01T23:27:14
+1604294834.455793,Received length: 20
+1604294834.4700851,"Data: node: 1, message: 23, time: 1604269604, Vbat 353 v, Tx dur 435 ms, T: 1904 C, RH: 3507 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 14/0"
+1604294835.010824,"...sent a reply, 539ms"
+1604294850.4547782,Current time: 2020-11-01T23:27:30
+1604294850.457272,Received length: 20
+1604294850.470597,"Data: node: 1, message: 24, time: 1604269620, Vbat 353 v, Tx dur 435 ms, T: 1907 C, RH: 3511 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 16/0"
+1604294853.498844,"...reply failed, 3026ms"
+1604294866.454349,Current time: 2020-11-01T23:27:46
+1604294866.456241,Received length: 20
+1604294866.470284,"Data: node: 1, message: 25, time: 1604269636, Vbat 353 v, Tx dur 435 ms, T: 1907 C, RH: 3518 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 17/0"
+1604294867.0111518,"...sent a reply, 539ms"
+1604294882.454734,Current time: 2020-11-01T23:28:02
+1604294882.458449,Received length: 20
+1604294882.4698188,"Data: node: 1, message: 26, time: 1604269652, Vbat 353 v, Tx dur 435 ms, T: 1907 C, RH: 3516 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 19/0"
+1604294885.25981,"...reply failed, 2780ms"
+1604294898.454289,Current time: 2020-11-01T23:28:18
+1604294898.456226,Received length: 20
+1604294898.470131,"Data: node: 1, message: 27, time: 1604269668, Vbat 353 v, Tx dur 435 ms, T: 1907 C, RH: 3523 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 20/0"
+1604294899.010253,"...sent a reply, 539ms"
+1604294914.454667,Current time: 2020-11-01T23:28:34
+1604294914.455721,Received length: 20
+1604294914.46948,"Data: node: 1, message: 28, time: 1604269684, Vbat 353 v, Tx dur 435 ms, T: 1904 C, RH: 3516 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 22/0"
+1604294917.61815,"...reply failed, 3147ms"
+1604294930.4542232,Current time: 2020-11-01T23:28:50
+1604294930.4559581,Received length: 20
+1604294930.469877,"Data: node: 1, message: 29, time: 1604269700, Vbat 353 v, Tx dur 435 ms, T: 1907 C, RH: 3516 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 23/0"
+1604294933.3973372,"...reply failed, 2926ms"
+1604294946.453762,Current time: 2020-11-01T23:29:06
+1604294946.455682,Received length: 20
+1604294946.469707,"Data: node: 1, message: 30, time: 1604269716, Vbat 353 v, Tx dur 435 ms, T: 1904 C, RH: 3515 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 24/0"
+1604294947.010644,"...sent a reply, 538ms"
+1604294962.454237,Current time: 2020-11-01T23:29:22
+1604294962.4561741,Received length: 20
+1604294962.4700701,"Data: node: 1, message: 31, time: 1604269732, Vbat 353 v, Tx dur 435 ms, T: 1904 C, RH: 3513 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 26/0"
+1604294963.012307,"...sent a reply, 538ms"
+1604294978.4537249,Current time: 2020-11-01T23:29:38
+1604294978.4555762,Received length: 20
+1604294978.4696698,"Data: node: 1, message: 32, time: 1604269748, Vbat 353 v, Tx dur 435 ms, T: 1901 C, RH: 3515 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 28/0"
+1604294981.0267751,"...reply failed, 2555ms"
+1604294994.4538,Current time: 2020-11-01T23:29:54
+1604294994.455862,Received length: 20
+1604294994.468736,"Data: node: 1, message: 33, time: 1604269764, Vbat 353 v, Tx dur 435 ms, T: 1901 C, RH: 3518 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 29/0"
+1604294995.009928,"...sent a reply, 538ms"
+1604295010.453592,Current time: 2020-11-01T23:30:10
+1604295010.455698,Received length: 20
+1604295010.4692612,"Data: node: 1, message: 34, time: 1604269780, Vbat 353 v, Tx dur 435 ms, T: 1902 C, RH: 3518 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 31/0"
+1604295013.396731,"...reply failed, 2926ms"
+1604295026.454019,Current time: 2020-11-01T23:30:26
+1604295026.45541,Received length: 20
+1604295026.469003,"Data: node: 1, message: 35, time: 1604269796, Vbat 353 v, Tx dur 435 ms, T: 1902 C, RH: 3520 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 32/0"
+1604295027.009964,"...sent a reply, 539ms"
+1604295042.453227,Current time: 2020-11-01T23:30:42
+1604295042.455175,Received length: 20
+1604295042.4693062,"Data: node: 1, message: 36, time: 1604269812, Vbat 353 v, Tx dur 435 ms, T: 1902 C, RH: 3520 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 34/0"
+1604295043.0092852,"...sent a reply, 539ms"
+1604295058.45315,Current time: 2020-11-01T23:30:58
+1604295058.455294,Received length: 20
+1604295058.468819,"Data: node: 1, message: 37, time: 1604269828, Vbat 353 v, Tx dur 435 ms, T: 1904 C, RH: 3515 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 36/0"
+1604295060.804789,"...reply failed, 2334ms"
+1604295074.4534929,Current time: 2020-11-01T23:31:14
+1604295074.4555469,Received length: 20
+1604295074.469226,"Data: node: 1, message: 38, time: 1604269844, Vbat 353 v, Tx dur 434 ms, T: 1901 C, RH: 3500 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 37/0"
+1604295077.3646011,"...reply failed, 2893ms"
+1604295090.453076,Current time: 2020-11-01T23:31:30
+1604295090.456939,Received length: 20
+1604295090.468847,"Data: node: 1, message: 39, time: 1604269860, Vbat 353 v, Tx dur 434 ms, T: 1901 C, RH: 3506 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 38/0"
+1604295091.00976,"...sent a reply, 539ms"
+1604295106.453452,Current time: 2020-11-01T23:31:46
+1604295106.455381,Received length: 20
+1604295106.468411,"Data: node: 1, message: 40, time: 1604269876, Vbat 353 v, Tx dur 435 ms, T: 1900 C, RH: 3511 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 40/0"
+1604295109.2212129,"...reply failed, 2751ms"
+1604295122.452985,Current time: 2020-11-01T23:32:02
+1604295122.468639,Received length: 20
+1604295122.470824,"Data: node: 1, message: 41, time: 1604269892, Vbat 353 v, Tx dur 435 ms, T: 1900 C, RH: 3518 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 41/0"
+1604295123.00981,"...sent a reply, 538ms"
+1604295138.4533849,Current time: 2020-11-01T23:32:18
+1604295138.454509,Received length: 20
+1604295138.4687161,"Data: node: 1, message: 42, time: 1604269908, Vbat 353 v, Tx dur 435 ms, T: 1901 C, RH: 3521 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 43/0"
+1604295139.0113778,"...sent a reply, 539ms"
+1604295154.452933,Current time: 2020-11-01T23:32:34
+1604295154.461945,Received length: 20
+1604295154.469584,"Data: node: 1, message: 43, time: 1604269924, Vbat 353 v, Tx dur 435 ms, T: 1900 C, RH: 3524 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 45/0"
+1604295155.009866,"...sent a reply, 539ms"
+1604295170.45249,Current time: 2020-11-01T23:32:50
+1604295170.454426,Received length: 20
+1604295170.4684072,"Data: node: 1, message: 44, time: 1604269940, Vbat 353 v, Tx dur 435 ms, T: 1898 C, RH: 3516 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 47/0"
+1604295173.441372,"...reply failed, 2971ms"
+1604295186.452876,Current time: 2020-11-01T23:33:06
+1604295186.45471,Received length: 20
+1604295186.468745,"Data: node: 1, message: 45, time: 1604269956, Vbat 353 v, Tx dur 435 ms, T: 1898 C, RH: 3525 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 48/0"
+1604295187.009068,"...sent a reply, 538ms"
+1604295202.452438,Current time: 2020-11-01T23:33:22
+1604295202.454379,Received length: 20
+1604295202.468384,"Data: node: 1, message: 46, time: 1604269972, Vbat 353 v, Tx dur 435 ms, T: 1900 C, RH: 3524 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 50/0"
+1604295204.84253,"...reply failed, 2373ms"
+1604295218.452806,Current time: 2020-11-01T23:33:38
+1604295218.454682,Received length: 20
+1604295218.467863,"Data: node: 1, message: 47, time: 1604269988, Vbat 353 v, Tx dur 435 ms, T: 1898 C, RH: 3521 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 51/0"
+1604295221.604013,"...reply failed, 3134ms"
+1604295234.452357,Current time: 2020-11-01T23:33:54
+1604295234.454297,Received length: 20
+1604295234.468317,"Data: node: 1, message: 48, time: 1604270004, Vbat 353 v, Tx dur 435 ms, T: 1898 C, RH: 3522 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 52/0"
+1604295237.2883961,"...reply failed, 2819ms"
+1604295250.452713,Current time: 2020-11-01T23:34:10
+1604295250.455116,Received length: 20
+1604295250.4676611,"Data: node: 1, message: 49, time: 1604270020, Vbat 353 v, Tx dur 435 ms, T: 1898 C, RH: 3521 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 53/0"
+1604295253.659095,"...reply failed, 3189ms"
+1604295266.4523048,Current time: 2020-11-01T23:34:26
+1604295266.45424,Received length: 20
+1604295266.468252,"Data: node: 1, message: 50, time: 1604270036, Vbat 353 v, Tx dur 435 ms, T: 1898 C, RH: 3504 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 54/0"
+1604295269.176249,"...reply failed, 2707ms"
+1604295282.451863,Current time: 2020-11-01T23:34:42
+1604295282.453815,Received length: 20
+1604295282.4677591,"Data: node: 1, message: 51, time: 1604270052, Vbat 353 v, Tx dur 435 ms, T: 1896 C, RH: 3509 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 55/0"
+1604295285.395901,"...reply failed, 2927ms"
+1604295298.452348,Current time: 2020-11-01T23:34:58
+1604295298.454279,Received length: 20
+1604295298.468152,"Data: node: 1, message: 52, time: 1604270068, Vbat 353 v, Tx dur 435 ms, T: 1895 C, RH: 3516 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 56/0"
+1604295299.0082428,"...sent a reply, 539ms"
+1604295314.451809,Current time: 2020-11-01T23:35:14
+1604295314.453729,Received length: 20
+1604295314.467716,"Data: node: 1, message: 53, time: 1604270084, Vbat 353 v, Tx dur 435 ms, T: 1896 C, RH: 3516 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 58/0"
+1604295316.935859,"...reply failed, 2465ms"
+1604295330.452142,Current time: 2020-11-01T23:35:30
+1604295330.4543328,Received length: 20
+1604295330.4670022,"Data: node: 1, message: 54, time: 1604270100, Vbat 353 v, Tx dur 435 ms, T: 1896 C, RH: 3514 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 59/0"
+1604295331.007008,"...sent a reply, 539ms"
+1604295346.451749,Current time: 2020-11-01T23:35:46
+1604295346.453675,Received length: 20
+1604295346.4676852,"Data: node: 1, message: 55, time: 1604270116, Vbat 353 v, Tx dur 435 ms, T: 1896 C, RH: 3500 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 61/0"
+1604295347.0074959,"...sent a reply, 538ms"
+1604295362.452064,Current time: 2020-11-01T23:36:02
+1604295362.454386,Received length: 20
+1604295362.466938,"Data: node: 1, message: 56, time: 1604270132, Vbat 353 v, Tx dur 435 ms, T: 1895 C, RH: 3499 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 63/0"
+1604295363.00706,"...sent a reply, 538ms"
+1604295378.451654,Current time: 2020-11-01T23:36:18
+1604295378.453608,Received length: 20
+1604295378.467616,"Data: node: 1, message: 57, time: 1604270148, Vbat 353 v, Tx dur 435 ms, T: 1896 C, RH: 3496 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 65/0"
+1604295379.0066361,"...sent a reply, 539ms"
+1604295394.4511518,Current time: 2020-11-01T23:36:34
+1604295394.453356,Received length: 20
+1604295394.46716,"Data: node: 1, message: 58, time: 1604270164, Vbat 353 v, Tx dur 434 ms, T: 1895 C, RH: 3502 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 67/0"
+1604295395.007024,"...sent a reply, 538ms"
+1604295410.451602,Current time: 2020-11-01T23:36:50
+1604295410.453602,Received length: 20
+1604295410.467652,"Data: node: 1, message: 59, time: 1604270180, Vbat 353 v, Tx dur 434 ms, T: 1893 C, RH: 3511 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 69/0"
+1604295411.006609,"...sent a reply, 539ms"
+1604295426.451114,Current time: 2020-11-01T23:37:06
+1604295426.453088,Received length: 20
+1604295426.467089,"Data: node: 1, message: 60, time: 1604270196, Vbat 353 v, Tx dur 435 ms, T: 1895 C, RH: 3491 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 71/0"
+1604295428.6130738,"...reply failed, 2145ms"
+1604295442.4515378,Current time: 2020-11-01T23:37:22
+1604295442.4534678,Received length: 20
+1604295442.466615,"Data: node: 1, message: 61, time: 1604270212, Vbat 353 v, Tx dur 435 ms, T: 1894 C, RH: 3500 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 72/0"
+1604295443.006672,"...sent a reply, 538ms"
+1604295474.451435,Current time: 2020-11-01T23:37:54
+1604295474.453368,Received length: 20
+1604295474.4665642,"Data: node: 1, message: 63, time: 1604270244, Vbat 353 v, Tx dur 435 ms, T: 1895 C, RH: 3513 %, status: 0x10, RSSI -55 dBm, SNR 10 dB, good/bad packets: 74/0"
+1604295476.8366258,"...reply failed, 2369ms"
+1604295490.450977,Current time: 2020-11-01T23:38:10
+1604295490.453038,Received length: 20
+1604295490.466936,"Data: node: 1, message: 64, time: 1604270260, Vbat 353 v, Tx dur 435 ms, T: 1893 C, RH: 3523 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 75/0"
+1604295491.006027,"...sent a reply, 538ms"
+1604295506.451392,Current time: 2020-11-01T23:38:26
+1604295506.452472,Received length: 20
+1604295506.4665248,"Data: node: 1, message: 65, time: 1604270276, Vbat 353 v, Tx dur 435 ms, T: 1894 C, RH: 3525 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 77/0"
+1604295507.007477,"...sent a reply, 538ms"
+1604295522.450801,Current time: 2020-11-01T23:38:42
+1604295522.452887,Received length: 20
+1604295522.466868,"Data: node: 1, message: 66, time: 1604270292, Vbat 353 v, Tx dur 435 ms, T: 1893 C, RH: 3524 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 79/0"
+1604295523.006059,"...sent a reply, 538ms"
+1604295538.450521,Current time: 2020-11-01T23:38:58
+1604295538.452307,Received length: 20
+1604295538.466295,"Data: node: 1, message: 67, time: 1604270308, Vbat 353 v, Tx dur 435 ms, T: 1893 C, RH: 3523 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 81/0"
+1604295541.56142,"...reply failed, 3094ms"
+1604295554.4508648,Current time: 2020-11-01T23:39:14
+1604295554.452804,Received length: 20
+1604295554.465923,"Data: node: 1, message: 68, time: 1604270324, Vbat 353 v, Tx dur 435 ms, T: 1893 C, RH: 3530 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 82/0"
+1604295555.00596,"...sent a reply, 539ms"
+1604295570.450538,Current time: 2020-11-01T23:39:30
+1604295570.4533918,Received length: 20
+1604295570.466229,"Data: node: 1, message: 69, time: 1604270340, Vbat 353 v, Tx dur 435 ms, T: 1890 C, RH: 3540 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 84/0"
+1604295571.006253,"...sent a reply, 539ms"
+1604295586.450899,Current time: 2020-11-01T23:39:46
+1604295586.452672,Received length: 20
+1604295586.465896,"Data: node: 1, message: 70, time: 1604270356, Vbat 353 v, Tx dur 435 ms, T: 1893 C, RH: 3533 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 86/0"
+1604295588.8990002,"...reply failed, 2432ms"
+1604295602.450391,Current time: 2020-11-01T23:40:02
+1604295602.452714,Received length: 20
+1604295602.466075,"Data: node: 1, message: 71, time: 1604270372, Vbat 353 v, Tx dur 435 ms, T: 1891 C, RH: 3536 %, status: 0x00, RSSI -53 dBm, SNR 11 dB, good/bad packets: 87/0"
+1604295604.96844,"...reply failed, 2502ms"
+1604295618.450749,Current time: 2020-11-01T23:40:18
+1604295618.451924,Received length: 20
+1604295618.465885,"Data: node: 1, message: 72, time: 1604270388, Vbat 353 v, Tx dur 435 ms, T: 1894 C, RH: 3536 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 88/0"
+1604295621.692014,"...reply failed, 3225ms"
+1604295634.450073,Current time: 2020-11-01T23:40:34
+1604295634.45201,Received length: 20
+1604295634.465827,"Data: node: 1, message: 73, time: 1604270404, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3534 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 89/0"
+1604295635.004809,"...sent a reply, 539ms"
+1604295650.449803,Current time: 2020-11-01T23:40:50
+1604295650.451827,Received length: 20
+1604295650.465826,"Data: node: 1, message: 74, time: 1604270420, Vbat 353 v, Tx dur 435 ms, T: 1890 C, RH: 3541 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 91/0"
+1604295651.005773,"...sent a reply, 538ms"
+1604295666.4502358,Current time: 2020-11-01T23:41:06
+1604295666.452296,Received length: 20
+1604295666.465379,"Data: node: 1, message: 75, time: 1604270436, Vbat 353 v, Tx dur 434 ms, T: 1891 C, RH: 3543 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 93/0"
+1604295667.005065,"...sent a reply, 539ms"
+1604295682.449805,Current time: 2020-11-01T23:41:22
+1604295682.451864,Received length: 20
+1604295682.465742,"Data: node: 1, message: 76, time: 1604270452, Vbat 353 v, Tx dur 434 ms, T: 1887 C, RH: 3543 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 95/0"
+1604295683.006778,"...sent a reply, 538ms"
+1604295698.450239,Current time: 2020-11-01T23:41:38
+1604295698.452082,Received length: 20
+1604295698.4653099,"Data: node: 1, message: 77, time: 1604270468, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3541 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 97/0"
+1604295699.005066,"...sent a reply, 538ms"
+1604295714.449761,Current time: 2020-11-01T23:41:54
+1604295714.4516969,Received length: 20
+1604295714.465729,"Data: node: 1, message: 78, time: 1604270484, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3540 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 99/0"
+1604295715.0047638,"...sent a reply, 539ms"
+1604295730.55467,Current time: 2020-11-01T23:42:10
+1604295730.5557382,Received length: 20
+1604295730.5697138,"Data: node: 1, message: 79, time: 1604270500, Vbat 353 v, Tx dur 435 ms, T: 1891 C, RH: 3541 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 101/0"
+1604295731.1097448,"...sent a reply, 539ms"
+1604295746.553754,Current time: 2020-11-01T23:42:26
+1604295746.5557399,Received length: 20
+1604295746.5698078,"Data: node: 1, message: 80, time: 1604270516, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3547 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 103/0"
+1604295747.108809,"...sent a reply, 539ms"
+1604295762.55381,Current time: 2020-11-01T23:42:42
+1604295762.555906,Received length: 20
+1604295762.569773,"Data: node: 1, message: 81, time: 1604270532, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3549 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 105/0"
+1604295765.09274,"...reply failed, 2522ms"
+1604295778.554213,Current time: 2020-11-01T23:42:58
+1604295778.556206,Received length: 20
+1604295778.5701382,"Data: node: 1, message: 82, time: 1604270548, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3543 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 106/0"
+1604295781.041287,"...reply failed, 2471ms"
+1604295794.553748,Current time: 2020-11-01T23:43:14
+1604295794.555701,Received length: 20
+1604295794.569689,"Data: node: 1, message: 83, time: 1604270564, Vbat 353 v, Tx dur 435 ms, T: 1890 C, RH: 3534 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 107/0"
+1604295795.109659,"...sent a reply, 539ms"
+1604295810.554098,Current time: 2020-11-01T23:43:30
+1604295810.557118,Received length: 20
+1604295810.5690439,"Data: node: 1, message: 84, time: 1604270580, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3543 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 109/0"
+1604295812.960217,"...reply failed, 2390ms"
+1604295826.5537221,Current time: 2020-11-01T23:43:46
+1604295826.555648,Received length: 20
+1604295826.569661,"Data: node: 1, message: 85, time: 1604270596, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3543 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 110/0"
+1604295828.984719,"...reply failed, 2414ms"
+1604295842.554069,Current time: 2020-11-01T23:44:02
+1604295842.556561,Received length: 20
+1604295842.5690491,"Data: node: 1, message: 86, time: 1604270612, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3549 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 111/0"
+1604295843.110174,"...sent a reply, 538ms"
+1604295858.5531142,Current time: 2020-11-01T23:44:18
+1604295858.55523,Received length: 20
+1604295858.569088,"Data: node: 1, message: 87, time: 1604270628, Vbat 353 v, Tx dur 434 ms, T: 1887 C, RH: 3541 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 113/0"
+1604295859.108493,"...sent a reply, 538ms"
+1604295874.553162,Current time: 2020-11-01T23:44:34
+1604295874.555538,Received length: 20
+1604295874.5691211,"Data: node: 1, message: 88, time: 1604270644, Vbat 353 v, Tx dur 434 ms, T: 1887 C, RH: 3546 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 115/0"
+1604295876.763247,"...reply failed, 2193ms"
+1604295890.553715,Current time: 2020-11-01T23:44:50
+1604295890.55601,Received length: 20
+1604295890.569521,"Data: node: 1, message: 89, time: 1604270660, Vbat 353 v, Tx dur 435 ms, T: 1885 C, RH: 3549 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 116/0"
+1604295891.108625,"...sent a reply, 538ms"
+1604295906.553129,Current time: 2020-11-01T23:45:06
+1604295906.555082,Received length: 20
+1604295906.5691001,"Data: node: 1, message: 90, time: 1604270676, Vbat 353 v, Tx dur 435 ms, T: 1885 C, RH: 3553 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 118/0"
+1604295909.361235,"...reply failed, 2792ms"
+1604295922.553546,Current time: 2020-11-01T23:45:22
+1604295922.555476,Received length: 20
+1604295922.568654,"Data: node: 1, message: 91, time: 1604270692, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3550 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 119/0"
+1604295925.0216691,"...reply failed, 2452ms"
+1604295938.55307,Current time: 2020-11-01T23:45:38
+1604295938.5550249,Received length: 20
+1604295938.569128,"Data: node: 1, message: 92, time: 1604270708, Vbat 353 v, Tx dur 435 ms, T: 1887 C, RH: 3547 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 120/0"
+1604295941.2941399,"...reply failed, 2725ms"
+1604295954.5531871,Current time: 2020-11-01T23:45:54
+1604295954.554195,Received length: 20
+1604295954.568164,"Data: node: 1, message: 93, time: 1604270724, Vbat 353 v, Tx dur 435 ms, T: 1885 C, RH: 3552 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 121/0"
+1604295955.108609,"...sent a reply, 538ms"
+1604295970.5529542,Current time: 2020-11-01T23:46:10
+1604295970.555277,Received length: 20
+1604295970.568665,"Data: node: 1, message: 94, time: 1604270740, Vbat 353 v, Tx dur 435 ms, T: 1884 C, RH: 3557 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 123/0"
+1604295971.1080298,"...sent a reply, 539ms"
+1604295986.552518,Current time: 2020-11-01T23:46:26
+1604295986.554483,Received length: 20
+1604295986.568474,"Data: node: 1, message: 95, time: 1604270756, Vbat 353 v, Tx dur 435 ms, T: 1885 C, RH: 3550 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 125/0"
+1604295987.108333,"...sent a reply, 538ms"
+1604296002.5528781,Current time: 2020-11-01T23:46:42
+1604296002.554553,Received length: 20
+1604296002.568434,"Data: node: 1, message: 96, time: 1604270772, Vbat 353 v, Tx dur 435 ms, T: 1884 C, RH: 3553 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 127/0"
+1604296003.107929,"...sent a reply, 539ms"
+1604296018.552834,Current time: 2020-11-01T23:46:58
+1604296018.554261,Received length: 20
+1604296018.5684018,"Data: node: 1, message: 97, time: 1604270788, Vbat 353 v, Tx dur 435 ms, T: 1885 C, RH: 3550 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 129/0"
+1604296019.110336,"...sent a reply, 539ms"
+1604296034.552843,Current time: 2020-11-01T23:47:14
+1604296034.554542,Received length: 20
+1604296034.568434,"Data: node: 1, message: 98, time: 1604270804, Vbat 353 v, Tx dur 435 ms, T: 1883 C, RH: 3556 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 131/0"
+1604296035.1078122,"...sent a reply, 539ms"
+1604296050.5523431,Current time: 2020-11-01T23:47:30
+1604296050.554176,Received length: 20
+1604296050.5679832,"Data: node: 1, message: 99, time: 1604270820, Vbat 353 v, Tx dur 435 ms, T: 1883 C, RH: 3553 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 133/0"
+1604296051.108305,"...sent a reply, 539ms"
+1604296066.552733,Current time: 2020-11-01T23:47:46
+1604296066.553856,Received length: 20
+1604296066.5676,"Data: node: 1, message: 100, time: 1604270836, Vbat 353 v, Tx dur 434 ms, T: 1885 C, RH: 3552 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 135/0"
+1604296067.107388,"...sent a reply, 539ms"
+1604296082.5522711,Current time: 2020-11-01T23:48:02
+1604296082.554645,Received length: 20
+1604296082.568021,"Data: node: 1, message: 101, time: 1604270852, Vbat 353 v, Tx dur 434 ms, T: 1883 C, RH: 3558 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 137/0"
+1604296083.108333,"...sent a reply, 539ms"
+1604296098.552639,Current time: 2020-11-01T23:48:18
+1604296098.553836,Received length: 20
+1604296098.567816,"Data: node: 1, message: 102, time: 1604270868, Vbat 353 v, Tx dur 435 ms, T: 1883 C, RH: 3556 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 139/0"
+1604296101.483857,"...reply failed, 2915ms"
+1604296114.552139,Current time: 2020-11-01T23:48:34
+1604296114.553995,Received length: 20
+1604296114.567882,"Data: node: 1, message: 103, time: 1604270884, Vbat 353 v, Tx dur 435 ms, T: 1884 C, RH: 3558 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 140/0"
+1604296115.107214,"...sent a reply, 539ms"
+1604296130.551826,Current time: 2020-11-01T23:48:50
+1604296130.5537632,Received length: 20
+1604296130.567809,"Data: node: 1, message: 104, time: 1604270900, Vbat 353 v, Tx dur 435 ms, T: 1884 C, RH: 3557 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 142/0"
+1604296133.226762,"...reply failed, 2658ms"
+1604296146.55219,Current time: 2020-11-01T23:49:06
+1604296146.554097,Received length: 20
+1604296146.568139,"Data: node: 1, message: 105, time: 1604270916, Vbat 353 v, Tx dur 435 ms, T: 1883 C, RH: 3557 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 143/0"
+1604296147.1071339,"...sent a reply, 539ms"
+1604296162.551778,Current time: 2020-11-01T23:49:22
+1604296162.5537012,Received length: 20
+1604296162.5682828,"Data: node: 1, message: 106, time: 1604270932, Vbat 353 v, Tx dur 435 ms, T: 1884 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 145/0"
+1604296165.127748,"...reply failed, 2559ms"
+1604296178.552109,Current time: 2020-11-01T23:49:38
+1604296178.553865,Received length: 20
+1604296178.567796,"Data: node: 1, message: 107, time: 1604270948, Vbat 353 v, Tx dur 435 ms, T: 1884 C, RH: 3559 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 146/0"
+1604296179.1069791,"...sent a reply, 539ms"
+1604296210.5518022,Current time: 2020-11-01T23:50:10
+1604296210.553,Received length: 20
+1604296210.567481,"Data: node: 1, message: 109, time: 1604270980, Vbat 353 v, Tx dur 435 ms, T: 1881 C, RH: 3562 %, status: 0x10, RSSI -55 dBm, SNR 10 dB, good/bad packets: 148/0"
+1604296213.5881631,"...reply failed, 3018ms"
+1604296226.551645,Current time: 2020-11-01T23:50:26
+1604296226.553566,Received length: 20
+1604296226.567574,"Data: node: 1, message: 110, time: 1604270996, Vbat 353 v, Tx dur 435 ms, T: 1881 C, RH: 3561 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 149/0"
+1604296227.106722,"...sent a reply, 538ms"
+1604296242.5512588,Current time: 2020-11-01T23:50:42
+1604296242.553134,Received length: 20
+1604296242.567122,"Data: node: 1, message: 111, time: 1604271012, Vbat 353 v, Tx dur 435 ms, T: 1883 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 151/0"
+1604296244.736076,"...reply failed, 2168ms"
+1604296258.551569,Current time: 2020-11-01T23:50:58
+1604296258.553302,Received length: 20
+1604296258.5672371,"Data: node: 1, message: 112, time: 1604271028, Vbat 353 v, Tx dur 435 ms, T: 1883 C, RH: 3557 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 152/0"
+1604296260.697348,"...reply failed, 2129ms"
+1604296274.551393,Current time: 2020-11-01T23:51:14
+1604296274.553078,Received length: 20
+1604296274.566643,"Data: node: 1, message: 113, time: 1604271044, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3555 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 153/0"
+1604296275.36989,"...sent a reply, 802ms"
+1604296290.551527,Current time: 2020-11-01T23:51:30
+1604296290.553916,Received length: 20
+1604296290.5672588,"Data: node: 1, message: 114, time: 1604271060, Vbat 353 v, Tx dur 435 ms, T: 1881 C, RH: 3557 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 155/0"
+1604296292.9016802,"...reply failed, 2334ms"
+1604296306.5510669,Current time: 2020-11-01T23:51:46
+1604296306.5528162,Received length: 20
+1604296306.566736,"Data: node: 1, message: 115, time: 1604271076, Vbat 353 v, Tx dur 435 ms, T: 1881 C, RH: 3559 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 156/0"
+1604296309.452151,"...reply failed, 2884ms"
+1604296322.551448,Current time: 2020-11-01T23:52:02
+1604296322.5525372,Received length: 20
+1604296322.566475,"Data: node: 1, message: 116, time: 1604271092, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3562 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 157/0"
+1604296323.106486,"...sent a reply, 538ms"
+1604296338.5510058,Current time: 2020-11-01T23:52:18
+1604296338.552798,Received length: 20
+1604296338.566656,"Data: node: 1, message: 117, time: 1604271108, Vbat 353 v, Tx dur 434 ms, T: 1879 C, RH: 3562 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 159/0"
+1604296340.957223,"...reply failed, 2390ms"
+1604296354.5513759,Current time: 2020-11-01T23:52:34
+1604296354.5524569,Received length: 20
+1604296354.566185,"Data: node: 1, message: 118, time: 1604271124, Vbat 353 v, Tx dur 434 ms, T: 1881 C, RH: 3566 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 160/0"
+1604296355.106433,"...sent a reply, 538ms"
+1604296370.550849,Current time: 2020-11-01T23:52:50
+1604296370.553012,Received length: 20
+1604296370.566897,"Data: node: 1, message: 119, time: 1604271140, Vbat 353 v, Tx dur 435 ms, T: 1881 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 162/0"
+1604296373.188027,"...reply failed, 2621ms"
+1604296386.550501,Current time: 2020-11-01T23:53:06
+1604296386.5522418,Received length: 20
+1604296386.566019,"Data: node: 1, message: 120, time: 1604271156, Vbat 353 v, Tx dur 435 ms, T: 1881 C, RH: 3559 %, status: 0x00, RSSI -53 dBm, SNR 11 dB, good/bad packets: 163/0"
+1604296389.032539,"...reply failed, 2464ms"
+1604296402.5509171,Current time: 2020-11-01T23:53:22
+1604296402.552835,Received length: 20
+1604296402.5668428,"Data: node: 1, message: 121, time: 1604271172, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3562 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 164/0"
+1604296405.120973,"...reply failed, 2554ms"
+1604296418.5504,Current time: 2020-11-01T23:53:38
+1604296418.552323,Received length: 20
+1604296418.566356,"Data: node: 1, message: 122, time: 1604271188, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3561 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 165/0"
+1604296420.863433,"...reply failed, 2296ms"
+1604296434.5505762,Current time: 2020-11-01T23:53:54
+1604296434.5527098,Received length: 20
+1604296434.566509,"Data: node: 1, message: 123, time: 1604271204, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3555 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 166/0"
+1604296437.38398,"...reply failed, 2817ms"
+1604296450.550447,Current time: 2020-11-01T23:54:10
+1604296450.55232,Received length: 20
+1604296450.5663419,"Data: node: 1, message: 124, time: 1604271220, Vbat 353 v, Tx dur 435 ms, T: 1881 C, RH: 3562 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 167/0"
+1604296453.571425,"...reply failed, 3005ms"
+1604296466.550744,Current time: 2020-11-01T23:54:26
+1604296466.552083,Received length: 20
+1604296466.5658722,"Data: node: 1, message: 125, time: 1604271236, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3561 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 168/0"
+1604296467.105757,"...sent a reply, 539ms"
+1604296482.550318,Current time: 2020-11-01T23:54:42
+1604296482.552043,Received length: 20
+1604296482.566077,"Data: node: 1, message: 126, time: 1604271252, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3564 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 170/0"
+1604296483.106306,"...sent a reply, 538ms"
+1604296498.5498722,Current time: 2020-11-01T23:54:58
+1604296498.551958,Received length: 20
+1604296498.565828,"Data: node: 1, message: 127, time: 1604271268, Vbat 353 v, Tx dur 435 ms, T: 1883 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 172/0"
+1604296500.639348,"...reply failed, 2073ms"
+1604296514.550256,Current time: 2020-11-01T23:55:14
+1604296514.552192,Received length: 20
+1604296514.565974,"Data: node: 1, message: 128, time: 1604271284, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3565 %, status: 0x00, RSSI -53 dBm, SNR 11 dB, good/bad packets: 173/0"
+1604296515.105315,"...sent a reply, 539ms"
+1604296530.5498052,Current time: 2020-11-01T23:55:30
+1604296530.5517519,Received length: 20
+1604296530.5657759,"Data: node: 1, message: 129, time: 1604271300, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3564 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 175/0"
+1604296531.105731,"...sent a reply, 538ms"
+1604296546.550195,Current time: 2020-11-01T23:55:46
+1604296546.552135,Received length: 20
+1604296546.566123,"Data: node: 1, message: 130, time: 1604271316, Vbat 353 v, Tx dur 434 ms, T: 1879 C, RH: 3559 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 177/0"
+1604296549.493314,"...reply failed, 2925ms"
+1604296562.549748,Current time: 2020-11-01T23:56:02
+1604296562.5516748,Received length: 20
+1604296562.565734,"Data: node: 1, message: 131, time: 1604271332, Vbat 353 v, Tx dur 434 ms, T: 1879 C, RH: 3559 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 178/0"
+1604296565.328887,"...reply failed, 2762ms"
+1604296578.550262,Current time: 2020-11-01T23:56:18
+1604296578.551145,Received length: 20
+1604296578.565282,"Data: node: 1, message: 132, time: 1604271348, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3559 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 179/0"
+1604296579.105244,"...sent a reply, 538ms"
+1604296594.5496771,Current time: 2020-11-01T23:56:34
+1604296594.552566,Received length: 20
+1604296594.565789,"Data: node: 1, message: 133, time: 1604271364, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3556 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 181/0"
+1604296595.1054468,"...sent a reply, 538ms"
+1604296610.5500522,Current time: 2020-11-01T23:56:50
+1604296610.55113,Received length: 20
+1604296610.565187,"Data: node: 1, message: 134, time: 1604271380, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3559 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 183/0"
+1604296611.105139,"...sent a reply, 539ms"
+1604296626.536318,Current time: 2020-11-01T23:57:06
+1604296626.538081,Received length: 20
+1604296626.552002,"Data: node: 1, message: 135, time: 1604271396, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3559 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 185/0"
+1604296629.291171,"...reply failed, 2741ms"
+1604296642.523229,Current time: 2020-11-01T23:57:22
+1604296642.525172,Received length: 20
+1604296642.539149,"Data: node: 1, message: 136, time: 1604271412, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3559 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 186/0"
+1604296645.1460302,"...reply failed, 2607ms"
+1604296652.520134,Current time: 2020-11-01T23:57:32
+1604296652.522416,Received length: 20
+1604296652.536056,"Data: node: 1, message: 137, time: 1604271422, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3557 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 187/0"
+1604296654.732631,"...reply failed, 2196ms"
+1604296668.517324,Current time: 2020-11-01T23:57:48
+1604296668.5190568,Received length: 20
+1604296668.5328262,"Data: node: 1, message: 138, time: 1604271438, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3555 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 188/0"
+1604296671.636916,"...reply failed, 3102ms"
+1604296684.5168488,Current time: 2020-11-01T23:58:04
+1604296684.519202,Received length: 20
+1604296684.532779,"Data: node: 1, message: 139, time: 1604271454, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3562 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 189/0"
+1604296685.071914,"...sent a reply, 538ms"
+1604296700.5160892,Current time: 2020-11-01T23:58:20
+1604296700.518055,Received length: 20
+1604296700.5320919,"Data: node: 1, message: 140, time: 1604271470, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3558 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 191/0"
+1604296701.071987,"...sent a reply, 539ms"
+1604296716.51635,Current time: 2020-11-01T23:58:36
+1604296716.5182989,Received length: 20
+1604296716.532359,"Data: node: 1, message: 141, time: 1604271486, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3555 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 193/0"
+1604296719.14158,"...reply failed, 2608ms"
+1604296732.515906,Current time: 2020-11-01T23:58:52
+1604296732.5178492,Received length: 20
+1604296732.531917,"Data: node: 1, message: 142, time: 1604271502, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3559 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 194/0"
+1604296733.071878,"...sent a reply, 538ms"
+1604296748.516282,Current time: 2020-11-01T23:59:08
+1604296748.518208,Received length: 20
+1604296748.531643,"Data: node: 1, message: 143, time: 1604271518, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3558 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 196/0"
+1604296751.021555,"...reply failed, 2489ms"
+1604296764.515865,Current time: 2020-11-01T23:59:24
+1604296764.517569,Received length: 20
+1604296764.531404,"Data: node: 1, message: 144, time: 1604271534, Vbat 353 v, Tx dur 434 ms, T: 1877 C, RH: 3545 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 197/0"
+1604296766.811935,"...reply failed, 2279ms"
+1604296780.516172,Current time: 2020-11-01T23:59:40
+1604296780.517282,Received length: 20
+1604296780.530924,"Data: node: 1, message: 145, time: 1604271550, Vbat 353 v, Tx dur 434 ms, T: 1876 C, RH: 3532 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 198/0"
+1604296783.193208,"...reply failed, 2661ms"
+1604296796.515763,Current time: 2020-11-01T23:59:56
+1604296796.517704,Received length: 20
+1604296796.531782,"Data: node: 1, message: 146, time: 1604271566, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3531 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 199/0"
+1604296797.071732,"...sent a reply, 539ms"
+1604296812.515352,Current time: 2020-11-02T00:00:12
+1604296812.51727,Received length: 20
+1604296812.5312839,"Data: node: 1, message: 147, time: 1604271582, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3537 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 201/0"
+1604296815.412239,"...reply failed, 2880ms"
+1604296828.515442,Current time: 2020-11-02T00:00:28
+1604296828.517398,Received length: 20
+1604296828.531383,"Data: node: 1, message: 148, time: 1604271598, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3541 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 202/0"
+1604296830.8198469,"...reply failed, 2288ms"
+1604296844.515253,Current time: 2020-11-02T00:00:44
+1604296844.517181,Received length: 20
+1604296844.53115,"Data: node: 1, message: 149, time: 1604271614, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3549 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 203/0"
+1604296845.0712562,"...sent a reply, 539ms"
+1604296860.5151849,Current time: 2020-11-02T00:01:00
+1604296860.5171342,Received length: 20
+1604296860.531102,"Data: node: 1, message: 150, time: 1604271630, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3550 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 205/0"
+1604296861.0707462,"...sent a reply, 539ms"
+1604296876.51471,Current time: 2020-11-02T00:01:16
+1604296876.5174558,Received length: 20
+1604296876.531162,"Data: node: 1, message: 151, time: 1604271646, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3549 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 207/0"
+1604296879.68727,"...reply failed, 3155ms"
+1604296892.51558,Current time: 2020-11-02T00:01:32
+1604296892.517807,Received length: 20
+1604296892.530745,"Data: node: 1, message: 152, time: 1604271662, Vbat 353 v, Tx dur 435 ms, T: 1879 C, RH: 3550 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 208/0"
+1604296893.072581,"...sent a reply, 538ms"
+1604296908.515137,Current time: 2020-11-02T00:01:48
+1604296908.517075,Received length: 20
+1604296908.5310779,"Data: node: 1, message: 153, time: 1604271678, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3556 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 210/0"
+1604296911.165175,"...reply failed, 2633ms"
+1604296924.5155032,Current time: 2020-11-02T00:02:04
+1604296924.516646,Received length: 20
+1604296924.530623,"Data: node: 1, message: 154, time: 1604271694, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3557 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 211/0"
+1604296927.385685,"...reply failed, 2854ms"
+1604296940.5150871,Current time: 2020-11-02T00:02:20
+1604296940.516955,Received length: 20
+1604296940.53069,"Data: node: 1, message: 155, time: 1604271710, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3561 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 212/0"
+1604296941.071106,"...sent a reply, 539ms"
+1604296956.514672,Current time: 2020-11-02T00:02:36
+1604296956.5167282,Received length: 20
+1604296956.5307038,"Data: node: 1, message: 156, time: 1604271726, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3559 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 214/0"
+1604296957.070605,"...sent a reply, 539ms"
+1604296972.51501,Current time: 2020-11-02T00:02:52
+1604296972.516957,Received length: 20
+1604296972.530977,"Data: node: 1, message: 157, time: 1604271742, Vbat 353 v, Tx dur 434 ms, T: 1877 C, RH: 3554 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 216/0"
+1604296973.071048,"...sent a reply, 538ms"
+1604296988.514544,Current time: 2020-11-02T00:03:08
+1604296988.516522,Received length: 20
+1604296988.530496,"Data: node: 1, message: 158, time: 1604271758, Vbat 353 v, Tx dur 434 ms, T: 1876 C, RH: 3537 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 218/0"
+1604296989.070476,"...sent a reply, 539ms"
+1604297004.514951,Current time: 2020-11-02T00:03:24
+1604297004.516705,Received length: 20
+1604297004.530544,"Data: node: 1, message: 159, time: 1604271774, Vbat 353 v, Tx dur 435 ms, T: 1874 C, RH: 3534 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 220/0"
+1604297005.069973,"...sent a reply, 538ms"
+1604297020.5148978,Current time: 2020-11-02T00:03:40
+1604297020.5161421,Received length: 20
+1604297020.530463,"Data: node: 1, message: 160, time: 1604271790, Vbat 353 v, Tx dur 435 ms, T: 1877 C, RH: 3541 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 222/0"
+1604297021.070496,"...sent a reply, 539ms"
+1604297036.5148852,Current time: 2020-11-02T00:03:56
+1604297036.5159922,Received length: 20
+1604297036.529759,"Data: node: 1, message: 161, time: 1604271806, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3550 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 224/0"
+1604297039.520979,"...reply failed, 2989ms"
+1604297052.5144691,Current time: 2020-11-02T00:04:12
+1604297052.516413,Received length: 20
+1604297052.530231,"Data: node: 1, message: 162, time: 1604271822, Vbat 352 v, Tx dur 435 ms, T: 1874 C, RH: 3554 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 225/0"
+1604297053.0715,"...sent a reply, 538ms"
+1604297068.5140102,Current time: 2020-11-02T00:04:28
+1604297068.5159419,Received length: 20
+1604297068.5296419,"Data: node: 1, message: 163, time: 1604271838, Vbat 352 v, Tx dur 435 ms, T: 1874 C, RH: 3554 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 227/0"
+1604297069.069977,"...sent a reply, 538ms"
+1604297084.514362,Current time: 2020-11-02T00:04:44
+1604297084.516087,Received length: 20
+1604297084.5301409,"Data: node: 1, message: 164, time: 1604271854, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3555 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 229/0"
+1604297086.8233988,"...reply failed, 2292ms"
+1604297100.513453,Current time: 2020-11-02T00:05:00
+1604297100.515445,Received length: 20
+1604297100.5294259,"Data: node: 1, message: 165, time: 1604271870, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3559 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 230/0"
+1604297101.069803,"...sent a reply, 538ms"
+1604297116.514157,Current time: 2020-11-02T00:05:16
+1604297116.51719,Received length: 20
+1604297116.5298738,"Data: node: 1, message: 166, time: 1604271886, Vbat 353 v, Tx dur 435 ms, T: 1874 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 232/0"
+1604297119.492362,"...reply failed, 2961ms"
+1604297132.5138628,Current time: 2020-11-02T00:05:32
+1604297132.5162082,Received length: 20
+1604297132.5297348,"Data: node: 1, message: 167, time: 1604271902, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3564 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 233/0"
+1604297133.069792,"...sent a reply, 539ms"
+1604297148.5142798,Current time: 2020-11-02T00:05:48
+1604297148.516202,Received length: 20
+1604297148.529369,"Data: node: 1, message: 168, time: 1604271918, Vbat 353 v, Tx dur 435 ms, T: 1874 C, RH: 3557 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 235/0"
+1604297149.070254,"...sent a reply, 539ms"
+1604297164.513812,Current time: 2020-11-02T00:06:04
+1604297164.515687,Received length: 20
+1604297164.529533,"Data: node: 1, message: 169, time: 1604271934, Vbat 353 v, Tx dur 435 ms, T: 1873 C, RH: 3556 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 237/0"
+1604297165.0697541,"...sent a reply, 539ms"
+1604297180.514185,Current time: 2020-11-02T00:06:20
+1604297180.5156538,Received length: 20
+1604297180.529243,"Data: node: 1, message: 170, time: 1604271950, Vbat 353 v, Tx dur 434 ms, T: 1874 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 239/0"
+1604297181.069191,"...sent a reply, 538ms"
+1604297196.513839,Current time: 2020-11-02T00:06:36
+1604297196.515479,Received length: 20
+1604297196.529479,"Data: node: 1, message: 171, time: 1604271966, Vbat 353 v, Tx dur 434 ms, T: 1876 C, RH: 3566 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 241/0"
+1604297197.0695941,"...sent a reply, 539ms"
+1604297212.51415,Current time: 2020-11-02T00:06:52
+1604297212.5152361,Received length: 20
+1604297212.5293078,"Data: node: 1, message: 172, time: 1604271982, Vbat 353 v, Tx dur 435 ms, T: 1874 C, RH: 3566 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 243/0"
+1604297213.0701492,"...sent a reply, 539ms"
+1604297228.513723,Current time: 2020-11-02T00:07:08
+1604297228.515657,Received length: 20
+1604297228.5296772,"Data: node: 1, message: 173, time: 1604271998, Vbat 353 v, Tx dur 435 ms, T: 1873 C, RH: 3573 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 245/0"
+1604297229.07074,"...sent a reply, 539ms"
+1604297244.512974,Current time: 2020-11-02T00:07:24
+1604297244.5152209,Received length: 20
+1604297244.5293381,"Data: node: 1, message: 174, time: 1604272014, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3571 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 247/0"
+1604297245.069242,"...sent a reply, 539ms"
+1604297260.513643,Current time: 2020-11-02T00:07:40
+1604297260.51559,Received length: 20
+1604297260.529613,"Data: node: 1, message: 175, time: 1604272030, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3568 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 249/0"
+1604297262.736747,"...reply failed, 2207ms"
+1604297276.5132108,Current time: 2020-11-02T00:07:56
+1604297276.5149,Received length: 20
+1604297276.529165,"Data: node: 1, message: 176, time: 1604272046, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3568 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 250/0"
+1604297277.06916,"...sent a reply, 538ms"
+1604297292.5135381,Current time: 2020-11-02T00:08:12
+1604297292.51458,Received length: 20
+1604297292.528827,"Data: node: 1, message: 177, time: 1604272062, Vbat 353 v, Tx dur 435 ms, T: 1874 C, RH: 3565 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 252/0"
+1604297295.221754,"...reply failed, 2692ms"
+1604297308.513119,Current time: 2020-11-02T00:08:28
+1604297308.51509,Received length: 20
+1604297308.528863,"Data: node: 1, message: 178, time: 1604272078, Vbat 353 v, Tx dur 435 ms, T: 1876 C, RH: 3571 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 253/0"
+1604297309.06912,"...sent a reply, 539ms"
+1604297324.5134132,Current time: 2020-11-02T00:08:44
+1604297324.514452,Received length: 20
+1604297324.5286558,"Data: node: 1, message: 179, time: 1604272094, Vbat 353 v, Tx dur 435 ms, T: 1873 C, RH: 3571 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 255/0"
+1604297326.884649,"...reply failed, 2355ms"
+1604297340.512639,Current time: 2020-11-02T00:09:00
+1604297340.5146172,Received length: 20
+1604297340.52854,"Data: node: 1, message: 180, time: 1604272110, Vbat 353 v, Tx dur 435 ms, T: 1874 C, RH: 3571 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 256/0"
+1604297341.069082,"...sent a reply, 538ms"
+1604297356.5134149,Current time: 2020-11-02T00:09:16
+1604297356.514526,Received length: 20
+1604297356.5303218,"Data: node: 1, message: 181, time: 1604272126, Vbat 353 v, Tx dur 435 ms, T: 1873 C, RH: 3568 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 258/0"
+1604297357.068675,"...sent a reply, 539ms"
+1604297372.5130281,Current time: 2020-11-02T00:09:32
+1604297372.5149682,Received length: 20
+1604297372.5290189,"Data: node: 1, message: 182, time: 1604272142, Vbat 353 v, Tx dur 435 ms, T: 1874 C, RH: 3556 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 260/0"
+1604297373.068993,"...sent a reply, 538ms"
+1604297388.512426,Current time: 2020-11-02T00:09:48
+1604297388.514546,Received length: 20
+1604297388.5285408,"Data: node: 1, message: 183, time: 1604272158, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3566 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 262/0"
+1604297391.420626,"...reply failed, 2891ms"
+1604297404.512734,Current time: 2020-11-02T00:10:04
+1604297404.514664,Received length: 20
+1604297404.5286741,"Data: node: 1, message: 184, time: 1604272174, Vbat 353 v, Tx dur 434 ms, T: 1871 C, RH: 3566 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 263/0"
+1604297406.7790568,"...reply failed, 2248ms"
+1604297420.5123708,Current time: 2020-11-02T00:10:20
+1604297420.514462,Received length: 20
+1604297420.52849,"Data: node: 1, message: 185, time: 1604272190, Vbat 353 v, Tx dur 434 ms, T: 1871 C, RH: 3562 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 264/0"
+1604297421.068511,"...sent a reply, 539ms"
+1604297436.512678,Current time: 2020-11-02T00:10:36
+1604297436.5148852,Received length: 20
+1604297436.5280352,"Data: node: 1, message: 186, time: 1604272206, Vbat 353 v, Tx dur 434 ms, T: 1871 C, RH: 3566 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 266/0"
+1604297437.068038,"...sent a reply, 539ms"
+1604297452.512278,Current time: 2020-11-02T00:10:52
+1604297452.514417,Received length: 20
+1604297452.528425,"Data: node: 1, message: 187, time: 1604272222, Vbat 353 v, Tx dur 434 ms, T: 1871 C, RH: 3564 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 268/0"
+1604297453.0684109,"...sent a reply, 539ms"
+1604297468.511799,Current time: 2020-11-02T00:11:08
+1604297468.513736,Received length: 20
+1604297468.52774,"Data: node: 1, message: 188, time: 1604272238, Vbat 353 v, Tx dur 435 ms, T: 1873 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 270/0"
+1604297470.752937,"...reply failed, 2224ms"
+1604297484.5122461,Current time: 2020-11-02T00:11:24
+1604297484.514171,Received length: 20
+1604297484.5281348,"Data: node: 1, message: 189, time: 1604272254, Vbat 353 v, Tx dur 435 ms, T: 1870 C, RH: 3565 %, status: 0x00, RSSI -53 dBm, SNR 11 dB, good/bad packets: 271/0"
+1604297485.068161,"...sent a reply, 539ms"
+1604297500.512171,Current time: 2020-11-02T00:11:40
+1604297500.513674,Received length: 20
+1604297500.527874,"Data: node: 1, message: 190, time: 1604272270, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3566 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 273/0"
+1604297502.7146418,"...reply failed, 2186ms"
+1604297516.512748,Current time: 2020-11-02T00:11:56
+1604297516.5140202,Received length: 20
+1604297516.527976,"Data: node: 1, message: 191, time: 1604272286, Vbat 353 v, Tx dur 435 ms, T: 1870 C, RH: 3570 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 274/0"
+1604297518.823444,"...reply failed, 2346ms"
+1604297532.460202,Current time: 2020-11-02T00:12:12
+1604297532.46177,Received length: 20
+1604297532.476013,"Data: node: 1, message: 192, time: 1604272302, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3575 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 275/0"
+1604297535.238006,"...reply failed, 2760ms"
+1604297548.4609768,Current time: 2020-11-02T00:12:28
+1604297548.462241,Received length: 20
+1604297548.476445,"Data: node: 1, message: 193, time: 1604272318, Vbat 353 v, Tx dur 435 ms, T: 1869 C, RH: 3580 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 276/0"
+1604297549.015635,"...sent a reply, 539ms"
+1604297564.4600608,Current time: 2020-11-02T00:12:44
+1604297564.461813,Received length: 20
+1604297564.475679,"Data: node: 1, message: 194, time: 1604272334, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3581 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 278/0"
+1604297565.017099,"...sent a reply, 539ms"
+1604297580.459957,Current time: 2020-11-02T00:13:00
+1604297580.460984,Received length: 20
+1604297580.4750001,"Data: node: 1, message: 195, time: 1604272350, Vbat 353 v, Tx dur 435 ms, T: 1869 C, RH: 3580 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 280/0"
+1604297581.0164459,"...sent a reply, 539ms"
+1604297596.459914,Current time: 2020-11-02T00:13:16
+1604297596.461997,Received length: 20
+1604297596.475945,"Data: node: 1, message: 196, time: 1604272366, Vbat 353 v, Tx dur 435 ms, T: 1870 C, RH: 3575 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 282/0"
+1604297597.0158122,"...sent a reply, 539ms"
+1604297612.45948,Current time: 2020-11-02T00:13:32
+1604297612.461327,Received length: 20
+1604297612.4752629,"Data: node: 1, message: 197, time: 1604272382, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3579 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 284/0"
+1604297615.500511,"...reply failed, 3024ms"
+1604297628.459829,Current time: 2020-11-02T00:13:48
+1604297628.4618099,Received length: 20
+1604297628.475734,"Data: node: 1, message: 198, time: 1604272398, Vbat 353 v, Tx dur 435 ms, T: 1870 C, RH: 3580 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 285/0"
+1604297629.016153,"...sent a reply, 539ms"
+1604297644.459401,Current time: 2020-11-02T00:14:04
+1604297644.461322,Received length: 20
+1604297644.475338,"Data: node: 1, message: 199, time: 1604272414, Vbat 353 v, Tx dur 434 ms, T: 1869 C, RH: 3578 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 287/0"
+1604297647.143531,"...reply failed, 2667ms"
+1604297660.459753,Current time: 2020-11-02T00:14:20
+1604297660.461688,Received length: 20
+1604297660.475654,"Data: node: 1, message: 200, time: 1604272430, Vbat 353 v, Tx dur 434 ms, T: 1869 C, RH: 3579 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 288/0"
+1604297661.015719,"...sent a reply, 539ms"
+1604297676.458765,Current time: 2020-11-02T00:14:36
+1604297676.4608011,Received length: 20
+1604297676.474762,"Data: node: 1, message: 201, time: 1604272446, Vbat 353 v, Tx dur 435 ms, T: 1871 C, RH: 3583 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 290/0"
+1604297677.015392,"...sent a reply, 539ms"
+1604297692.459651,Current time: 2020-11-02T00:14:52
+1604297692.461586,Received length: 20
+1604297692.474779,"Data: node: 1, message: 202, time: 1604272462, Vbat 353 v, Tx dur 435 ms, T: 1870 C, RH: 3581 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 292/0"
+1604297695.465781,"...reply failed, 2990ms"
+1604297708.459198,Current time: 2020-11-02T00:15:08
+1604297708.46113,Received length: 20
+1604297708.475213,"Data: node: 1, message: 203, time: 1604272478, Vbat 353 v, Tx dur 435 ms, T: 1869 C, RH: 3580 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 293/0"
+1604297711.5002902,"...reply failed, 3024ms"
+1604297724.459522,Current time: 2020-11-02T00:15:24
+1604297724.4608169,Received length: 20
+1604297724.474505,"Data: node: 1, message: 204, time: 1604272494, Vbat 353 v, Tx dur 435 ms, T: 1869 C, RH: 3577 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 294/0"
+1604297726.908662,"...reply failed, 2433ms"
+1604297740.459095,Current time: 2020-11-02T00:15:40
+1604297740.461087,Received length: 20
+1604297740.474734,"Data: node: 1, message: 205, time: 1604272510, Vbat 353 v, Tx dur 435 ms, T: 1869 C, RH: 3577 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 295/0"
+1604297743.337163,"...reply failed, 2860ms"
+1604297756.458671,Current time: 2020-11-02T00:15:56
+1604297756.460556,Received length: 20
+1604297756.474594,"Data: node: 1, message: 206, time: 1604272526, Vbat 353 v, Tx dur 435 ms, T: 1869 C, RH: 3574 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 296/0"
+1604297759.2246652,"...reply failed, 2749ms"
+1604297772.458962,Current time: 2020-11-02T00:16:12
+1604297772.4608798,Received length: 20
+1604297772.474956,"Data: node: 1, message: 207, time: 1604272542, Vbat 353 v, Tx dur 435 ms, T: 1867 C, RH: 3566 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 297/0"
+1604297773.014899,"...sent a reply, 538ms"
+1604297788.458653,Current time: 2020-11-02T00:16:28
+1604297788.460547,Received length: 20
+1604297788.474463,"Data: node: 1, message: 208, time: 1604272558, Vbat 353 v, Tx dur 435 ms, T: 1864 C, RH: 3570 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 299/0"
+1604297789.014466,"...sent a reply, 539ms"
+1604297804.458879,Current time: 2020-11-02T00:16:44
+1604297804.460791,Received length: 20
+1604297804.474544,"Data: node: 1, message: 209, time: 1604272574, Vbat 353 v, Tx dur 435 ms, T: 1867 C, RH: 3572 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 301/0"
+1604297805.014863,"...sent a reply, 539ms"
+1604297820.4578292,Current time: 2020-11-02T00:17:00
+1604297820.459862,Received length: 20
+1604297820.473898,"Data: node: 1, message: 210, time: 1604272590, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3561 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 303/0"
+1604297823.425459,"...reply failed, 2950ms"
+1604297836.4587982,Current time: 2020-11-02T00:17:16
+1604297836.460732,Received length: 20
+1604297836.473928,"Data: node: 1, message: 211, time: 1604272606, Vbat 353 v, Tx dur 435 ms, T: 1867 C, RH: 3563 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 304/0"
+1604297837.013955,"...sent a reply, 539ms"
+1604297852.458312,Current time: 2020-11-02T00:17:32
+1604297852.46036,Received length: 20
+1604297852.4740648,"Data: node: 1, message: 212, time: 1604272622, Vbat 353 v, Tx dur 434 ms, T: 1866 C, RH: 3570 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 306/0"
+1604297853.014315,"...sent a reply, 539ms"
+1604297868.458653,Current time: 2020-11-02T00:17:48
+1604297868.459785,Received length: 20
+1604297868.47374,"Data: node: 1, message: 213, time: 1604272638, Vbat 353 v, Tx dur 435 ms, T: 1864 C, RH: 3571 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 308/0"
+1604297870.978813,"...reply failed, 2504ms"
+1604297884.458213,Current time: 2020-11-02T00:18:04
+1604297884.46,Received length: 20
+1604297884.4738119,"Data: node: 1, message: 214, time: 1604272654, Vbat 353 v, Tx dur 435 ms, T: 1864 C, RH: 3571 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 309/0"
+1604297885.014165,"...sent a reply, 539ms"
+1604297900.4577012,Current time: 2020-11-02T00:18:20
+1604297900.459782,Received length: 20
+1604297900.4734678,"Data: node: 1, message: 215, time: 1604272670, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3565 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 311/0"
+1604297901.013713,"...sent a reply, 539ms"
+1604297916.457997,Current time: 2020-11-02T00:18:36
+1604297916.460066,Received length: 20
+1604297916.473841,"Data: node: 1, message: 216, time: 1604272686, Vbat 353 v, Tx dur 435 ms, T: 1867 C, RH: 3565 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 313/0"
+1604297919.6511512,"...reply failed, 3175ms"
+1604297932.457645,Current time: 2020-11-02T00:18:52
+1604297932.459599,Received length: 20
+1604297932.473376,"Data: node: 1, message: 217, time: 1604272702, Vbat 352 v, Tx dur 435 ms, T: 1864 C, RH: 3562 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 314/0"
+1604297933.013676,"...sent a reply, 539ms"
+1604297948.458009,Current time: 2020-11-02T00:19:08
+1604297948.4599411,Received length: 20
+1604297948.473807,"Data: node: 1, message: 218, time: 1604272718, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3562 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 316/0"
+1604297949.014014,"...sent a reply, 539ms"
+1604297964.4575171,Current time: 2020-11-02T00:19:24
+1604297964.4592519,Received length: 20
+1604297964.473207,"Data: node: 1, message: 219, time: 1604272734, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3563 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 318/0"
+1604297965.013406,"...sent a reply, 539ms"
+1604297980.457878,Current time: 2020-11-02T00:19:40
+1604297980.459009,Received length: 20
+1604297980.4729018,"Data: node: 1, message: 220, time: 1604272750, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3562 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 320/0"
+1604297981.01301,"...sent a reply, 538ms"
+1604297996.457409,Current time: 2020-11-02T00:19:56
+1604297996.4593868,Received length: 20
+1604297996.473075,"Data: node: 1, message: 221, time: 1604272766, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3563 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 322/0"
+1604297999.496471,"...reply failed, 3022ms"
+1604298012.457877,Current time: 2020-11-02T00:20:12
+1604298012.458954,Received length: 20
+1604298012.472949,"Data: node: 1, message: 222, time: 1604272782, Vbat 353 v, Tx dur 435 ms, T: 1864 C, RH: 3568 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 323/0"
+1604298013.0129158,"...sent a reply, 538ms"
+1604298028.4573529,Current time: 2020-11-02T00:20:28
+1604298028.459112,Received length: 20
+1604298028.472959,"Data: node: 1, message: 223, time: 1604272798, Vbat 353 v, Tx dur 435 ms, T: 1867 C, RH: 3571 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 325/0"
+1604298029.013419,"...sent a reply, 539ms"
+1604298060.456722,Current time: 2020-11-02T00:21:00
+1604298060.458708,Received length: 20
+1604298060.4726982,"Data: node: 1, message: 225, time: 1604272830, Vbat 352 v, Tx dur 435 ms, T: 1866 C, RH: 3573 %, status: 0x10, RSSI -55 dBm, SNR 10 dB, good/bad packets: 327/1"
+1604298062.6744351,"...reply failed, 2201ms"
+1604298076.456791,Current time: 2020-11-02T00:21:16
+1604298076.458723,Received length: 20
+1604298076.472756,"Data: node: 1, message: 226, time: 1604272846, Vbat 352 v, Tx dur 435 ms, T: 1864 C, RH: 3568 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 328/1"
+1604298077.012929,"...sent a reply, 538ms"
+1604298092.457153,Current time: 2020-11-02T00:21:32
+1604298092.458896,Received length: 20
+1604298092.472793,"Data: node: 1, message: 227, time: 1604272862, Vbat 353 v, Tx dur 435 ms, T: 1864 C, RH: 3575 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 330/1"
+1604298093.0143301,"...sent a reply, 538ms"
+1604298108.456686,Current time: 2020-11-02T00:21:48
+1604298108.4585788,Received length: 20
+1604298108.4726012,"Data: node: 1, message: 228, time: 1604272878, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3572 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 332/1"
+1604298111.339916,"...reply failed, 2866ms"
+1604298124.457113,Current time: 2020-11-02T00:22:04
+1604298124.458186,Received length: 20
+1604298124.47218,"Data: node: 1, message: 229, time: 1604272894, Vbat 353 v, Tx dur 435 ms, T: 1864 C, RH: 3566 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 333/1"
+1604298127.748275,"...reply failed, 3275ms"
+1604298140.4565818,Current time: 2020-11-02T00:22:20
+1604298140.458538,Received length: 20
+1604298140.472556,"Data: node: 1, message: 230, time: 1604272910, Vbat 353 v, Tx dur 435 ms, T: 1866 C, RH: 3559 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 334/1"
+1604298141.013497,"...sent a reply, 539ms"
+1604298156.456937,Current time: 2020-11-02T00:22:36
+1604298156.459027,Received length: 20
+1604298156.472091,"Data: node: 1, message: 231, time: 1604272926, Vbat 353 v, Tx dur 435 ms, T: 1864 C, RH: 3562 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 336/1"
+1604298157.012225,"...sent a reply, 539ms"
+1604298172.456502,Current time: 2020-11-02T00:22:52
+1604298172.458444,Received length: 20
+1604298172.472476,"Data: node: 1, message: 232, time: 1604272942, Vbat 353 v, Tx dur 434 ms, T: 1866 C, RH: 3568 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 338/1"
+1604298174.755609,"...reply failed, 2282ms"
+1604298188.455594,Current time: 2020-11-02T00:23:08
+1604298188.457498,Received length: 20
+1604298188.4714801,"Data: node: 1, message: 233, time: 1604272958, Vbat 353 v, Tx dur 434 ms, T: 1866 C, RH: 3575 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 339/1"
+1604298189.012005,"...sent a reply, 539ms"
+1604298204.4563808,Current time: 2020-11-02T00:23:24
+1604298204.4581602,Received length: 20
+1604298204.4720042,"Data: node: 1, message: 234, time: 1604272974, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3572 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 341/1"
+1604298206.553493,"...reply failed, 2080ms"
+1604298220.455894,Current time: 2020-11-02T00:23:40
+1604298220.457862,Received length: 20
+1604298220.47189,"Data: node: 1, message: 235, time: 1604272990, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3577 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 342/1"
+1604298221.011884,"...sent a reply, 539ms"
+1604298236.456241,Current time: 2020-11-02T00:23:56
+1604298236.4580202,Received length: 20
+1604298236.4719958,"Data: node: 1, message: 236, time: 1604273006, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3577 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 344/1"
+1604298237.012383,"...sent a reply, 539ms"
+1604298252.455821,Current time: 2020-11-02T00:24:12
+1604298252.4577348,Received length: 20
+1604298252.4718049,"Data: node: 1, message: 237, time: 1604273022, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3578 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 346/1"
+1604298253.011798,"...sent a reply, 539ms"
+1604298268.456189,Current time: 2020-11-02T00:24:28
+1604298268.457228,Received length: 20
+1604298268.471333,"Data: node: 1, message: 238, time: 1604273038, Vbat 352 v, Tx dur 435 ms, T: 1862 C, RH: 3577 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 348/1"
+1604298270.7723908,"...reply failed, 2298ms"
+1604298284.455681,Current time: 2020-11-02T00:24:44
+1604298284.4574342,Received length: 20
+1604298284.4713888,"Data: node: 1, message: 239, time: 1604273054, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3572 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 349/1"
+1604298287.167789,"...reply failed, 2695ms"
+1604298300.455801,Current time: 2020-11-02T00:25:00
+1604298300.457473,Received length: 20
+1604298300.4707258,"Data: node: 1, message: 240, time: 1604273070, Vbat 353 v, Tx dur 435 ms, T: 1860 C, RH: 3572 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 350/1"
+1604298301.0120409,"...sent a reply, 538ms"
+1604298316.4556181,Current time: 2020-11-02T00:25:16
+1604298316.4573498,Received length: 20
+1604298316.471243,"Data: node: 1, message: 241, time: 1604273086, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3575 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 352/1"
+1604298317.01166,"...sent a reply, 539ms"
+1604298332.455169,Current time: 2020-11-02T00:25:32
+1604298332.457066,Received length: 20
+1604298332.471138,"Data: node: 1, message: 242, time: 1604273102, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3577 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 354/1"
+1604298334.868126,"...reply failed, 2395ms"
+1604298348.455672,Current time: 2020-11-02T00:25:48
+1604298348.457545,Received length: 20
+1604298348.4715111,"Data: node: 1, message: 243, time: 1604273118, Vbat 353 v, Tx dur 435 ms, T: 1862 C, RH: 3571 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 355/1"
+1604298349.011611,"...sent a reply, 539ms"
+1604337733.084772,Current time: 2020-11-02T11:22:13
+1604337733.087043,Received length: 20
+1604337733.098026,"Data: node: 1, message: 2705, time: 1604312504, Vbat 353 v, Tx dur 434 ms, T: 2004 C, RH: 3448 %, status: 0x10, RSSI -56 dBm, SNR 10 dB, good/bad packets: 1/0"
+1604337733.638929,"...sent a reply, 538ms"
+1604337749.0823748,Current time: 2020-11-02T11:22:29
+1604337749.084275,Received length: 20
+1604337749.098325,"Data: node: 1, message: 2706, time: 1604312520, Vbat 353 v, Tx dur 435 ms, T: 2003 C, RH: 3449 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 3/0"
+1604337751.8875022,"...reply failed, 2788ms"
+1604337765.082227,Current time: 2020-11-02T11:22:45
+1604337765.0839622,Received length: 20
+1604337765.097891,"Data: node: 1, message: 2707, time: 1604312536, Vbat 353 v, Tx dur 435 ms, T: 2006 C, RH: 3447 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 4/0"
+1604337765.637883,"...sent a reply, 539ms"
+1604337781.082298,Current time: 2020-11-02T11:23:01
+1604337781.0847628,Received length: 20
+1604337781.0972002,"Data: node: 1, message: 2708, time: 1604312552, Vbat 353 v, Tx dur 435 ms, T: 2004 C, RH: 3443 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 6/0"
+1604337781.6402502,"...sent a reply, 539ms"
+1604337797.0818172,Current time: 2020-11-02T11:23:17
+1604337797.0838342,Received length: 20
+1604337797.097771,"Data: node: 1, message: 2709, time: 1604312568, Vbat 353 v, Tx dur 435 ms, T: 2006 C, RH: 3433 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 8/0"
+1604337797.637922,"...sent a reply, 539ms"
+1604337813.082185,Current time: 2020-11-02T11:23:33
+1604337813.084256,Received length: 20
+1604337813.0972722,"Data: node: 1, message: 2710, time: 1604312584, Vbat 353 v, Tx dur 435 ms, T: 2003 C, RH: 3446 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 10/0"
+1604337813.637922,"...sent a reply, 538ms"
+1604337829.0817862,Current time: 2020-11-02T11:23:49
+1604337829.0837498,Received length: 20
+1604337829.0977302,"Data: node: 1, message: 2711, time: 1604312600, Vbat 353 v, Tx dur 435 ms, T: 2007 C, RH: 3443 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 12/0"
+1604337829.63787,"...sent a reply, 539ms"
+1604337845.081266,Current time: 2020-11-02T11:24:05
+1604337845.083201,Received length: 20
+1604337845.097313,"Data: node: 1, message: 2712, time: 1604312616, Vbat 353 v, Tx dur 435 ms, T: 2007 C, RH: 3438 %, status: 0x00, RSSI -57 dBm, SNR 9 dB, good/bad packets: 14/0"
+1604337845.637365,"...sent a reply, 539ms"
+1604337861.081749,Current time: 2020-11-02T11:24:21
+1604337861.0836961,Received length: 20
+1604337861.097715,"Data: node: 1, message: 2713, time: 1604312632, Vbat 353 v, Tx dur 435 ms, T: 2007 C, RH: 3441 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 16/0"
+1604337861.637762,"...sent a reply, 539ms"
+1604337877.081296,Current time: 2020-11-02T11:24:37
+1604337877.083385,Received length: 20
+1604337877.0970051,"Data: node: 1, message: 2714, time: 1604312648, Vbat 353 v, Tx dur 435 ms, T: 2006 C, RH: 3461 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 18/0"
+1604337877.637281,"...sent a reply, 538ms"
+1604337893.0817852,Current time: 2020-11-02T11:24:53
+1604337893.0835998,Received length: 20
+1604337893.097622,"Data: node: 1, message: 2715, time: 1604312664, Vbat 353 v, Tx dur 435 ms, T: 2006 C, RH: 3463 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 20/0"
+1604337893.6376672,"...sent a reply, 539ms"
+1604337909.081238,Current time: 2020-11-02T11:25:09
+1604337909.0831208,Received length: 20
+1604337909.097157,"Data: node: 1, message: 2716, time: 1604312680, Vbat 353 v, Tx dur 435 ms, T: 2007 C, RH: 3441 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 22/0"
+1604337911.512195,"...reply failed, 2414ms"
+1604337925.0816488,Current time: 2020-11-02T11:25:25
+1604337925.082784,Received length: 20
+1604337925.0967538,"Data: node: 1, message: 2717, time: 1604312696, Vbat 353 v, Tx dur 435 ms, T: 2007 C, RH: 3423 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 23/0"
+1604337925.637517,"...sent a reply, 538ms"
+1604337941.081086,Current time: 2020-11-02T11:25:41
+1604337941.0830588,Received length: 20
+1604337941.097117,"Data: node: 1, message: 2718, time: 1604312712, Vbat 353 v, Tx dur 435 ms, T: 2009 C, RH: 3414 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 25/0"
+1604337943.300281,"...reply failed, 2200ms"
+1604337957.080715,Current time: 2020-11-02T11:25:57
+1604337957.082947,Received length: 20
+1604337957.0966961,"Data: node: 1, message: 2719, time: 1604312728, Vbat 353 v, Tx dur 435 ms, T: 2007 C, RH: 3407 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 26/0"
+1604337959.743687,"...reply failed, 2645ms"
+1604337973.08085,Current time: 2020-11-02T11:26:13
+1604337973.0829701,Received length: 20
+1604337973.097068,"Data: node: 1, message: 2720, time: 1604312744, Vbat 353 v, Tx dur 435 ms, T: 2009 C, RH: 3406 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 27/0"
+1604337976.0071502,"...reply failed, 2909ms"
+1604337989.0803268,Current time: 2020-11-02T11:26:29
+1604337989.082558,Received length: 20
+1604337989.0966332,"Data: node: 1, message: 2721, time: 1604312760, Vbat 353 v, Tx dur 434 ms, T: 2010 C, RH: 3403 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 28/0"
+1604337989.6366541,"...sent a reply, 539ms"
+1604338005.080865,Current time: 2020-11-02T11:26:45
+1604338005.082901,Received length: 20
+1604338005.096926,"Data: node: 1, message: 2722, time: 1604312776, Vbat 353 v, Tx dur 434 ms, T: 2007 C, RH: 3405 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 30/0"
+1604338007.941074,"...reply failed, 2843ms"
+1604338021.080377,Current time: 2020-11-02T11:27:01
+1604338021.082371,Received length: 20
+1604338021.096585,"Data: node: 1, message: 2723, time: 1604312792, Vbat 353 v, Tx dur 434 ms, T: 2010 C, RH: 3402 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 31/0"
+1604338021.636557,"...sent a reply, 538ms"
+1604338037.0788329,Current time: 2020-11-02T11:27:17
+1604338037.079864,Received length: 20
+1604338037.0941298,"Data: node: 1, message: 2724, time: 1604312808, Vbat 353 v, Tx dur 434 ms, T: 2010 C, RH: 3393 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 33/0"
+1604338037.634037,"...sent a reply, 539ms"
+1604338053.064041,Current time: 2020-11-02T11:27:33
+1604338053.0661702,Received length: 20
+1604338053.08023,"Data: node: 1, message: 2725, time: 1604312824, Vbat 353 v, Tx dur 434 ms, T: 2011 C, RH: 3389 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 35/0"
+1604338055.776132,"...reply failed, 2696ms"
+1604338069.059336,Current time: 2020-11-02T11:27:49
+1604338069.0602639,Received length: 20
+1604338069.0746381,"Data: node: 1, message: 2726, time: 1604312840, Vbat 353 v, Tx dur 434 ms, T: 2012 C, RH: 3384 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 36/0"
+1604338069.615403,"...sent a reply, 539ms"
+1604338085.057164,Current time: 2020-11-02T11:28:05
+1604338085.059029,Received length: 20
+1604338085.073493,"Data: node: 1, message: 2727, time: 1604312856, Vbat 353 v, Tx dur 434 ms, T: 2012 C, RH: 3380 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 38/0"
+1604338085.613305,"...sent a reply, 538ms"
+1604338101.056594,Current time: 2020-11-02T11:28:21
+1604338101.057825,Received length: 20
+1604338101.072012,"Data: node: 1, message: 2728, time: 1604312872, Vbat 353 v, Tx dur 434 ms, T: 2012 C, RH: 3389 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 40/0"
+1604338103.2502232,"...reply failed, 2177ms"
+1604338117.056183,Current time: 2020-11-02T11:28:37
+1604338117.0580218,Received length: 20
+1604338117.072414,"Data: node: 1, message: 2729, time: 1604312888, Vbat 353 v, Tx dur 434 ms, T: 2014 C, RH: 3389 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 41/0"
+1604338117.613379,"...sent a reply, 539ms"
+1604338133.055585,Current time: 2020-11-02T11:28:53
+1604338133.0579782,Received length: 20
+1604338133.0718238,"Data: node: 1, message: 2730, time: 1604312904, Vbat 353 v, Tx dur 434 ms, T: 2016 C, RH: 3391 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 43/0"
+1604338133.612695,"...sent a reply, 539ms"
+1604338149.056138,Current time: 2020-11-02T11:29:09
+1604338149.057939,Received length: 20
+1604338149.071868,"Data: node: 1, message: 2731, time: 1604312920, Vbat 353 v, Tx dur 435 ms, T: 2012 C, RH: 3400 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 45/0"
+1604338152.22347,"...reply failed, 3150ms"
+1604338165.055444,Current time: 2020-11-02T11:29:25
+1604338165.0575418,Received length: 20
+1604338165.071698,"Data: node: 1, message: 2732, time: 1604312936, Vbat 353 v, Tx dur 435 ms, T: 2014 C, RH: 3425 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 46/0"
+1604338165.6114922,"...sent a reply, 539ms"
+1604338181.0560682,Current time: 2020-11-02T11:29:41
+1604338181.057136,Received length: 20
+1604338181.071263,"Data: node: 1, message: 2733, time: 1604312952, Vbat 353 v, Tx dur 435 ms, T: 2014 C, RH: 3399 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 48/0"
+1604338183.2352252,"...reply failed, 2163ms"
+1604338197.055608,Current time: 2020-11-02T11:29:57
+1604338197.057687,Received length: 20
+1604338197.071648,"Data: node: 1, message: 2734, time: 1604312968, Vbat 353 v, Tx dur 435 ms, T: 2014 C, RH: 3389 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 49/0"
+1604338197.6116118,"...sent a reply, 539ms"
+1604338213.055142,Current time: 2020-11-02T11:30:13
+1604338213.056982,Received length: 20
+1604338213.070977,"Data: node: 1, message: 2735, time: 1604312984, Vbat 353 v, Tx dur 435 ms, T: 2012 C, RH: 3391 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 51/0"
+1604338213.611329,"...sent a reply, 539ms"
+1604338229.055559,Current time: 2020-11-02T11:30:29
+1604338229.057506,Received length: 20
+1604338229.071431,"Data: node: 1, message: 2736, time: 1604313000, Vbat 353 v, Tx dur 435 ms, T: 2017 C, RH: 3418 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 53/0"
+1604338229.61165,"...sent a reply, 539ms"
+1604338245.0550709,Current time: 2020-11-02T11:30:45
+1604338245.057085,Received length: 20
+1604338245.071072,"Data: node: 1, message: 2737, time: 1604313016, Vbat 353 v, Tx dur 435 ms, T: 2017 C, RH: 3400 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 55/0"
+1604338247.237136,"...reply failed, 2165ms"
+1604338261.055488,Current time: 2020-11-02T11:31:01
+1604338261.0577002,Received length: 20
+1604338261.071392,"Data: node: 1, message: 2738, time: 1604313032, Vbat 353 v, Tx dur 435 ms, T: 2017 C, RH: 3400 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 56/0"
+1604338261.611556,"...sent a reply, 539ms"
+1604338277.0550542,Current time: 2020-11-02T11:31:17
+1604338277.057002,Received length: 20
+1604338277.071017,"Data: node: 1, message: 2739, time: 1604313048, Vbat 353 v, Tx dur 435 ms, T: 2017 C, RH: 3396 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 58/0"
+1604338279.330115,"...reply failed, 2256ms"
+1604338293.0554361,Current time: 2020-11-02T11:31:33
+1604338293.0587242,Received length: 20
+1604338293.070314,"Data: node: 1, message: 2740, time: 1604313064, Vbat 353 v, Tx dur 435 ms, T: 2016 C, RH: 3400 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 59/0"
+1604338296.0905778,"...reply failed, 3018ms"
+1604338309.054948,Current time: 2020-11-02T11:31:49
+1604338309.056903,Received length: 20
+1604338309.070815,"Data: node: 1, message: 2741, time: 1604313080, Vbat 353 v, Tx dur 435 ms, T: 2018 C, RH: 3409 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 60/0"
+1604338311.372065,"...reply failed, 2300ms"
+1604338325.055218,Current time: 2020-11-02T11:32:05
+1604338325.057312,Received length: 20
+1604338325.070343,"Data: node: 1, message: 2742, time: 1604313096, Vbat 354 v, Tx dur 435 ms, T: 2018 C, RH: 3391 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 61/0"
+1604338327.6513531,"...reply failed, 2579ms"
+1604338341.0548842,Current time: 2020-11-02T11:32:21
+1604338341.056871,Received length: 20
+1604338341.070713,"Data: node: 1, message: 2743, time: 1604313112, Vbat 353 v, Tx dur 435 ms, T: 2017 C, RH: 3391 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 62/0"
+1604338341.610943,"...sent a reply, 539ms"
+1604338357.05442,Current time: 2020-11-02T11:32:37
+1604338357.056448,Received length: 20
+1604338357.070488,"Data: node: 1, message: 2744, time: 1604313128, Vbat 353 v, Tx dur 435 ms, T: 2016 C, RH: 3404 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 64/0"
+1604338357.610471,"...sent a reply, 538ms"
+1604338373.054817,Current time: 2020-11-02T11:32:53
+1604338373.0567858,Received length: 20
+1604338373.070871,"Data: node: 1, message: 2745, time: 1604313144, Vbat 353 v, Tx dur 435 ms, T: 2020 C, RH: 3390 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 66/0"
+1604338375.591984,"...reply failed, 2520ms"
+1604338389.054415,Current time: 2020-11-02T11:33:09
+1604338389.0563588,Received length: 20
+1604338389.07015,"Data: node: 1, message: 2746, time: 1604313160, Vbat 353 v, Tx dur 435 ms, T: 2018 C, RH: 3396 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 67/0"
+1604338389.610467,"...sent a reply, 538ms"
+1604338405.054837,Current time: 2020-11-02T11:33:25
+1604338405.0567381,Received length: 20
+1604338405.070814,"Data: node: 1, message: 2747, time: 1604313176, Vbat 353 v, Tx dur 435 ms, T: 2020 C, RH: 3388 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 69/0"
+1604338405.610816,"...sent a reply, 539ms"
+1604338421.054355,Current time: 2020-11-02T11:33:41
+1604338421.0562549,Received length: 20
+1604338421.0702899,"Data: node: 1, message: 2748, time: 1604313192, Vbat 353 v, Tx dur 435 ms, T: 2018 C, RH: 3412 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 71/0"
+1604338424.023296,"...reply failed, 2951ms"
+1604338437.0547159,Current time: 2020-11-02T11:33:57
+1604338437.0557451,Received length: 20
+1604338437.069695,"Data: node: 1, message: 2749, time: 1604313208, Vbat 353 v, Tx dur 435 ms, T: 2020 C, RH: 3408 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 72/0"
+1604338437.610774,"...sent a reply, 539ms"
+1604338453.054282,Current time: 2020-11-02T11:34:13
+1604338453.056234,Received length: 20
+1604338453.07026,"Data: node: 1, message: 2750, time: 1604313224, Vbat 353 v, Tx dur 434 ms, T: 2020 C, RH: 3404 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 74/0"
+1604338453.6122081,"...sent a reply, 539ms"
+1604338469.053799,Current time: 2020-11-02T11:34:29
+1604338469.055802,Received length: 20
+1604338469.069791,"Data: node: 1, message: 2751, time: 1604313240, Vbat 353 v, Tx dur 434 ms, T: 2020 C, RH: 3395 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 76/0"
+1604338471.590967,"...reply failed, 2520ms"
+1604338485.0542452,Current time: 2020-11-02T11:34:45
+1604338485.056017,Received length: 20
+1604338485.0699892,"Data: node: 1, message: 2752, time: 1604313256, Vbat 353 v, Tx dur 434 ms, T: 2020 C, RH: 3403 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 77/0"
+1604338485.6102242,"...sent a reply, 538ms"
+1604338501.05378,Current time: 2020-11-02T11:35:01
+1604338501.055846,Received length: 20
+1604338501.069607,"Data: node: 1, message: 2753, time: 1604313272, Vbat 353 v, Tx dur 434 ms, T: 2020 C, RH: 3404 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 79/0"
+1604338503.4048908,"...reply failed, 2334ms"
+1604338517.0541701,Current time: 2020-11-02T11:35:17
+1604338517.056041,Received length: 20
+1604338517.069959,"Data: node: 1, message: 2754, time: 1604313288, Vbat 353 v, Tx dur 434 ms, T: 2024 C, RH: 3405 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 80/0"
+1604338517.610253,"...sent a reply, 538ms"
+1604338533.053813,Current time: 2020-11-02T11:35:33
+1604338533.055823,Received length: 20
+1604338533.0694778,"Data: node: 1, message: 2755, time: 1604313304, Vbat 353 v, Tx dur 434 ms, T: 2023 C, RH: 3391 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 82/0"
+1604338533.609747,"...sent a reply, 539ms"
+1604338549.054113,Current time: 2020-11-02T11:35:49
+1604338549.055146,Received length: 20
+1604338549.069908,"Data: node: 1, message: 2756, time: 1604313320, Vbat 353 v, Tx dur 435 ms, T: 2020 C, RH: 3390 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 84/0"
+1604338549.610121,"...sent a reply, 539ms"
+1604338565.053388,Current time: 2020-11-02T11:36:05
+1604338565.055493,Received length: 20
+1604338565.069696,"Data: node: 1, message: 2757, time: 1604313336, Vbat 353 v, Tx dur 435 ms, T: 2020 C, RH: 3393 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 86/0"
+1604338568.081832,"...reply failed, 3011ms"
+1604338581.053229,Current time: 2020-11-02T11:36:21
+1604338581.0553548,Received length: 20
+1604338581.0691562,"Data: node: 1, message: 2758, time: 1604313352, Vbat 353 v, Tx dur 435 ms, T: 2024 C, RH: 3384 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 87/0"
+1604338584.070414,"...reply failed, 3000ms"
+1604338597.0536718,Current time: 2020-11-02T11:36:37
+1604338597.055626,Received length: 20
+1604338597.0697012,"Data: node: 1, message: 2759, time: 1604313368, Vbat 353 v, Tx dur 435 ms, T: 2025 C, RH: 3381 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 88/0"
+1604338597.609531,"...sent a reply, 539ms"
+1604338613.052982,Current time: 2020-11-02T11:36:53
+1604338613.055006,Received length: 20
+1604338613.069195,"Data: node: 1, message: 2760, time: 1604313384, Vbat 354 v, Tx dur 435 ms, T: 2024 C, RH: 3379 %, status: 0x00, RSSI -56 dBm, SNR 11 dB, good/bad packets: 90/0"
+1604338613.611074,"...sent a reply, 538ms"
+1604338629.053515,Current time: 2020-11-02T11:37:09
+1604338629.0554502,Received length: 20
+1604338629.0695648,"Data: node: 1, message: 2761, time: 1604313400, Vbat 353 v, Tx dur 435 ms, T: 2023 C, RH: 3381 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 92/0"
+1604338631.3227031,"...reply failed, 2252ms"
+1604338645.05308,Current time: 2020-11-02T11:37:25
+1604338645.055043,Received length: 20
+1604338645.068864,"Data: node: 1, message: 2762, time: 1604313416, Vbat 354 v, Tx dur 435 ms, T: 2025 C, RH: 3370 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 93/0"
+1604338645.6090848,"...sent a reply, 539ms"
+1604338661.0536058,Current time: 2020-11-02T11:37:41
+1604338661.054476,Received length: 20
+1604338661.068459,"Data: node: 1, message: 2763, time: 1604313432, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3400 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 95/0"
+1604338661.609483,"...sent a reply, 538ms"
+1604338677.052934,Current time: 2020-11-02T11:37:57
+1604338677.054754,Received length: 20
+1604338677.069043,"Data: node: 1, message: 2764, time: 1604313448, Vbat 353 v, Tx dur 435 ms, T: 2025 C, RH: 3398 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 97/0"
+1604338679.367151,"...reply failed, 2297ms"
+1604338693.053403,Current time: 2020-11-02T11:38:13
+1604338693.0544,Received length: 20
+1604338693.0686169,"Data: node: 1, message: 2765, time: 1604313464, Vbat 353 v, Tx dur 435 ms, T: 2025 C, RH: 3393 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 98/0"
+1604338695.395335,"...reply failed, 2325ms"
+1604338709.0529768,Current time: 2020-11-02T11:38:29
+1604338709.054952,Received length: 20
+1604338709.068995,"Data: node: 1, message: 2766, time: 1604313480, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3393 %, status: 0x00, RSSI -54 dBm, SNR 10 dB, good/bad packets: 99/0"
+1604338709.608937,"...sent a reply, 539ms"
+1604338725.052524,Current time: 2020-11-02T11:38:45
+1604338725.054218,Received length: 20
+1604338725.06834,"Data: node: 1, message: 2767, time: 1604313496, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3383 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 101/0"
+1604338727.650552,"...reply failed, 2580ms"
+1604338741.052908,Current time: 2020-11-02T11:39:01
+1604338741.0550022,Received length: 20
+1604338741.068934,"Data: node: 1, message: 2768, time: 1604313512, Vbat 353 v, Tx dur 435 ms, T: 2028 C, RH: 3383 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 102/0"
+1604338743.855024,"...reply failed, 2785ms"
+1604338757.0522099,Current time: 2020-11-02T11:39:17
+1604338757.054361,Received length: 20
+1604338757.0684822,"Data: node: 1, message: 2769, time: 1604313528, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3398 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 103/0"
+1604338759.401433,"...reply failed, 2331ms"
+1604338773.0527391,Current time: 2020-11-02T11:39:33
+1604338773.054774,Received length: 20
+1604338773.068896,"Data: node: 1, message: 2770, time: 1604313544, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3386 %, status: 0x00, RSSI -55 dBm, SNR 10 dB, good/bad packets: 104/0"
+1604338773.6084669,"...sent a reply, 539ms"
+1604338789.052351,Current time: 2020-11-02T11:39:49
+1604338789.054372,Received length: 20
+1604338789.0683892,"Data: node: 1, message: 2771, time: 1604313560, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3383 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 106/0"
+1604338789.6104162,"...sent a reply, 538ms"
+1604338805.0527098,Current time: 2020-11-02T11:40:05
+1604338805.055209,Received length: 20
+1604338805.0677602,"Data: node: 1, message: 2772, time: 1604313576, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3380 %, status: 0x00, RSSI -56 dBm, SNR 10 dB, good/bad packets: 108/0"
+1604338805.608632,"...sent a reply, 539ms"
+1604338821.052381,Current time: 2020-11-02T11:40:21
+1604338821.054101,Received length: 20
+1604338821.0682821,"Data: node: 1, message: 2773, time: 1604313592, Vbat 353 v, Tx dur 435 ms, T: 2028 C, RH: 3384 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 110/0"
+1604338824.1764328,"...reply failed, 3106ms"
+1604338837.051341,Current time: 2020-11-02T11:40:37
+1604338837.0533671,Received length: 20
+1604338837.0672882,"Data: node: 1, message: 2774, time: 1604313608, Vbat 353 v, Tx dur 435 ms, T: 2027 C, RH: 3398 %, status: 0x00, RSSI -54 dBm, SNR 13 dB, good/bad packets: 111/0"
+1604338839.795382,"...reply failed, 2726ms"
+1604338853.052276,Current time: 2020-11-02T11:40:53
+1604338853.054231,Received length: 20
+1604338853.068256,"Data: node: 1, message: 2775, time: 1604313624, Vbat 353 v, Tx dur 435 ms, T: 2029 C, RH: 3418 %, status: 0x00, RSSI -54 dBm, SNR 11 dB, good/bad packets: 112/0"
+1604338855.785286,"...reply failed, 2715ms"
+1604338869.051295,Current time: 2020-11-02T11:41:09
+1604338869.0532649,Received length: 20
+1604338869.06736,"Data: node: 1, message: 2776, time: 1604313640, Vbat 353 v, Tx dur 435 ms, T: 2029 C, RH: 3420 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 113/0"
+1604338869.6085582,"...sent a reply, 538ms"
+1604338885.0517051,Current time: 2020-11-02T11:41:25
+1604338885.053679,Received length: 20
+1604338885.067733,"Data: node: 1, message: 2777, time: 1604313656, Vbat 353 v, Tx dur 435 ms, T: 2031 C, RH: 3428 %, status: 0x00, RSSI -58 dBm, SNR 14 dB, good/bad packets: 115/0"
+1604338887.504128,"...reply failed, 2434ms"
+1604338901.051671,Current time: 2020-11-02T11:41:41
+1604338901.053705,Received length: 20
+1604338901.067934,"Data: node: 1, message: 2778, time: 1604313672, Vbat 353 v, Tx dur 434 ms, T: 2027 C, RH: 3431 %, status: 0x00, RSSI -57 dBm, SNR 13 dB, good/bad packets: 116/0"
+1604338901.6078038,"...sent a reply, 539ms"
+1604338917.051811,Current time: 2020-11-02T11:41:57
+1604338917.0529711,Received length: 20
+1604338917.067116,"Data: node: 1, message: 2779, time: 1604313688, Vbat 353 v, Tx dur 434 ms, T: 2028 C, RH: 3422 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 118/0"
+1604338917.608159,"...sent a reply, 538ms"
+1604338933.051739,Current time: 2020-11-02T11:42:13
+1604338933.053869,Received length: 20
+1604338933.067702,"Data: node: 1, message: 2780, time: 1604313704, Vbat 354 v, Tx dur 434 ms, T: 2031 C, RH: 3425 %, status: 0x00, RSSI -60 dBm, SNR 12 dB, good/bad packets: 120/0"
+1604338933.607727,"...sent a reply, 539ms"
+1604338949.034134,Current time: 2020-11-02T11:42:29
+1604338949.0359838,Received length: 20
+1604338949.050039,"Data: node: 1, message: 2781, time: 1604313720, Vbat 353 v, Tx dur 434 ms, T: 2031 C, RH: 3430 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 122/0"
+1604338949.593011,"...sent a reply, 539ms"
+1604338965.028499,Current time: 2020-11-02T11:42:45
+1604338965.030228,Received length: 20
+1604338965.044445,"Data: node: 1, message: 2782, time: 1604313736, Vbat 353 v, Tx dur 434 ms, T: 2031 C, RH: 3427 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 124/0"
+1604338965.585276,"...sent a reply, 539ms"
+1604338981.025444,Current time: 2020-11-02T11:43:01
+1604338981.027383,Received length: 20
+1604338981.041635,"Data: node: 1, message: 2783, time: 1604313752, Vbat 353 v, Tx dur 434 ms, T: 2031 C, RH: 3430 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 126/0"
+1604338981.582654,"...sent a reply, 539ms"
+1604338997.0254211,Current time: 2020-11-02T11:43:17
+1604338997.027346,Received length: 20
+1604338997.0412831,"Data: node: 1, message: 2784, time: 1604313768, Vbat 353 v, Tx dur 435 ms, T: 2031 C, RH: 3434 %, status: 0x00, RSSI -57 dBm, SNR 14 dB, good/bad packets: 128/0"
+1604338997.5814168,"...sent a reply, 539ms"
+1604339013.024502,Current time: 2020-11-02T11:43:33
+1604339013.026596,Received length: 20
+1604339013.040556,"Data: node: 1, message: 2785, time: 1604313784, Vbat 353 v, Tx dur 435 ms, T: 2032 C, RH: 3430 %, status: 0x00, RSSI -57 dBm, SNR 12 dB, good/bad packets: 130/0"
+1604339013.5802612,"...sent a reply, 539ms"
+1604339029.0247,Current time: 2020-11-02T11:43:49
+1604339029.025722,Received length: 20
+1604339029.039764,"Data: node: 1, message: 2786, time: 1604313800, Vbat 353 v, Tx dur 435 ms, T: 2031 C, RH: 3423 %, status: 0x00, RSSI -59 dBm, SNR 13 dB, good/bad packets: 132/0"
+1604339029.580692,"...sent a reply, 539ms"
+1604339045.024436,Current time: 2020-11-02T11:44:05
+1604339045.026135,Received length: 20
+1604339045.040441,"Data: node: 1, message: 2787, time: 1604313816, Vbat 353 v, Tx dur 435 ms, T: 2034 C, RH: 3439 %, status: 0x00, RSSI -56 dBm, SNR 13 dB, good/bad packets: 134/0"
+1604339045.580524,"...sent a reply, 539ms"
+1604339061.023995,Current time: 2020-11-02T11:44:21
+1604339061.025954,Received length: 20
+1604339061.039954,"Data: node: 1, message: 2788, time: 1604313832, Vbat 353 v, Tx dur 435 ms, T: 2032 C, RH: 3443 %, status: 0x00, RSSI -59 dBm, SNR 13 dB, good/bad packets: 136/0"
+1604339063.267076,"...reply failed, 2225ms"
+1604339077.0244439,Current time: 2020-11-02T11:44:37
+1604339077.026249,Received length: 20
+1604339077.0403311,"Data: node: 1, message: 2789, time: 1604313848, Vbat 353 v, Tx dur 435 ms, T: 2032 C, RH: 3443 %, status: 0x00, RSSI -58 dBm, SNR 12 dB, good/bad packets: 137/0"
+1604339079.3465621,"...reply failed, 2305ms"
+1604339093.023913,Current time: 2020-11-02T11:44:53
+1604339093.025856,Received length: 20
+1604339093.039905,"Data: node: 1, message: 2790, time: 1604313864, Vbat 353 v, Tx dur 435 ms, T: 2031 C, RH: 3436 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 138/0"
+1604339093.5804842,"...sent a reply, 538ms"
+1604339109.024267,Current time: 2020-11-02T11:45:09
+1604339109.02619,Received length: 20
+1604339109.0402691,"Data: node: 1, message: 2791, time: 1604313880, Vbat 353 v, Tx dur 435 ms, T: 2031 C, RH: 3439 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 140/0"
+1604339112.0575192,"...reply failed, 3014ms"
+1604339125.0237162,Current time: 2020-11-02T11:45:25
+1604339125.025625,Received length: 20
+1604339125.0398688,"Data: node: 1, message: 2792, time: 1604313896, Vbat 353 v, Tx dur 435 ms, T: 2032 C, RH: 3440 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 141/0"
+1604339125.579496,"...sent a reply, 538ms"
+1604339141.0241559,Current time: 2020-11-02T11:45:41
+1604339141.0251899,Received length: 20
+1604339141.0393758,"Data: node: 1, message: 2793, time: 1604313912, Vbat 353 v, Tx dur 435 ms, T: 2034 C, RH: 3434 %, status: 0x00, RSSI -59 dBm, SNR 13 dB, good/bad packets: 143/0"
+1604339143.533563,"...reply failed, 2490ms"
+1604339157.0237708,Current time: 2020-11-02T11:45:57
+1604339157.0257201,Received length: 20
+1604339157.0397592,"Data: node: 1, message: 2794, time: 1604313928, Vbat 353 v, Tx dur 435 ms, T: 2031 C, RH: 3436 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 144/0"
+1604339159.292715,"...reply failed, 2251ms"
+1604339173.0232089,Current time: 2020-11-02T11:46:13
+1604339173.025074,Received length: 20
+1604339173.039021,"Data: node: 1, message: 2795, time: 1604313944, Vbat 353 v, Tx dur 435 ms, T: 2032 C, RH: 3432 %, status: 0x00, RSSI -58 dBm, SNR 11 dB, good/bad packets: 145/0"
+1604339173.5803,"...sent a reply, 539ms"
+1604339189.0236218,Current time: 2020-11-02T11:46:29
+1604339189.025554,Received length: 20
+1604339189.039645,"Data: node: 1, message: 2796, time: 1604313960, Vbat 353 v, Tx dur 435 ms, T: 2034 C, RH: 3431 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 147/0"
+1604339189.581586,"...sent a reply, 538ms"
+1604339205.023378,Current time: 2020-11-02T11:46:45
+1604339205.0250618,Received length: 20
+1604339205.039305,"Data: node: 1, message: 2797, time: 1604313976, Vbat 353 v, Tx dur 435 ms, T: 2032 C, RH: 3436 %, status: 0x00, RSSI -63 dBm, SNR 11 dB, good/bad packets: 149/0"
+1604339207.7941031,"...reply failed, 2753ms"
+1604339221.023652,Current time: 2020-11-02T11:47:01
+1604339221.025464,Received length: 20
+1604339221.03969,"Data: node: 1, message: 2798, time: 1604313992, Vbat 353 v, Tx dur 435 ms, T: 2032 C, RH: 3441 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 150/0"
+1604339221.579529,"...sent a reply, 538ms"
+1604339237.023037,Current time: 2020-11-02T11:47:17
+1604339237.024977,Received length: 20
+1604339237.03918,"Data: node: 1, message: 2799, time: 1604314008, Vbat 353 v, Tx dur 434 ms, T: 2035 C, RH: 3438 %, status: 0x00, RSSI -63 dBm, SNR 14 dB, good/bad packets: 152/0"
+1604339237.580193,"...sent a reply, 539ms"
+1604339253.024599,Current time: 2020-11-02T11:47:33
+1604339253.025463,Received length: 20
+1604339253.0391328,"Data: node: 1, message: 2800, time: 1604314024, Vbat 353 v, Tx dur 434 ms, T: 2034 C, RH: 3429 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 154/0"
+1604339253.579288,"...sent a reply, 538ms"
+1604339269.024013,Current time: 2020-11-02T11:47:49
+1604339269.025374,Received length: 20
+1604339269.039238,"Data: node: 1, message: 2801, time: 1604314040, Vbat 353 v, Tx dur 434 ms, T: 2034 C, RH: 3422 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 156/0"
+1604339269.5787818,"...sent a reply, 539ms"
+1604339285.022395,Current time: 2020-11-02T11:48:05
+1604339285.024487,Received length: 20
+1604339285.038371,"Data: node: 1, message: 2802, time: 1604314056, Vbat 353 v, Tx dur 434 ms, T: 2037 C, RH: 3437 %, status: 0x00, RSSI -63 dBm, SNR 12 dB, good/bad packets: 158/0"
+1604339285.581422,"...sent a reply, 539ms"
+1604339301.0281641,Current time: 2020-11-02T11:48:21
+1604339301.028975,Received length: 20
+1604339301.04159,"Data: node: 1, message: 2803, time: 1604314072, Vbat 353 v, Tx dur 434 ms, T: 2035 C, RH: 3434 %, status: 0x00, RSSI -61 dBm, SNR 12 dB, good/bad packets: 160/0"
+1604339301.579107,"...sent a reply, 539ms"
+1604339317.022505,Current time: 2020-11-02T11:48:37
+1604339317.0246348,Received length: 20
+1604339317.0384881,"Data: node: 1, message: 2804, time: 1604314088, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3433 %, status: 0x00, RSSI -63 dBm, SNR 11 dB, good/bad packets: 162/0"
+1604339319.542677,"...reply failed, 2503ms"
+1604339333.0228631,Current time: 2020-11-02T11:48:53
+1604339333.024777,Received length: 20
+1604339333.038799,"Data: node: 1, message: 2805, time: 1604314104, Vbat 353 v, Tx dur 435 ms, T: 2034 C, RH: 3439 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 163/0"
+1604339333.579136,"...sent a reply, 539ms"
+1604339349.0227041,Current time: 2020-11-02T11:49:09
+1604339349.02435,Received length: 20
+1604339349.038523,"Data: node: 1, message: 2806, time: 1604314120, Vbat 353 v, Tx dur 435 ms, T: 2035 C, RH: 3434 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 165/0"
+1604339349.5794199,"...sent a reply, 539ms"
+1604339365.022785,Current time: 2020-11-02T11:49:25
+1604339365.0238268,Received length: 20
+1604339365.037892,"Data: node: 1, message: 2807, time: 1604314136, Vbat 353 v, Tx dur 435 ms, T: 2035 C, RH: 3446 %, status: 0x00, RSSI -61 dBm, SNR 9 dB, good/bad packets: 167/0"
+1604339365.578915,"...sent a reply, 539ms"
+1604339381.022324,Current time: 2020-11-02T11:49:41
+1604339381.024443,Received length: 20
+1604339381.038499,"Data: node: 1, message: 2808, time: 1604314152, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3447 %, status: 0x00, RSSI -61 dBm, SNR 9 dB, good/bad packets: 169/0"
+1604339384.0186508,"...reply failed, 2979ms"
+1604339397.021981,Current time: 2020-11-02T11:49:57
+1604339397.024052,Received length: 20
+1604339397.037925,"Data: node: 1, message: 2809, time: 1604314168, Vbat 353 v, Tx dur 435 ms, T: 2035 C, RH: 3430 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 170/0"
+1604339399.296031,"...reply failed, 2256ms"
+1604339413.022629,Current time: 2020-11-02T11:50:13
+1604339413.024283,Received length: 20
+1604339413.038181,"Data: node: 1, message: 2810, time: 1604314184, Vbat 353 v, Tx dur 435 ms, T: 2034 C, RH: 3420 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 171/0"
+1604339415.885535,"...reply failed, 2846ms"
+1604339429.022173,Current time: 2020-11-02T11:50:29
+1604339429.023869,Received length: 20
+1604339429.037834,"Data: node: 1, message: 2811, time: 1604314200, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3412 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 172/0"
+1604339429.579031,"...sent a reply, 539ms"
+1604339445.0222678,Current time: 2020-11-02T11:50:45
+1604339445.023196,Received length: 20
+1604339445.038187,"Data: node: 1, message: 2812, time: 1604314216, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3440 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 174/0"
+1604339445.580466,"...sent a reply, 539ms"
+1604339461.021913,Current time: 2020-11-02T11:51:01
+1604339461.024044,Received length: 20
+1604339461.037745,"Data: node: 1, message: 2813, time: 1604314232, Vbat 353 v, Tx dur 435 ms, T: 2035 C, RH: 3439 %, status: 0x00, RSSI -61 dBm, SNR 9 dB, good/bad packets: 176/0"
+1604339463.886017,"...reply failed, 2846ms"
+1604339477.022369,Current time: 2020-11-02T11:51:17
+1604339477.023595,Received length: 20
+1604339477.037167,"Data: node: 1, message: 2814, time: 1604314248, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3434 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 177/0"
+1604339479.124372,"...reply failed, 2085ms"
+1604339493.0219572,Current time: 2020-11-02T11:51:33
+1604339493.023797,Received length: 20
+1604339493.037442,"Data: node: 1, message: 2815, time: 1604314264, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3433 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 178/0"
+1604339493.5779982,"...sent a reply, 538ms"
+1604339509.021294,Current time: 2020-11-02T11:51:49
+1604339509.023479,Received length: 20
+1604339509.037088,"Data: node: 1, message: 2816, time: 1604314280, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3416 %, status: 0x00, RSSI -61 dBm, SNR 11 dB, good/bad packets: 180/0"
+1604339512.098358,"...reply failed, 3058ms"
+1604339525.021694,Current time: 2020-11-02T11:52:05
+1604339525.024839,Received length: 20
+1604339525.037793,"Data: node: 1, message: 2817, time: 1604314296, Vbat 353 v, Tx dur 435 ms, T: 2035 C, RH: 3407 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 181/0"
+1604339525.577871,"...sent a reply, 538ms"
+1604339541.021377,Current time: 2020-11-02T11:52:21
+1604339541.0233421,Received length: 20
+1604339541.037299,"Data: node: 1, message: 2818, time: 1604314312, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3425 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 183/0"
+1604339541.578243,"...sent a reply, 539ms"
+1604339557.022004,Current time: 2020-11-02T11:52:37
+1604339557.024079,Received length: 20
+1604339557.0373912,"Data: node: 1, message: 2819, time: 1604314328, Vbat 354 v, Tx dur 435 ms, T: 2037 C, RH: 3430 %, status: 0x00, RSSI -61 dBm, SNR 9 dB, good/bad packets: 185/0"
+1604339557.577836,"...sent a reply, 539ms"
+1604339573.021479,Current time: 2020-11-02T11:52:53
+1604339573.0232692,Received length: 20
+1604339573.0371132,"Data: node: 1, message: 2820, time: 1604314344, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3438 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 187/0"
+1604339573.578273,"...sent a reply, 539ms"
+1604339589.021707,Current time: 2020-11-02T11:53:09
+1604339589.023958,Received length: 20
+1604339589.0367832,"Data: node: 1, message: 2821, time: 1604314360, Vbat 353 v, Tx dur 434 ms, T: 2037 C, RH: 3434 %, status: 0x00, RSSI -63 dBm, SNR 11 dB, good/bad packets: 189/0"
+1604339589.577735,"...sent a reply, 539ms"
+1604339605.020789,Current time: 2020-11-02T11:53:25
+1604339605.0228102,Received length: 20
+1604339605.036788,"Data: node: 1, message: 2822, time: 1604314376, Vbat 353 v, Tx dur 434 ms, T: 2037 C, RH: 3436 %, status: 0x00, RSSI -63 dBm, SNR 12 dB, good/bad packets: 191/0"
+1604339605.578003,"...sent a reply, 539ms"
+1604339621.020554,Current time: 2020-11-02T11:53:41
+1604339621.0227652,Received length: 20
+1604339621.036651,"Data: node: 1, message: 2823, time: 1604314392, Vbat 353 v, Tx dur 434 ms, T: 2037 C, RH: 3433 %, status: 0x00, RSSI -63 dBm, SNR 14 dB, good/bad packets: 193/0"
+1604339621.578815,"...sent a reply, 539ms"
+1604339637.0210712,Current time: 2020-11-02T11:53:57
+1604339637.023036,Received length: 20
+1604339637.03714,"Data: node: 1, message: 2824, time: 1604314408, Vbat 353 v, Tx dur 434 ms, T: 2037 C, RH: 3441 %, status: 0x00, RSSI -63 dBm, SNR 12 dB, good/bad packets: 195/0"
+1604339639.3353522,"...reply failed, 2297ms"
+1604339653.02051,Current time: 2020-11-02T11:54:13
+1604339653.02271,Received length: 20
+1604339653.036504,"Data: node: 1, message: 2825, time: 1604314424, Vbat 353 v, Tx dur 434 ms, T: 2037 C, RH: 3438 %, status: 0x00, RSSI -58 dBm, SNR 12 dB, good/bad packets: 196/0"
+1604339653.578582,"...sent a reply, 539ms"
+1604339669.020871,Current time: 2020-11-02T11:54:29
+1604339669.0219269,Received length: 20
+1604339669.037262,"Data: node: 1, message: 2826, time: 1604314440, Vbat 353 v, Tx dur 435 ms, T: 2040 C, RH: 3441 %, status: 0x00, RSSI -65 dBm, SNR 13 dB, good/bad packets: 198/0"
+1604339669.576851,"...sent a reply, 538ms"
+1604339685.0203369,Current time: 2020-11-02T11:54:45
+1604339685.022253,Received length: 20
+1604339685.0362618,"Data: node: 1, message: 2827, time: 1604314456, Vbat 353 v, Tx dur 435 ms, T: 2040 C, RH: 3441 %, status: 0x00, RSSI -64 dBm, SNR 13 dB, good/bad packets: 200/0"
+1604339685.5762508,"...sent a reply, 539ms"
+1604339701.021122,Current time: 2020-11-02T11:55:01
+1604339701.024048,Received length: 20
+1604339701.035923,"Data: node: 1, message: 2828, time: 1604314472, Vbat 353 v, Tx dur 435 ms, T: 2037 C, RH: 3447 %, status: 0x00, RSSI -64 dBm, SNR 13 dB, good/bad packets: 202/0"
+1604339701.57693,"...sent a reply, 539ms"
+1604339717.02077,Current time: 2020-11-02T11:55:17
+1604339717.022374,Received length: 20
+1604339717.0368981,"Data: node: 1, message: 2829, time: 1604314488, Vbat 353 v, Tx dur 435 ms, T: 2040 C, RH: 3436 %, status: 0x00, RSSI -65 dBm, SNR 13 dB, good/bad packets: 204/0"
+1604339719.67267,"...reply failed, 2635ms"
+1604339733.019787,Current time: 2020-11-02T11:55:33
+1604339733.021659,Received length: 20
+1604339733.035743,"Data: node: 1, message: 2830, time: 1604314504, Vbat 353 v, Tx dur 435 ms, T: 2040 C, RH: 3437 %, status: 0x00, RSSI -64 dBm, SNR 13 dB, good/bad packets: 205/0"
+1604339735.93053,"...reply failed, 2892ms"
+1604339749.0201302,Current time: 2020-11-02T11:55:49
+1604339749.022115,Received length: 20
+1604339749.03613,"Data: node: 1, message: 2831, time: 1604314520, Vbat 353 v, Tx dur 435 ms, T: 2042 C, RH: 3441 %, status: 0x00, RSSI -63 dBm, SNR 13 dB, good/bad packets: 206/0"
+1604339749.576111,"...sent a reply, 539ms"
+1604339765.019973,Current time: 2020-11-02T11:56:05
+1604339765.021822,Received length: 20
+1604339765.0358589,"Data: node: 1, message: 2832, time: 1604314536, Vbat 353 v, Tx dur 435 ms, T: 2042 C, RH: 3446 %, status: 0x00, RSSI -63 dBm, SNR 14 dB, good/bad packets: 208/0"
+1604339765.5769842,"...sent a reply, 538ms"
+1604339781.02044,Current time: 2020-11-02T11:56:21
+1604339781.0223832,Received length: 20
+1604339781.036368,"Data: node: 1, message: 2833, time: 1604314552, Vbat 353 v, Tx dur 435 ms, T: 2040 C, RH: 3429 %, status: 0x00, RSSI -63 dBm, SNR 13 dB, good/bad packets: 210/0"
+1604339781.578198,"...sent a reply, 539ms"
+1604339797.0198138,Current time: 2020-11-02T11:56:37
+1604339797.021733,Received length: 20
+1604339797.035715,"Data: node: 1, message: 2834, time: 1604314568, Vbat 353 v, Tx dur 435 ms, T: 2042 C, RH: 3434 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 212/0"
+1604339797.576117,"...sent a reply, 538ms"
+1604339813.019974,Current time: 2020-11-02T11:56:53
+1604339813.020991,Received length: 20
+1604339813.036155,"Data: node: 1, message: 2835, time: 1604314584, Vbat 353 v, Tx dur 435 ms, T: 2042 C, RH: 3446 %, status: 0x00, RSSI -63 dBm, SNR 13 dB, good/bad packets: 214/0"
+1604339813.576332,"...sent a reply, 539ms"
+1604339829.019994,Current time: 2020-11-02T11:57:09
+1604339829.02193,Received length: 20
+1604339829.0358121,"Data: node: 1, message: 2836, time: 1604314600, Vbat 354 v, Tx dur 435 ms, T: 2041 C, RH: 3443 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 216/0"
+1604339829.5760791,"...sent a reply, 538ms"
+1604339845.003148,Current time: 2020-11-02T11:57:25
+1604339845.005109,Received length: 20
+1604339845.0194528,"Data: node: 1, message: 2837, time: 1604314616, Vbat 353 v, Tx dur 435 ms, T: 2041 C, RH: 3445 %, status: 0x00, RSSI -61 dBm, SNR 10 dB, good/bad packets: 218/0"
+1604339847.853715,"...reply failed, 2835ms"
+1604339860.995235,Current time: 2020-11-02T11:57:41
+1604339860.996477,Received length: 20
+1604339861.0102148,"Data: node: 1, message: 2838, time: 1604314632, Vbat 353 v, Tx dur 435 ms, T: 2044 C, RH: 3443 %, status: 0x00, RSSI -61 dBm, SNR 11 dB, good/bad packets: 219/0"
+1604339861.550117,"...sent a reply, 539ms"
+1604339876.9904299,Current time: 2020-11-02T11:57:57
+1604339876.9923682,Received length: 20
+1604339877.006319,"Data: node: 1, message: 2839, time: 1604314648, Vbat 353 v, Tx dur 435 ms, T: 2044 C, RH: 3445 %, status: 0x00, RSSI -57 dBm, SNR 14 dB, good/bad packets: 221/0"
+1604339877.546905,"...sent a reply, 539ms"
+1604339892.989537,Current time: 2020-11-02T11:58:13
+1604339892.991422,Received length: 20
+1604339893.0053911,"Data: node: 1, message: 2840, time: 1604314664, Vbat 353 v, Tx dur 435 ms, T: 2042 C, RH: 3441 %, status: 0x00, RSSI -59 dBm, SNR 13 dB, good/bad packets: 223/0"
+1604339896.032476,"...reply failed, 3026ms"
+1604339908.988843,Current time: 2020-11-02T11:58:29
+1604339908.990747,Received length: 20
+1604339909.004782,"Data: node: 1, message: 2841, time: 1604314680, Vbat 353 v, Tx dur 435 ms, T: 2045 C, RH: 3439 %, status: 0x00, RSSI -57 dBm, SNR 13 dB, good/bad packets: 224/0"
+1604339909.544875,"...sent a reply, 538ms"
+1604339924.988671,Current time: 2020-11-02T11:58:45
+1604339924.989711,Received length: 20
+1604339925.0046191,"Data: node: 1, message: 2842, time: 1604314696, Vbat 353 v, Tx dur 435 ms, T: 2042 C, RH: 3436 %, status: 0x00, RSSI -66 dBm, SNR 13 dB, good/bad packets: 226/0"
+1604339927.411838,"...reply failed, 2406ms"
+1604339940.988202,Current time: 2020-11-02T11:59:01
+1604339940.9900732,Received length: 20
+1604339941.004489,"Data: node: 1, message: 2843, time: 1604314712, Vbat 353 v, Tx dur 435 ms, T: 2045 C, RH: 3434 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 227/0"
+1604339941.544409,"...sent a reply, 538ms"
+1604339956.9880059,Current time: 2020-11-02T11:59:17
+1604339956.990061,Received length: 20
+1604339957.003733,"Data: node: 1, message: 2844, time: 1604314728, Vbat 353 v, Tx dur 435 ms, T: 2041 C, RH: 3440 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 229/0"
+1604339959.35298,"...reply failed, 2345ms"
+1604339972.988446,Current time: 2020-11-02T11:59:33
+1604339972.990387,Received length: 20
+1604339973.0044212,"Data: node: 1, message: 2845, time: 1604314744, Vbat 353 v, Tx dur 435 ms, T: 2046 C, RH: 3436 %, status: 0x00, RSSI -59 dBm, SNR 11 dB, good/bad packets: 230/0"
+1604339975.1953971,"...reply failed, 2190ms"
+1604339988.988103,Current time: 2020-11-02T11:59:49
+1604339988.98981,Received length: 20
+1604339989.0035489,"Data: node: 1, message: 2846, time: 1604314760, Vbat 353 v, Tx dur 434 ms, T: 2044 C, RH: 3445 %, status: 0x00, RSSI -59 dBm, SNR 11 dB, good/bad packets: 231/0"
+1604339989.544731,"...sent a reply, 539ms"
+1604340004.988373,Current time: 2020-11-02T12:00:05
+1604340004.99029,Received length: 20
+1604340005.004342,"Data: node: 1, message: 2847, time: 1604314776, Vbat 353 v, Tx dur 434 ms, T: 2044 C, RH: 3441 %, status: 0x00, RSSI -59 dBm, SNR 12 dB, good/bad packets: 233/0"
+1604340005.544425,"...sent a reply, 538ms"
+1604340020.987637,Current time: 2020-11-02T12:00:21
+1604340020.989625,Received length: 20
+1604340021.003513,"Data: node: 1, message: 2848, time: 1604314792, Vbat 353 v, Tx dur 434 ms, T: 2048 C, RH: 3443 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 235/0"
+1604340021.544749,"...sent a reply, 539ms"
+1604340036.988123,Current time: 2020-11-02T12:00:37
+1604340036.9894028,Received length: 20
+1604340037.003048,"Data: node: 1, message: 2849, time: 1604314808, Vbat 353 v, Tx dur 434 ms, T: 2045 C, RH: 3443 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 237/0"
+1604340037.544109,"...sent a reply, 538ms"
+1604340052.987869,Current time: 2020-11-02T12:00:53
+1604340052.9899032,Received length: 20
+1604340053.003807,"Data: node: 1, message: 2850, time: 1604314824, Vbat 353 v, Tx dur 435 ms, T: 2045 C, RH: 3437 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 239/0"
+1604340055.743273,"...reply failed, 2738ms"
+1604340068.9874282,Current time: 2020-11-02T12:01:09
+1604340068.989367,Received length: 20
+1604340069.003637,"Data: node: 1, message: 2851, time: 1604314840, Vbat 353 v, Tx dur 435 ms, T: 2045 C, RH: 3434 %, status: 0x00, RSSI -59 dBm, SNR 11 dB, good/bad packets: 240/0"
+1604340069.54432,"...sent a reply, 538ms"
+1604340084.987778,Current time: 2020-11-02T12:01:25
+1604340084.989702,Received length: 20
+1604340085.0034602,"Data: node: 1, message: 2852, time: 1604314856, Vbat 353 v, Tx dur 435 ms, T: 2048 C, RH: 3445 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 242/0"
+1604340085.5438552,"...sent a reply, 539ms"
+1604340100.987391,Current time: 2020-11-02T12:01:41
+1604340100.98925,Received length: 20
+1604340101.0032902,"Data: node: 1, message: 2853, time: 1604314872, Vbat 353 v, Tx dur 435 ms, T: 2046 C, RH: 3443 %, status: 0x00, RSSI -61 dBm, SNR 11 dB, good/bad packets: 244/0"
+1604340101.544186,"...sent a reply, 539ms"
+1604340116.98773,Current time: 2020-11-02T12:01:57
+1604340116.989654,Received length: 20
+1604340117.0036402,"Data: node: 1, message: 2854, time: 1604314888, Vbat 353 v, Tx dur 435 ms, T: 2045 C, RH: 3439 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 246/0"
+1604340117.5457752,"...sent a reply, 538ms"
+1604340132.986868,Current time: 2020-11-02T12:02:13
+1604340132.988798,Received length: 20
+1604340133.002795,"Data: node: 1, message: 2855, time: 1604314904, Vbat 353 v, Tx dur 435 ms, T: 2049 C, RH: 3434 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 248/0"
+1604340133.544203,"...sent a reply, 538ms"
+1604340148.987396,Current time: 2020-11-02T12:02:29
+1604340148.988503,Received length: 20
+1604340149.003426,"Data: node: 1, message: 2856, time: 1604314920, Vbat 353 v, Tx dur 435 ms, T: 2048 C, RH: 3430 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 250/0"
+1604340151.123512,"...reply failed, 2112ms"
+1604340164.987093,Current time: 2020-11-02T12:02:45
+1604340164.989125,Received length: 20
+1604340165.003032,"Data: node: 1, message: 2857, time: 1604314936, Vbat 353 v, Tx dur 435 ms, T: 2046 C, RH: 3448 %, status: 0x00, RSSI -60 dBm, SNR 10 dB, good/bad packets: 251/0"
+1604340167.831269,"...reply failed, 2826ms"
+1604340180.986719,Current time: 2020-11-02T12:03:01
+1604340180.988619,Received length: 20
+1604340181.0027578,"Data: node: 1, message: 2858, time: 1604314952, Vbat 353 v, Tx dur 435 ms, T: 2049 C, RH: 3436 %, status: 0x00, RSSI -63 dBm, SNR 14 dB, good/bad packets: 252/0"
+1604340183.434575,"...reply failed, 2430ms"
+1604340196.9872131,Current time: 2020-11-02T12:03:17
+1604340196.9891672,Received length: 20
+1604340197.003009,"Data: node: 1, message: 2859, time: 1604314968, Vbat 353 v, Tx dur 435 ms, T: 2051 C, RH: 3437 %, status: 0x00, RSSI -63 dBm, SNR 13 dB, good/bad packets: 253/0"
+1604340199.7711282,"...reply failed, 2767ms"
+1604340228.9871202,Current time: 2020-11-02T12:03:49
+1604340228.989376,Received length: 20
+1604340229.003262,"Data: node: 1, message: 2861, time: 1604315000, Vbat 353 v, Tx dur 435 ms, T: 2048 C, RH: 3425 %, status: 0x10, RSSI -58 dBm, SNR 13 dB, good/bad packets: 254/1"
+1604340231.4390159,"...reply failed, 2434ms"
+1604340244.986558,Current time: 2020-11-02T12:04:05
+1604340244.9886599,Received length: 20
+1604340245.002392,"Data: node: 1, message: 2862, time: 1604315016, Vbat 353 v, Tx dur 434 ms, T: 2046 C, RH: 3425 %, status: 0x00, RSSI -68 dBm, SNR 13 dB, good/bad packets: 255/1"
+1604340247.490577,"...reply failed, 2486ms"
+1604340260.987069,Current time: 2020-11-02T12:04:21
+1604340260.988406,Received length: 20
+1604340261.0028958,"Data: node: 1, message: 2863, time: 1604315032, Vbat 353 v, Tx dur 434 ms, T: 2049 C, RH: 3434 %, status: 0x00, RSSI -63 dBm, SNR 13 dB, good/bad packets: 256/1"
+1604340261.543081,"...sent a reply, 538ms"
+1604340276.9865541,Current time: 2020-11-02T12:04:37
+1604340276.98843,Received length: 20
+1604340277.002395,"Data: node: 1, message: 2864, time: 1604315048, Vbat 353 v, Tx dur 435 ms, T: 2049 C, RH: 3430 %, status: 0x00, RSSI -68 dBm, SNR 13 dB, good/bad packets: 258/1"
+1604340277.543539,"...sent a reply, 538ms"
+1604340292.986149,Current time: 2020-11-02T12:04:53
+1604340292.987993,Received length: 20
+1604340293.002062,"Data: node: 1, message: 2865, time: 1604315064, Vbat 353 v, Tx dur 435 ms, T: 2049 C, RH: 3432 %, status: 0x00, RSSI -65 dBm, SNR 12 dB, good/bad packets: 260/1"
+1604340293.543257,"...sent a reply, 539ms"
+1604340308.986658,Current time: 2020-11-02T12:05:09
+1604340308.988359,Received length: 20
+1604340309.0023758,"Data: node: 1, message: 2866, time: 1604315080, Vbat 353 v, Tx dur 435 ms, T: 2048 C, RH: 3429 %, status: 0x00, RSSI -63 dBm, SNR 13 dB, good/bad packets: 262/1"
+1604340311.587542,"...reply failed, 2581ms"
+1604340324.9860559,Current time: 2020-11-02T12:05:25
+1604340324.9880488,Received length: 20
+1604340325.00213,"Data: node: 1, message: 2867, time: 1604315096, Vbat 353 v, Tx dur 435 ms, T: 2049 C, RH: 3425 %, status: 0x00, RSSI -60 dBm, SNR 11 dB, good/bad packets: 263/1"
+1604340327.9680178,"...reply failed, 2964ms"
+1604340340.9864619,Current time: 2020-11-02T12:05:41
+1604340340.988169,Received length: 20
+1604340341.002309,"Data: node: 1, message: 2868, time: 1604315112, Vbat 353 v, Tx dur 435 ms, T: 2051 C, RH: 3425 %, status: 0x00, RSSI -61 dBm, SNR 13 dB, good/bad packets: 264/1"
+1604340341.5425751,"...sent a reply, 538ms"
+1604340356.986023,Current time: 2020-11-02T12:05:57
+1604340356.9879491,Received length: 20
+1604340357.001821,"Data: node: 1, message: 2869, time: 1604315128, Vbat 353 v, Tx dur 435 ms, T: 2051 C, RH: 3424 %, status: 0x00, RSSI -64 dBm, SNR 8 dB, good/bad packets: 266/1"
+1604340357.5430431,"...sent a reply, 538ms"
+1604340372.98594,Current time: 2020-11-02T12:06:13
+1604340372.9869282,Received length: 20
+1604340373.002221,"Data: node: 1, message: 2870, time: 1604315144, Vbat 353 v, Tx dur 435 ms, T: 2049 C, RH: 3441 %, status: 0x00, RSSI -65 dBm, SNR 13 dB, good/bad packets: 268/1"
+1604340373.542447,"...sent a reply, 538ms"
+1604340388.98573,Current time: 2020-11-02T12:06:29
+1604340388.987582,Received length: 20
+1604340389.001812,"Data: node: 1, message: 2871, time: 1604315160, Vbat 353 v, Tx dur 435 ms, T: 2051 C, RH: 3439 %, status: 0x00, RSSI -59 dBm, SNR 13 dB, good/bad packets: 270/1"
+1604340389.542777,"...sent a reply, 539ms"
+1604340404.985483,Current time: 2020-11-02T12:06:45
+1604340404.9874518,Received length: 20
+1604340405.002414,"Data: node: 1, message: 2872, time: 1604315176, Vbat 353 v, Tx dur 435 ms, T: 2051 C, RH: 3439 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 272/1"
+1604340405.5419269,"...sent a reply, 538ms"
+1604340420.986104,Current time: 2020-11-02T12:07:01
+1604340420.987904,Received length: 20
+1604340421.001593,"Data: node: 1, message: 2873, time: 1604315192, Vbat 353 v, Tx dur 435 ms, T: 2052 C, RH: 3441 %, status: 0x00, RSSI -59 dBm, SNR 11 dB, good/bad packets: 274/1"
+1604340423.65901,"...reply failed, 2656ms"
+1604340436.985471,Current time: 2020-11-02T12:07:17
+1604340436.9871879,Received length: 20
+1604340437.0015302,"Data: node: 1, message: 2874, time: 1604315208, Vbat 353 v, Tx dur 435 ms, T: 2051 C, RH: 3431 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 275/1"
+1604340439.4145112,"...reply failed, 2411ms"
+1604340452.985826,Current time: 2020-11-02T12:07:33
+1604340452.988155,Received length: 20
+1604340453.001475,"Data: node: 1, message: 2875, time: 1604315224, Vbat 353 v, Tx dur 435 ms, T: 2051 C, RH: 3428 %, status: 0x00, RSSI -57 dBm, SNR 13 dB, good/bad packets: 276/1"
+1604340453.5427232,"...sent a reply, 538ms"
+1604340468.985377,Current time: 2020-11-02T12:07:49
+1604340468.987335,Received length: 20
+1604340469.001374,"Data: node: 1, message: 2876, time: 1604315240, Vbat 353 v, Tx dur 435 ms, T: 2052 C, RH: 3431 %, status: 0x00, RSSI -59 dBm, SNR 5 dB, good/bad packets: 278/1"
+1604340471.2794518,"...reply failed, 2274ms"
+1604340484.985734,Current time: 2020-11-02T12:08:05
+1604340484.9867132,Received length: 20
+1604340485.001626,"Data: node: 1, message: 2877, time: 1604315256, Vbat 353 v, Tx dur 435 ms, T: 2052 C, RH: 3425 %, status: 0x00, RSSI -57 dBm, SNR 13 dB, good/bad packets: 279/1"
+1604340486.0367959,"...sent a reply, 1033ms"
+1604340500.985261,Current time: 2020-11-02T12:08:21
+1604340500.987167,Received length: 20
+1604340501.00225,"Data: node: 1, message: 2878, time: 1604315272, Vbat 353 v, Tx dur 434 ms, T: 2052 C, RH: 3431 %, status: 0x00, RSSI -59 dBm, SNR 13 dB, good/bad packets: 281/1"
+1604340503.959521,"...reply failed, 2956ms"
+1604340516.984936,Current time: 2020-11-02T12:08:37
+1604340516.986593,Received length: 20
+1604340517.00112,"Data: node: 1, message: 2879, time: 1604315288, Vbat 353 v, Tx dur 435 ms, T: 2052 C, RH: 3424 %, status: 0x00, RSSI -58 dBm, SNR 13 dB, good/bad packets: 282/1"
+1604340519.8118951,"...reply failed, 2809ms"
+1604340532.984972,Current time: 2020-11-02T12:08:53
+1604340532.987,Received length: 20
+1604340533.0014222,"Data: node: 1, message: 2880, time: 1604315304, Vbat 353 v, Tx dur 435 ms, T: 2052 C, RH: 3430 %, status: 0x00, RSSI -55 dBm, SNR 11 dB, good/bad packets: 283/1"
+1604340533.542235,"...sent a reply, 538ms"
+1604340548.984589,Current time: 2020-11-02T12:09:09
+1604340548.986537,Received length: 20
+1604340549.0011919,"Data: node: 1, message: 2881, time: 1604315320, Vbat 353 v, Tx dur 435 ms, T: 2053 C, RH: 3423 %, status: 0x00, RSSI -57 dBm, SNR 11 dB, good/bad packets: 285/1"
+1604340551.2588081,"...reply failed, 2256ms"
+1604340564.985149,Current time: 2020-11-02T12:09:25
+1604340564.986801,Received length: 20
+1604340565.0012438,"Data: node: 1, message: 2882, time: 1604315336, Vbat 353 v, Tx dur 435 ms, T: 2053 C, RH: 3428 %, status: 0x00, RSSI -58 dBm, SNR 12 dB, good/bad packets: 286/1"
+1604340565.541153,"...sent a reply, 538ms"
+1604340580.984262,Current time: 2020-11-02T12:09:41
+1604340580.98625,Received length: 20
+1604340581.000248,"Data: node: 1, message: 2883, time: 1604315352, Vbat 353 v, Tx dur 435 ms, T: 2052 C, RH: 3424 %, status: 0x00, RSSI -59 dBm, SNR 13 dB, good/bad packets: 288/1"
+1604340583.5238998,"...reply failed, 2521ms"

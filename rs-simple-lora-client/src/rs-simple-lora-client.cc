@@ -18,8 +18,8 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <RHReliableDatagram.h>
 #include <RHDatagram.h>
+#include <RHReliableDatagram.h>
 #include <RH_RF95.h>
 #include <RTCZero.h>
 #include <SerialFlash.h>
@@ -70,14 +70,14 @@
 #define USE_RTC_STANDBY_FOR_DELAY 1 // 0 uses yield()
 
 #define WAIT_AVAILABLE 3000      // ms to wait for transmission to complete
-#define FAST_TX_INTERVAL_MS 5000 // ms to wait before next transmission when in non-sleeping mode
-#define STANDBY_INTERVAL_S 10    // seconds to wait before next transmission when sleeping
+#define STANDBY_INTERVAL_S 20    // seconds to wait/sleep before next transmission
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
 
 // Log file name.
 #define FILE_BASE_NAME "Data"
+#define SD_CARD_WAIT 5
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -106,16 +106,19 @@ SdFile file; // Log file.
 #define RFM95_SET_FREQ_FAIL 6
 #define SD_LOG_FILE_NAME_FAIL 7
 
+// In the RH Datagram and ReliableDatagram header, we can use the four
+// LSB of the 'status' field. Currently this is part of the data packet.
 #define STATUS_OK 0x00
 
-#define SD_NO_MORE_NAMES 0x01 // means it will use "Data99.csv"
-#define SD_FILE_ENTRY_WRITE_ERROR 0x02
-#define SD_CARD_WAKEUP_ERROR 0x04
+#define RFM95_SEND_ERROR 0x01
+#define RFM95_NO_REPLY 0x02
+#define SD_FILE_ENTRY_WRITE_ERROR 0x04
+#define SD_CARD_WAKEUP_ERROR 0x08
 
-#define RFM95_NO_REPLY 0x10
-#define RFM95_SEND_QUEUE_ERROR 0x20
-#define RFM95_SEND_ERROR 0x40
-#define RFM95_RECEIVE_FAILED 0x80
+#define SD_NO_MORE_NAMES 0x10 // means it will use "Data99.csv"
+
+// #define RFM95_SEND_QUEUE_ERROR 0x20
+//#define RFM95_RECEIVE_FAILED 0x80
 
 #if DEBUG
 #define SHT30D 0
@@ -399,17 +402,16 @@ void setup() {
         error_blink(STATUS_LED, RFM95_INIT_FAIL);
     }
 
-    // The default values
-    rf95_manager.setRetries(3);
-    rf95_manager.setTimeout(200);
- 
+    rf95_manager.setRetries(2);   // default is 3
+    rf95_manager.setTimeout(200); // the default value
+
     // Setup ISM frequency
     if (!rf95.setFrequency(FREQUENCY)) {
         IO(Serial.println(F("LoRa frequency out of range.")));
         error_blink(STATUS_LED, RFM95_SET_FREQ_FAIL);
     }
 
-   // Setup Power,dBm
+    // Setup Power,dBm
     rf95.setTxPower(tx_power);
     // Setup BandWidth, option: 7800,10400,15600,20800,31200,41700,62500,125000,250000,500000
     // Lower BandWidth for longer distance.
@@ -442,6 +444,8 @@ void setup() {
 
 // Used to hold any reply from the main node
 uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
+// The data sent to the main node
+packet_t data;
 
 void loop() {
     // FIXME - grab the time here and then use that time plus an offset (STANDBY_INTERVAL_S)
@@ -462,7 +466,6 @@ void loop() {
     yield_spi_to_rf95();
 
     // New packet encoding
-    packet_t data;
     build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
                       get_temperature(), get_humidity(), status);
 
@@ -471,44 +474,39 @@ void loop() {
     IO(Serial.println(data_packet_to_string(&data, true)));
 
     // Broadcast. This may block for up to CAD_TIMEOUT seconds
+    // Broadcasting means there's no waiting for an ACK.
     if (!rf95_manager.sendtoWait((uint8_t *)&data, DATA_PACKET_SIZE, RH_BROADCAST_ADDRESS)) {
-        status |= RFM95_SEND_QUEUE_ERROR;
+        status |= RFM95_SEND_ERROR;
         IO(Serial.println(F("Could not queue data packet")));
     }
-#if 0
-    if (!rf95_manager.waitPacketSent(WAIT_AVAILABLE)) {
-        status |= RFM95_SEND_ERROR;
-        IO(Serial.println(F("Could not send data packet")));
-    }
-#endif
+
     last_tx_time = millis() - start_time_ms; // last_tx_time used next iteration
 
 #if EXPECT_REPLY
     // Now wait for a reply
     uint8_t len = sizeof(rf95_buf);
     uint8_t from;
-
+#if 0
     if (rf95_manager.waitAvailableTimeout(WAIT_AVAILABLE)) {
-        // Should be a reply message for us now
-        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) { //rf95.recv(buf, &len)) {
-            uint32_t main_node_time = 0;
-            if (len == sizeof(uint32_t)) { // time code?
-                memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
-            }
-            // Update the current time
-
-            IO(Serial.print(F("got reply ")));
-            IO(Serial.print(main_node_time));
-            IO(Serial.print(F(" from ")));
-            IO(Serial.println(from, DEC)); // (char *)buf));
-            IO(Serial.print(F("RSSI: ")));
-            IO(Serial.println(rf95.lastRssi(), DEC));
-        } else {
-            IO(Serial.println(F("receive failed")));
-            status |= RFM95_RECEIVE_FAILED;
+#endif
+    // Should be a reply message for us now
+    // manager.recvfromAckTimeout(buf, &len, 2000, &from)
+    if (rf95_manager.recvfromAckTimeout(rf95_buf, &len, WAIT_AVAILABLE, &from)) { //rf95.recv(buf, &len)) {
+        uint32_t main_node_time = 0;
+        if (len == sizeof(uint32_t)) { // time code?
+            memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
+            // cast in abs() needed to resolve ambiguity
+            if (abs(long(rtc.getEpoch() - main_node_time)) > 1)
+                rtc.setEpoch(main_node_time);
         }
+        IO(Serial.print(F("got reply ")));
+        IO(Serial.print(main_node_time));
+        IO(Serial.print(F(" from ")));
+        IO(Serial.println(from, DEC)); // (char *)buf));
+        IO(Serial.print(F("RSSI: ")));
+        IO(Serial.println(rf95.lastRssi(), DEC));
     } else {
-        IO(Serial.println(F("No reply, is a main node running?")));
+        IO(Serial.println(F("receive failed")));
         status |= RFM95_NO_REPLY;
     }
 #endif // EXPECT_REPLY
@@ -525,7 +523,7 @@ void loop() {
 
         // Wait 5s for the SD card to settle. Do this here to save power by turning the
         // LORA off and sleeping the RS
-        rtc.setAlarmEpoch(rtc.getEpoch() + 5);
+        rtc.setAlarmEpoch(rtc.getEpoch() + SD_CARD_WAIT);
         rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
         rtc.attachInterrupt(alarmMatch);
         rtc.standbyMode();
@@ -535,7 +533,11 @@ void loop() {
         SPI.end();
 
         // TODO Fix this so that the times are on the hour.
-        uint8_t offset = max(STANDBY_INTERVAL_S - max((millis() - start_time_ms) / 1000, 0), 0);
+        // The time interval to sleep is the length of the sample interval minus
+        // the time needed to perform the sample operations millis() - start_time_ms
+        // and minus the time spent sleeping while the SD card cleans up after the
+        // last write.
+        uint8_t offset = max(STANDBY_INTERVAL_S - max((millis() - start_time_ms) / 1000, 0) - SD_CARD_WAIT, 0);
         // remove 1 to account for a rounding error
         if (offset > 0)
             offset -= 1;
@@ -553,13 +555,5 @@ void loop() {
         if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
             status |= SD_CARD_WAKEUP_ERROR;
         }
-        // wait 250ms for the SD card.
-        // yield(250); Nope, move up to before sleep and make 1s. 9/17/20
-    } 
-#if 0
-    else {
-        unsigned long elapsed_time_ms = max((millis() - start_time_ms), 0);
-        yield(max(FAST_TX_INTERVAL_MS - elapsed_time_ms, 0)); // wait here for upto TX_INTERVAL seconds
     }
-#endif
 }
