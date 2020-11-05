@@ -250,8 +250,13 @@ void setup() {
     if (rf95_manager.init()) {
         Serial.println(F(" OK"));
 
-        rf95_manager.setTimeout(400);   // 6 octets at SF = 10, CR = 5, BW = 125kHz is 327ms
-        
+        // 6 octets + preamble at SF = 10, CR = 5, BW = 125kHz is 327ms
+        // or 207ms, depending on who you ask... Either way, it's more than
+        // 200, which is the default. Setting the timeout to 400ms seems
+        // to improve the success rate at getting the replay back to the
+        // leaf node. jhrg 11/4/20
+        rf95_manager.setTimeout(400);
+
         // Setup ISM FREQUENCY
         rf95.setFrequency(FREQUENCY);
         // Setup Power,dBm
@@ -313,7 +318,7 @@ void loop() {
                 const char *pretty_buf = data_packet_to_string((packet_t *)&rf95_buf, false);
                 log_data(FILE_NAME, pretty_buf);
 
-                yield(1000);
+                // yield(1000); Not needed
 #if REPLY
                 // Send a reply that includes a time code (unixtime)
                 uint32_t now = RTC.now().unixtime();
