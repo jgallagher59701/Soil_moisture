@@ -69,8 +69,8 @@
 #define EXPECT_REPLY 1
 #define USE_RTC_STANDBY_FOR_DELAY 1 // 0 uses yield()
 
-#define WAIT_AVAILABLE 3000      // ms to wait for transmission to complete
-#define STANDBY_INTERVAL_S 20    // seconds to wait/sleep before next transmission
+#define WAIT_AVAILABLE 5000   // ms to wait for reply from main node
+#define STANDBY_INTERVAL_S 20 // seconds to wait/sleep before next transmission
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
@@ -402,8 +402,9 @@ void setup() {
         error_blink(STATUS_LED, RFM95_INIT_FAIL);
     }
 
-    rf95_manager.setRetries(2);   // default is 3
-    rf95_manager.setTimeout(200); // the default value
+    rf95_manager.setRetries(2); // default is 3
+    // the value based on the ACK time (6 Octets == 327ms given SF 10, CR 5, BW 125kHz)
+    rf95_manager.setTimeout(400);
 
     // Setup ISM frequency
     if (!rf95.setFrequency(FREQUENCY)) {
@@ -480,34 +481,39 @@ void loop() {
         IO(Serial.println(F("Could not queue data packet")));
     }
 
+    // This is not needed if the 'TO' address above is a specific node. If
+    // RH_BROADCAST_ADDRESS is used, then we should wait
+    if (!rf95_manager.waitPacketSent(WAIT_AVAILABLE)) {
+        status |= RFM95_SEND_ERROR;
+    }
+
     last_tx_time = millis() - start_time_ms; // last_tx_time used next iteration
 
 #if EXPECT_REPLY
     // Now wait for a reply
     uint8_t len = sizeof(rf95_buf);
     uint8_t from;
-#if 0
-    if (rf95_manager.waitAvailableTimeout(WAIT_AVAILABLE)) {
-#endif
+    char msg[256];
+
     // Should be a reply message for us now
-    // manager.recvfromAckTimeout(buf, &len, 2000, &from)
-    if (rf95_manager.recvfromAckTimeout(rf95_buf, &len, WAIT_AVAILABLE, &from)) { //rf95.recv(buf, &len)) {
-        uint32_t main_node_time = 0;
-        if (len == sizeof(uint32_t)) { // time code?
-            memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
-            // cast in abs() needed to resolve ambiguity
-            if (abs(long(rtc.getEpoch() - main_node_time)) > 1)
-                rtc.setEpoch(main_node_time);
+    if (rf95_manager.waitAvailableTimeout(WAIT_AVAILABLE)) {
+        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) {
+            uint32_t main_node_time = 0;
+            if (len == sizeof(uint32_t)) { // time code?
+                memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
+                // cast in abs() needed to resolve ambiguity
+                if (abs(long(rtc.getEpoch() - main_node_time)) > 1)
+                    rtc.setEpoch(main_node_time);
+            }
+            // Broadcast debug info
+            snprintf(msg, 256, "Reply received, time: %ld from %d, RSSI: %d", main_node_time, from, rf95.lastRssi());
+            rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg), RH_BROADCAST_ADDRESS);
+        } else {
+            status |= RFM95_NO_REPLY;
+            // Broadcast debug info
+            snprintf(msg, 256, "No Reply received");
+            rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg), RH_BROADCAST_ADDRESS);
         }
-        IO(Serial.print(F("got reply ")));
-        IO(Serial.print(main_node_time));
-        IO(Serial.print(F(" from ")));
-        IO(Serial.println(from, DEC)); // (char *)buf));
-        IO(Serial.print(F("RSSI: ")));
-        IO(Serial.println(rf95.lastRssi(), DEC));
-    } else {
-        IO(Serial.println(F("receive failed")));
-        status |= RFM95_NO_REPLY;
     }
 #endif // EXPECT_REPLY
 

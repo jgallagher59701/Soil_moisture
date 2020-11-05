@@ -250,6 +250,8 @@ void setup() {
     if (rf95_manager.init()) {
         Serial.println(F(" OK"));
 
+        rf95_manager.setTimeout(400);   // 6 octets at SF = 10, CR = 5, BW = 125kHz is 327ms
+        
         // Setup ISM FREQUENCY
         rf95.setFrequency(FREQUENCY);
         // Setup Power,dBm
@@ -284,16 +286,18 @@ void loop() {
     if (rf95_manager.available()) {
         status_on();
 
+        Serial.println();
         Serial.print(F("Current time: "));
         Serial.println(iso8601_date_time(RTC.now()));
 
         uint8_t len = sizeof(rf95_buf);
-        uint8_t from;
+        uint8_t from, to, id, header;
+        char msg[256];
+        if (rf95_manager.recvfromAck(rf95_buf, &len, &from, &to, &id, &header)) {
 
-        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) {
-
-            Serial.print(F("Received length: "));
-            Serial.println(len, DEC);
+            snprintf(msg, 256, "Received length: %d, from: 0x%02x, to: 0x%02x, id: 0x%02x, header: 0x%02x",
+                     len, from, to, id, header);
+            Serial.println(msg);
             Serial.flush();
 
             if (len == sizeof(packet_t)) {
@@ -308,22 +312,25 @@ void loop() {
                 // log reading to the SD card
                 const char *pretty_buf = data_packet_to_string((packet_t *)&rf95_buf, false);
                 log_data(FILE_NAME, pretty_buf);
+
+                yield(1000);
 #if REPLY
                 // Send a reply that includes a time code (unixtime)
                 uint32_t now = RTC.now().unixtime();
                 unsigned long start = millis();
                 if (rf95_manager.sendtoWait((uint8_t *)&now, sizeof(now), from)) {
-                    // rf95.waitPacketSent();
-                    unsigned long end = millis();
-                    Serial.print(F("...sent a reply, "));
-                    Serial.print(end - start, DEC);
-                    Serial.println(F("ms"));
+                    snprintf(msg, 256, "...sent a reply, %d retransmissions, %ld ms", rf95_manager.retransmissions(),
+                             millis() - start);
+                    Serial.println(msg);
+                    Serial.flush();
                 } else {
-                    unsigned long end = millis();
-                    Serial.print(F("...reply failed, "));
-                    Serial.print(end - start, DEC);
-                    Serial.println(F("ms"));
+                    snprintf(msg, 256, "...reply failed, %d retransmissions, %ld ms", rf95_manager.retransmissions(),
+                             millis() - start);
+                    Serial.println(msg);
+                    Serial.flush();
                 }
+
+                rf95_manager.resetRetransmissions();
 #endif
             } else {
                 Serial.print(F("Got: "));
