@@ -67,7 +67,6 @@
 #define MAIN_NODE_ADDRESS 0
 #define NODE_ADDRESS 1
 #define EXPECT_REPLY 1
-#define USE_RTC_STANDBY_FOR_DELAY 1 // 0 uses yield()
 
 #define WAIT_AVAILABLE 5000   // ms to wait for reply from main node
 #define STANDBY_INTERVAL_S 20 // seconds to wait/sleep before next transmission
@@ -77,7 +76,7 @@
 
 // Log file name.
 #define FILE_BASE_NAME "Data"
-#define SD_CARD_WAIT 5
+#define SD_CARD_WAIT 5 // seconds to wait after last write before power off
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -142,7 +141,10 @@ void yield(unsigned long ms_delay) {
 */
 void yield_spi_to_sd() {
     digitalWrite(RFM95_CS, HIGH);
-    // TODO remove? digitalWrite(FLASH_CS, HIGH);
+    digitalWrite(SD_CS, LOW);
+    // TODO remove?
+    // Moved to setup() since we never use this.
+    // digitalWrite(FLASH_CS, HIGH);
 }
 
 /**
@@ -150,7 +152,16 @@ void yield_spi_to_sd() {
 */
 void yield_spi_to_rf95() {
     digitalWrite(SD_CS, HIGH);
-    // TODO remove?  digitalWrite(FLASH_CS, HIGH);
+    digitalWrite(RFM95_CS, LOW);
+}
+
+/**
+ * @brief Remove everything from the SPI bus
+ */
+void yield_spi_bus() {
+    digitalWrite(SD_CS, HIGH);
+    digitalWrite(RFM95_CS, HIGH);
+    digitalWrite(FLASH_CS, HIGH);
 }
 
 /**
@@ -278,9 +289,9 @@ void log_data(const char *file_name, const char *data) {
  * @brief Get the temperature from the SHT-3
  * @return the temperature * 100 as a 16-bit unsigned int
  */
-uint16_t get_temperature() {
+int16_t get_temperature() {
 #if SHT30D
-    return (uint16_t)(sht30d.readTemperature() * 100);
+    return (int16_t)(sht30d.readTemperature() * 100);
 #else
     return 0;
 #endif
@@ -295,6 +306,21 @@ uint16_t get_humidity() {
     return (uint16_t)(sht30d.readHumidity() * 100);
 #else
     return 0;
+#endif
+}
+
+/**
+ * @brief Send a short message for debugging.
+ * @param msg The message; null terminated string
+ * @param to Send to this node
+ */
+void send_debug(const char *msg, uint8_t to) {
+#if DEBUG
+    IO(SerialUSB.println(msg));
+    IO(SerialUSB.flush());
+#else
+    yield_spi_to_rf95();
+    rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg) + 1, to);
 #endif
 }
 
@@ -332,6 +358,7 @@ void setup() {
     // RocketScream's built-in flash not used
     SerialFlash.begin(FLASH_CS);
     SerialFlash.sleep();
+    digitalWrite(FLASH_CS, HIGH); // deselect
 
     // SD card power control (low-side switching)
     pinMode(SD_PWR, OUTPUT);
@@ -431,12 +458,11 @@ void setup() {
     // not strictly needed for this code - the short delay loop option has the USB
     // attached, but this is convenient because the node's mode does not have to be
     // changed.
-#if !DEBUG
     yield(10000);
-#endif
+
+#if !DEBUG
     // Once past setup(), the USB cannot be used unless DEBUG is on. Then it must
     // be toggled during the sleep period.
-#if !DEBUG
     USBDevice.detach();
 #endif
 
@@ -449,22 +475,15 @@ uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
 packet_t data;
 
 void loop() {
-    // FIXME - grab the time here and then use that time plus an offset (STANDBY_INTERVAL_S)
-    // to determine when to wake up so that the node will wake up on the hour, etc.
-    // Set the initial time so some sensible value.
     IO(Serial.print(F("Sending to LoRa Server.. ")));
     static unsigned long last_tx_time = 0;
     static unsigned long message = 0;
 
     unsigned long start_time_ms = millis();
 
-    // Send a message to LoRa Server
-
     ++message;
 
     digitalWrite(STATUS_LED, HIGH); // TODO only in DEBUG mode
-
-    yield_spi_to_rf95();
 
     // New packet encoding
     build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
@@ -476,6 +495,7 @@ void loop() {
 
     // Broadcast. This may block for up to CAD_TIMEOUT seconds
     // Broadcasting means there's no waiting for an ACK.
+    yield_spi_to_rf95();
     if (!rf95_manager.sendtoWait((uint8_t *)&data, DATA_PACKET_SIZE, RH_BROADCAST_ADDRESS)) {
         status |= RFM95_SEND_ERROR;
         IO(Serial.println(F("Could not queue data packet")));
@@ -485,6 +505,7 @@ void loop() {
     // RH_BROADCAST_ADDRESS is used, then we should wait
     if (!rf95_manager.waitPacketSent(WAIT_AVAILABLE)) {
         status |= RFM95_SEND_ERROR;
+        IO(Serial.println(F("Could not send data packet")));
     }
 
     last_tx_time = millis() - start_time_ms; // last_tx_time used next iteration
@@ -493,7 +514,6 @@ void loop() {
     // Now wait for a reply
     uint8_t len = sizeof(rf95_buf);
     uint8_t from;
-    char msg[256];
 
     // Should be a reply message for us now
     if (rf95_manager.waitAvailableTimeout(WAIT_AVAILABLE)) {
@@ -506,19 +526,20 @@ void loop() {
                     rtc.setEpoch(main_node_time);
             }
             // Broadcast debug info
-            snprintf(msg, 256, "Reply received, time: %ld from %d, RSSI: %d", main_node_time, from, rf95.lastRssi());
-            rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg), RH_BROADCAST_ADDRESS);
+            send_debug("1", from);
         } else {
             status |= RFM95_NO_REPLY;
             // Broadcast debug info
-            snprintf(msg, 256, "No Reply received");
-            rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg), RH_BROADCAST_ADDRESS);
+            send_debug("No Reply received", from);
         }
     }
 #endif // EXPECT_REPLY
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
 
+    send_debug("2", from);
+
+    yield_spi_bus();
     digitalWrite(STATUS_LED, LOW);
 
     // Leaving this in guards against bricking the RS when sleeping with the USB detached.
@@ -532,34 +553,50 @@ void loop() {
         rtc.setAlarmEpoch(rtc.getEpoch() + SD_CARD_WAIT);
         rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
         rtc.attachInterrupt(alarmMatch);
+#if STANDBY_MODE
         rtc.standbyMode();
+#else
+        yield(SD_CARD_WAIT * 1000);
+#endif
+        // send_debug("3", from);
 
-        digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
-        // Adding SPI.end() drops the measured current draw from 0.65mA to 0.27mA
+        // yield_spi_to_sd();
+        // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
         SPI.end();
+        digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
 
         // TODO Fix this so that the times are on the hour.
         // The time interval to sleep is the length of the sample interval minus
         // the time needed to perform the sample operations millis() - start_time_ms
         // and minus the time spent sleeping while the SD card cleans up after the
         // last write.
-        uint8_t offset = max(STANDBY_INTERVAL_S - max((millis() - start_time_ms) / 1000, 0) - SD_CARD_WAIT, 0);
+        unsigned long elapsed_time = max((millis() - start_time_ms), 0) / 1000;
+        uint8_t offset = max(STANDBY_INTERVAL_S - elapsed_time - SD_CARD_WAIT, 0);
         // remove 1 to account for a rounding error
         if (offset > 0)
             offset -= 1;
-        IO(Serial.print(F("Alarm offset: ")));
-        IO(Serial.println(offset));
+
         rtc.setAlarmEpoch(rtc.getEpoch() + offset);
         rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
         rtc.attachInterrupt(alarmMatch);
+#if STANDBY_MODE
         rtc.standbyMode();
+#else
+        yield(offset * 1000);
+#endif
 
         // Reverse low-power options
+        yield_spi_to_sd();
+
         SPI.begin();
         digitalWrite(SD_PWR, HIGH);
         // rf95 wakes up on the first function call.
         if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
             status |= SD_CARD_WAKEUP_ERROR;
         }
+
+        char msg[256];
+        snprintf(msg, 256, "4: t:%ld, o:%d", elapsed_time, offset);
+        send_debug(msg, from);
     }
 }
