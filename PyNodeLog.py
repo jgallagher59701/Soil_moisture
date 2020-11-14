@@ -2,7 +2,13 @@ import serial
 import time
 import csv
 
-ser = serial.Serial('/dev/tty.SLAB_USBtoUART', 115200)
+# For OSX w/platformio
+# RocketScream
+# usb_port = "/dev/cu.usbmodem142101"
+# ESP8266
+usb_port = "/dev/tty.SLAB_USBtoUART"
+
+ser = serial.Serial(usb_port, 115200)
 ser.flushInput()
 
 while True:
