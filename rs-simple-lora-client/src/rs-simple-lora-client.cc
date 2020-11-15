@@ -32,6 +32,9 @@
 
 #define DEBUG 0          // Requires USB
 #define Serial SerialUSB // Needed for RS. jhrg 7/26/20
+#define LORA_DEBUG 1     // Send debugging info to the main node
+#define STANDBY_MODE 1   // Use RTC standby mode and not yield()
+#define TX_LED 0         // 1 == show the LED during operation, 0 == not
 
 #include "debug.h"
 
@@ -117,7 +120,7 @@ SdFile file; // Log file.
 #define SD_NO_MORE_NAMES 0x10 // means it will use "Data99.csv"
 
 // #define RFM95_SEND_QUEUE_ERROR 0x20
-//#define RFM95_RECEIVE_FAILED 0x80
+// #define RFM95_RECEIVE_FAILED 0x80
 
 #if DEBUG
 #define SHT30D 0
@@ -141,7 +144,7 @@ void yield(unsigned long ms_delay) {
 */
 void yield_spi_to_sd() {
     digitalWrite(RFM95_CS, HIGH);
-    digitalWrite(SD_CS, LOW);
+    //digitalWrite(SD_CS, LOW);
     // TODO remove?
     // Moved to setup() since we never use this.
     // digitalWrite(FLASH_CS, HIGH);
@@ -152,7 +155,7 @@ void yield_spi_to_sd() {
 */
 void yield_spi_to_rf95() {
     digitalWrite(SD_CS, HIGH);
-    digitalWrite(RFM95_CS, LOW);
+    //digitalWrite(RFM95_CS, LOW);
 }
 
 /**
@@ -210,10 +213,10 @@ int get_bat_v() {
 char file_name[13] = FILE_BASE_NAME "00.csv";
 
 /**
-   @brief get an unused filename for the new log.
-   This function returns a pointer to local static storage.
-   @return A pointer to the new file name.
-*/
+ * @brief get an unused filename for the new log.
+ *  This function returns a pointer to local static storage.
+ *  @return A pointer to the new file name.
+ */
 const char *
 get_new_log_filename() {
     const uint8_t BASE_NAME_SIZE = sizeof(FILE_BASE_NAME) - 1;
@@ -240,8 +243,8 @@ get_new_log_filename() {
 }
 
 /**
-   @return The log file name
-*/
+ * @return The log file name
+ */
 const char *
 get_log_filename() {
     return file_name;
@@ -273,9 +276,6 @@ void write_header(const char *file_name) {
 */
 void log_data(const char *file_name, const char *data) {
     yield_spi_to_sd();
-
-    SerialUSB.print("data to SD card: ");
-    SerialUSB.println(data);
 
     if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         file.println(data);
@@ -315,10 +315,7 @@ uint16_t get_humidity() {
  * @param to Send to this node
  */
 void send_debug(const char *msg, uint8_t to) {
-#if DEBUG
-    IO(SerialUSB.println(msg));
-    IO(SerialUSB.flush());
-#else
+#if LORA_DEBUG
     yield_spi_to_rf95();
     rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg) + 1, to);
 #endif
@@ -368,7 +365,7 @@ void setup() {
     pinMode(SD_CS, OUTPUT);
     pinMode(RFM95_CS, OUTPUT);
 
-    // Initialize USB and attach to host. Needed because code will detach for sleep
+    // Initialize USB and attach to host.
     USBDevice.init();
     USBDevice.attach();
 
@@ -454,15 +451,14 @@ void setup() {
     // Because the RS Ultra Pro boards native USB won't work with the standby() mode
     // in the LowPower or RTCZero libraries, the MCU board can easily wind up bricked
     // when using standby(). It will then become impossible to upload new/fixed
-    // code. Add a 15s delay here so a coordinated reset/upload will work. This is
-    // not strictly needed for this code - the short delay loop option has the USB
-    // attached, but this is convenient because the node's mode does not have to be
-    // changed.
+    // code. Add a 10s delay here so a coordinated reset/upload will work.
     yield(10000);
 
 #if !DEBUG
     // Once past setup(), the USB cannot be used unless DEBUG is on. Then it must
     // be toggled during the sleep period.
+    // NB: I cnnot get the SerialUSB class to work after the RS has woken from its
+    // StandbyMode.
     USBDevice.detach();
 #endif
 
@@ -476,17 +472,20 @@ packet_t data;
 
 void loop() {
     IO(Serial.print(F("Sending to LoRa Server.. ")));
-    static unsigned long last_tx_time = 0;
+    static unsigned long last_time_awake = 0;
     static unsigned long message = 0;
 
     unsigned long start_time_ms = millis();
 
     ++message;
 
-    digitalWrite(STATUS_LED, HIGH); // TODO only in DEBUG mode
+#if TX_LED
+    digitalWrite(STATUS_LED, HIGH);
+#endif
 
-    // New packet encoding
-    build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_tx_time,
+    // New packet encoding. TODO Could drop NODE_ADDRESS and status if using
+    // RH Datagrams.
+    build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_time_awake,
                       get_temperature(), get_humidity(), status);
 
     status = STATUS_OK; // clear status for the next sample interval
@@ -508,7 +507,7 @@ void loop() {
         IO(Serial.println(F("Could not send data packet")));
     }
 
-    last_tx_time = millis() - start_time_ms; // last_tx_time used next iteration
+    // last_time_awake = millis() - start_time_ms; // last_time_awake used next iteration
 
 #if EXPECT_REPLY
     // Now wait for a reply
@@ -522,14 +521,14 @@ void loop() {
             if (len == sizeof(uint32_t)) { // time code?
                 memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
                 // cast in abs() needed to resolve ambiguity
-                if (abs(long(rtc.getEpoch() - main_node_time)) > 1)
+                uint32_t delta_time = main_node_time - rtc.getEpoch();
+                if (abs(long(delta_time)) > 1) {
                     rtc.setEpoch(main_node_time);
+                }
             }
-            // Broadcast debug info
             send_debug("1", from);
         } else {
             status |= RFM95_NO_REPLY;
-            // Broadcast debug info
             send_debug("No Reply received", from);
         }
     }
@@ -540,7 +539,13 @@ void loop() {
     send_debug("2", from);
 
     yield_spi_bus();
+
+    // NB: millis() doesn't run during StandBy mode
+    last_time_awake = millis() - start_time_ms; // last_time_awake used next iteration
+
+#if TX_LED
     digitalWrite(STATUS_LED, LOW);
+#endif
 
     // Leaving this in guards against bricking the RS when sleeping with the USB detached.
     if (digitalRead(USE_STANDBY) == LOW) {
@@ -558,22 +563,23 @@ void loop() {
 #else
         yield(SD_CARD_WAIT * 1000);
 #endif
-        // send_debug("3", from);
 
-        // yield_spi_to_sd();
         // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
         SPI.end();
         digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
 
         // TODO Fix this so that the times are on the hour.
+        // Use setAlaramTime(h, m, s) and rtc.MATCH_MMSS for every hour or MATCH_SS for 
+        // every minute. Update the m and s values using 'time + n mod 60'
+
         // The time interval to sleep is the length of the sample interval minus
         // the time needed to perform the sample operations millis() - start_time_ms
         // and minus the time spent sleeping while the SD card cleans up after the
         // last write.
-        unsigned long elapsed_time = max((millis() - start_time_ms), 0) / 1000;
-        uint8_t offset = max(STANDBY_INTERVAL_S - elapsed_time - SD_CARD_WAIT, 0);
+        unsigned long elapsed_time = (millis() - start_time_ms) / 1000;
+        uint8_t offset = max(STANDBY_INTERVAL_S - elapsed_time - SD_CARD_WAIT, 1);
         // remove 1 to account for a rounding error
-        if (offset > 0)
+        if (offset > 1)
             offset -= 1;
 
         rtc.setAlarmEpoch(rtc.getEpoch() + offset);
@@ -586,17 +592,18 @@ void loop() {
 #endif
 
         // Reverse low-power options
-        yield_spi_to_sd();
-
         SPI.begin();
+        yield_spi_to_sd();
         digitalWrite(SD_PWR, HIGH);
         // rf95 wakes up on the first function call.
         if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
             status |= SD_CARD_WAKEUP_ERROR;
         }
 
+#if LORA_DEBUG
         char msg[256];
-        snprintf(msg, 256, "4: t:%ld, o:%d", elapsed_time, offset);
+        snprintf(msg, 256, "3: t:%ld, o:%d", elapsed_time, offset);
         send_debug(msg, from);
+#endif
     }
 }
