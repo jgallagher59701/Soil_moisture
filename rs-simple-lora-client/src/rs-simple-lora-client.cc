@@ -32,7 +32,7 @@
 
 #define DEBUG 0          // Requires USB
 #define Serial SerialUSB // Needed for RS. jhrg 7/26/20
-#define LORA_DEBUG 1     // Send debugging info to the main node
+#define LORA_DEBUG 0     // Send debugging info to the main node
 #define STANDBY_MODE 1   // Use RTC standby mode and not yield()
 #define TX_LED 0         // 1 == show the LED during operation, 0 == not
 
@@ -413,6 +413,8 @@ void setup() {
     sht30d.heater(false);
 #endif // SHT30D
 
+    // Not disabling interrupts here since the RFM 95 is not yet running
+
     // Initialize the SD card
     yield_spi_to_sd();
 
@@ -603,14 +605,17 @@ void loop() {
         yield(offset * 1000);
 #endif
 
-        // Reverse low-power options
+        // Reverse low-power options; start the SD card.
+        // rf95 wakes up on the first function call.
         SPI.begin();
+        
         yield_spi_to_sd();
         digitalWrite(SD_PWR, HIGH);
-        // rf95 wakes up on the first function call.
+        noInterrupts();
         if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
             status |= SD_CARD_WAKEUP_ERROR;
         }
+        interrupts();
 
 #if LORA_DEBUG
         char msg[256];
