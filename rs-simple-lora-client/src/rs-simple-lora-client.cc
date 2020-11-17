@@ -258,6 +258,9 @@ get_log_filename() {
 void write_header(const char *file_name) {
     yield_spi_to_sd();
 
+    // disable interrupts
+    noInterrupts();
+
     if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         IO(Serial.println(F("Couldn't write file header")));
         error_blink(STATUS_LED, SD_WRITE_HEADER_FAIL);
@@ -265,6 +268,9 @@ void write_header(const char *file_name) {
 
     file.println(F("# Start Log"));
     file.close();
+
+    // enable interrupts
+    interrupts();
 }
 
 /**
@@ -277,12 +283,18 @@ void write_header(const char *file_name) {
 void log_data(const char *file_name, const char *data) {
     yield_spi_to_sd();
 
+    // disable interrupts
+    noInterrupts();
+
     if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         file.println(data);
         file.close();
     } else {
         status |= SD_FILE_ENTRY_WRITE_ERROR;
     }
+
+    // enable interrupts
+    interrupts();
 }
 
 /**

@@ -118,7 +118,7 @@ char *iso8601_date_time(DateTime t) {
     @brief RF95 off the SPI bus to enable SD card access
 */
 void yield_spi_to_sd() {
-    digitalWrite(SD_CS, LOW);
+    //digitalWrite(SD_CS, LOW);
     digitalWrite(RFM95_CS, HIGH);
 }
 
@@ -127,7 +127,7 @@ void yield_spi_to_sd() {
 */
 void yield_spi_to_rf95() {
     digitalWrite(SD_CS, HIGH);
-    digitalWrite(RFM95_CS, LOW);
+    //digitalWrite(RFM95_CS, LOW);
 }
 
 /**
@@ -141,6 +141,8 @@ void write_header(const char *file_name) {
 
     yield_spi_to_sd();
 
+    cli();  // disable interrupts
+
     if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         Serial.println(F("Couldn't write file header"));
         sd_card_status = false;
@@ -150,6 +152,8 @@ void write_header(const char *file_name) {
     file.println(F("# Start Log"));
     file.println(F("# Node, Message, Time, Battery V, Last TX Dur ms, Temp C, Hum %, Status"));
     file.close();
+
+    sei();  // enable interrupts
 }
 
 /**
@@ -164,6 +168,7 @@ void log_data(const char *file_name, const char *data) {
         return;
 
     yield_spi_to_sd();
+    cli();  // disable interrupts
 
     if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         file.println(data);
@@ -171,6 +176,8 @@ void log_data(const char *file_name, const char *data) {
     } else {
         Serial.print(F("Failed to log data."));
     }
+
+    sei();  // enable interrupts
 }
 
 void status_on() {
