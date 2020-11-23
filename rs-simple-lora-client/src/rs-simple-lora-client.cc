@@ -102,6 +102,7 @@
 #define SD_FILE_ENTRY_WRITE_ERROR 0x04
 #define SD_CARD_WAKEUP_ERROR 0x08
 
+// These codes indicate errors at boot time.
 #define SD_NO_MORE_NAMES 0x10 // means it will use "Data99.csv"
 #define SD_CARD_INIT_ERROR 0x20
 #define RFM95_INIT_ERROR 0x40
@@ -127,11 +128,13 @@ SdFile file; // Log file.
 
 uint8_t status = STATUS_OK;
 
+// Exclude some parts of the code for debugging. Zero excludes the code.
 #define SHT30D 1
 #define SD 1
 
 /**
    @brief delay that enables background tasks
+   Used fir debugging and to enable program upload. See setup().
 */
 void yield(unsigned long ms_delay) {
     unsigned long start = millis();
