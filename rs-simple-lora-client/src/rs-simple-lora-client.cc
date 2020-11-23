@@ -68,7 +68,7 @@
 // RH_CAD_DEFAULT_TIMEOUT 10seconds
 
 #define MAIN_NODE_ADDRESS 0
-#define NODE_ADDRESS 1
+#define NODE_ADDRESS 2
 #define EXPECT_REPLY 1
 
 #define WAIT_AVAILABLE 5000   // ms to wait for reply from main node
@@ -80,6 +80,32 @@
 // Log file name.
 #define FILE_BASE_NAME "Data"
 #define SD_CARD_WAIT 5 // seconds to wait after last write before power off
+
+// setup() error codes. Any of these errors during the boot of the node
+// and flash the status led 2, 3, ..., n times. The sequence will
+// repeat ERROR_TIMES then continue. The node status will also be set.
+#define SHT31_BEGIN_FAIL 2
+#define SD_BEGIN_FAIL 3
+#define SD_WRITE_HEADER_FAIL 4
+#define RFM95_INIT_FAIL 5
+#define RFM95_SET_FREQ_FAIL 6
+#define SD_LOG_FILE_NAME_FAIL 7
+
+#define ERROR_TIMES 3
+
+// In the RH Datagram and ReliableDatagram header, we can use the four
+// LSB of the 'status' field. Currently this is part of the data packet.
+#define STATUS_OK 0x00
+
+#define RFM95_SEND_ERROR 0x01
+#define RFM95_NO_REPLY 0x02
+#define SD_FILE_ENTRY_WRITE_ERROR 0x04
+#define SD_CARD_WAKEUP_ERROR 0x08
+
+#define SD_NO_MORE_NAMES 0x10 // means it will use "Data99.csv"
+#define SD_CARD_INIT_ERROR 0x20
+#define RFM95_INIT_ERROR 0x40
+#define SHT_31_INIT_ERROR 0x80
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -99,36 +125,10 @@ Adafruit_SHT31 sht30d = Adafruit_SHT31();
 SdFat sd;    // File system object.
 SdFile file; // Log file.
 
-// setup() error codes. Any of these error the boot of the node
-// and flash the status led 2, 3, ..., n times.
-#define SHT31_BEGIN_FAIL 2
-#define SD_BEGIN_FAIL 3
-#define SD_WRITE_HEADER_FAIL 4
-#define RFM95_INIT_FAIL 5
-#define RFM95_SET_FREQ_FAIL 6
-#define SD_LOG_FILE_NAME_FAIL 7
-
-// In the RH Datagram and ReliableDatagram header, we can use the four
-// LSB of the 'status' field. Currently this is part of the data packet.
-#define STATUS_OK 0x00
-
-#define RFM95_SEND_ERROR 0x01
-#define RFM95_NO_REPLY 0x02
-#define SD_FILE_ENTRY_WRITE_ERROR 0x04
-#define SD_CARD_WAKEUP_ERROR 0x08
-
-#define SD_NO_MORE_NAMES 0x10 // means it will use "Data99.csv"
-
-// #define RFM95_SEND_QUEUE_ERROR 0x20
-// #define RFM95_RECEIVE_FAILED 0x80
-
-#if DEBUG
-#define SHT30D 0
-#else
-#define SHT30D 1
-#endif
-
 uint8_t status = STATUS_OK;
+
+#define SHT30D 1
+#define SD 1
 
 /**
    @brief delay that enables background tasks
@@ -139,15 +139,15 @@ void yield(unsigned long ms_delay) {
         yield();
 }
 
+// TODO: Are these functions that set the SPI bus CS lines HIGH needed?
+
 /**
     @brief RF95 off the SPI bus to enable SD card access
 */
 void yield_spi_to_sd() {
     digitalWrite(RFM95_CS, HIGH);
-    //digitalWrite(SD_CS, LOW);
-    // TODO remove?
-    // Moved to setup() since we never use this.
-    // digitalWrite(FLASH_CS, HIGH);
+    // Setting the SD card SS LOW seems to break things. Let the
+    // SdFat library code control when to set SS to LOW.
 }
 
 /**
@@ -155,7 +155,6 @@ void yield_spi_to_sd() {
 */
 void yield_spi_to_rf95() {
     digitalWrite(SD_CS, HIGH);
-    //digitalWrite(RFM95_CS, LOW);
 }
 
 /**
@@ -214,16 +213,20 @@ char file_name[13] = FILE_BASE_NAME "00.csv";
 
 /**
  * @brief get an unused filename for the new log.
- *  This function returns a pointer to local static storage.
- *  @return A pointer to the new file name.
+ * This function returns a pointer to local static storage.
+ * @note Only call this from setup(), never from Loop and never if
+ * the SD library has been initialized correctly.
+ * @return A pointer to the new file name.
  */
 const char *
 get_new_log_filename() {
+    // If the SD card/library failed to init, don't run this code.
+
     const uint8_t BASE_NAME_SIZE = sizeof(FILE_BASE_NAME) - 1;
 
     // Find an unused file name.
     if (BASE_NAME_SIZE > 6) {
-        error_blink(STATUS_LED, SD_LOG_FILE_NAME_FAIL);
+        blink(STATUS_LED, SD_LOG_FILE_NAME_FAIL, ERROR_TIMES);
     }
 
     // Look for a BASE_NAME00.csv. if all are taken return BASE_NAME99.csv
@@ -254,8 +257,10 @@ get_log_filename() {
    @brief Write a header for the new log file.
    @param file_name open/create this file, append if it exists
    @note Claim the SPI bus
+   @note Never call this if the SD card initialization fails.
 */
 void write_header(const char *file_name) {
+#if SD
     yield_spi_to_sd();
 
     // disable interrupts
@@ -263,7 +268,7 @@ void write_header(const char *file_name) {
 
     if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         IO(Serial.println(F("Couldn't write file header")));
-        error_blink(STATUS_LED, SD_WRITE_HEADER_FAIL);
+        blink(STATUS_LED, SD_WRITE_HEADER_FAIL, ERROR_TIMES);
     }
 
     file.println(F("# Start Log"));
@@ -271,6 +276,7 @@ void write_header(const char *file_name) {
 
     // enable interrupts
     interrupts();
+#endif
 }
 
 /**
@@ -281,6 +287,10 @@ void write_header(const char *file_name) {
    @note Claim the SPI bus (calls yield_spi_to_sd()().
 */
 void log_data(const char *file_name, const char *data) {
+#if SD
+    if (status & SD_CARD_INIT_ERROR)
+        return;
+
     yield_spi_to_sd();
 
     // disable interrupts
@@ -295,10 +305,12 @@ void log_data(const char *file_name, const char *data) {
 
     // enable interrupts
     interrupts();
+#endif
 }
 
 /**
  * @brief Get the temperature from the SHT-3
+ * @note If the SHT30D didn't initialize correctly, this will return zero.
  * @return the temperature * 100 as a 16-bit unsigned int
  */
 int16_t get_temperature() {
@@ -322,7 +334,7 @@ uint16_t get_humidity() {
 }
 
 /**
- * @brief Send a short message for debugging.
+ * @brief Send a short message for debugging using the LoRa
  * @param msg The message; null terminated string
  * @param to Send to this node
  */
@@ -337,7 +349,7 @@ void send_debug(const char *msg, uint8_t to) {
  * @brief Call back for the sleep alarm
  */
 void alarmMatch() {
-    // Need to do this?
+    // TODO: Need to do this?
     rtc.detachInterrupt();
 }
 
@@ -406,7 +418,9 @@ void setup() {
 #if SHT30D
     if (!sht30d.begin(0x44)) { // Set to 0x45 for alternate i2c addr
         IO(Serial.println(F("Couldn't find SHT31")));
-        error_blink(STATUS_LED, SHT31_BEGIN_FAIL);
+        blink(STATUS_LED, SHT31_BEGIN_FAIL, ERROR_TIMES);
+        digitalWrite(STATUS_LED, HIGH);
+        status |= SHT_31_INIT_ERROR;
     }
 
     // The SHT30-D temp/humidity sensor has a heater; turn it off
@@ -415,6 +429,7 @@ void setup() {
 
     // Not disabling interrupts here since the RFM 95 is not yet running
 
+#if SD
     // Initialize the SD card
     yield_spi_to_sd();
 
@@ -424,20 +439,25 @@ void setup() {
     // not over 50 MHz. Try a lower speed if SPI errors occur.
     if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
         IO(Serial.println(F("Couldn't init the SD Card")));
-        error_blink(STATUS_LED, SD_BEGIN_FAIL);
+        blink(STATUS_LED, SD_BEGIN_FAIL, ERROR_TIMES);
+        digitalWrite(STATUS_LED, HIGH);
+        status |= SD_CARD_INIT_ERROR;
+    } else {
+        const char *file_name = get_new_log_filename();
+        IO(Serial.println(file_name));
+
+        // Write data header. This will call error_blink() if it fails.
+        write_header(file_name);
     }
-
-    const char *file_name = get_new_log_filename();
-    IO(Serial.println(file_name));
-
-    // Write data header. This will call error_blink() if it fails.
-    write_header(file_name);
+#endif
 
     yield_spi_to_rf95();
 
     if (!rf95_manager.init()) {
         IO(Serial.println(F("LoRa init failed.")));
         error_blink(STATUS_LED, RFM95_INIT_FAIL);
+        digitalWrite(STATUS_LED, HIGH);
+        status |= RFM95_INIT_ERROR;
     }
 
     rf95_manager.setRetries(2); // default is 3
@@ -447,7 +467,9 @@ void setup() {
     // Setup ISM frequency
     if (!rf95.setFrequency(FREQUENCY)) {
         IO(Serial.println(F("LoRa frequency out of range.")));
-        error_blink(STATUS_LED, RFM95_SET_FREQ_FAIL);
+        blink(STATUS_LED, RFM95_SET_FREQ_FAIL, ERROR_TIMES);
+        digitalWrite(STATUS_LED, HIGH);
+        status |= RFM95_INIT_ERROR;
     }
 
     // Setup Power,dBm
@@ -502,7 +524,8 @@ void loop() {
     build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_time_awake,
                       get_temperature(), get_humidity(), status);
 
-    status = STATUS_OK; // clear status for the next sample interval
+    // Preserve the 4 high bits of the status byte - the initialization errors.
+    status = status & 0xF0; // clear status low nybble for the next sample interval
 
     IO(Serial.println(data_packet_to_string(&data, true)));
 
@@ -561,54 +584,54 @@ void loop() {
     digitalWrite(STATUS_LED, LOW);
 #endif
 
-    // Leaving this in guards against bricking the RS when sleeping with the USB detached.
-    if (digitalRead(USE_STANDBY) == LOW) {
-        // low-power configuration
+    // low-power configuration
 
-        rf95.sleep(); // Turn off the LoRa
+    rf95.sleep(); // Turn off the LoRa
 
-        // Wait 5s for the SD card to settle. Do this here to save power by turning the
-        // LORA off and sleeping the RS
-        rtc.setAlarmEpoch(rtc.getEpoch() + SD_CARD_WAIT);
-        rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
-        rtc.attachInterrupt(alarmMatch);
+    // Wait 5s for the SD card to settle. Do this here to save power by turning the
+    // LORA off and sleeping the RS
+    rtc.setAlarmEpoch(rtc.getEpoch() + SD_CARD_WAIT);
+    rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
+    rtc.attachInterrupt(alarmMatch);
 #if STANDBY_MODE
-        rtc.standbyMode();
+    rtc.standbyMode();
 #else
-        yield(SD_CARD_WAIT * 1000);
+    yield(SD_CARD_WAIT * 1000);
 #endif
 
-        // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
-        SPI.end();
-        digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
+    // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
+    SPI.end();
+    digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
 
-        // TODO Fix this so that the times are on the hour.
-        // Use setAlaramTime(h, m, s) and rtc.MATCH_MMSS for every hour or MATCH_SS for 
-        // every minute. Update the m and s values using 'time + n mod 60'
+    // TODO Fix this so that the times are on the hour.
+    // Use setAlaramTime(h, m, s) and rtc.MATCH_MMSS for every hour or MATCH_SS for
+    // every minute. Update the m and s values using 'time + n mod 60'
 
-        // The time interval to sleep is the length of the sample interval minus
-        // the time needed to perform the sample operations millis() - start_time_ms
-        // and minus the time spent sleeping while the SD card cleans up after the
-        // last write.
-        unsigned long elapsed_time = (millis() - start_time_ms) / 1000;
-        uint8_t offset = max(STANDBY_INTERVAL_S - elapsed_time - SD_CARD_WAIT, 1);
-        // remove 1 to account for a rounding error
-        if (offset > 1)
-            offset -= 1;
+    // The time interval to sleep is the length of the sample interval minus
+    // the time needed to perform the sample operations millis() - start_time_ms
+    // and minus the time spent sleeping while the SD card cleans up after the
+    // last write.
+    unsigned long elapsed_time = (millis() - start_time_ms) / 1000;
+    uint8_t offset = max(STANDBY_INTERVAL_S - elapsed_time - SD_CARD_WAIT, 1);
+    // remove 1 to account for a rounding error
+    if (offset > 1)
+        offset -= 1;
 
-        rtc.setAlarmEpoch(rtc.getEpoch() + offset);
-        rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
-        rtc.attachInterrupt(alarmMatch);
+    rtc.setAlarmEpoch(rtc.getEpoch() + offset);
+    rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
+    rtc.attachInterrupt(alarmMatch);
 #if STANDBY_MODE
-        rtc.standbyMode();
+    rtc.standbyMode();
 #else
-        yield(offset * 1000);
+    yield(offset * 1000);
 #endif
 
-        // Reverse low-power options; start the SD card.
-        // rf95 wakes up on the first function call.
-        SPI.begin();
-        
+    // Reverse low-power options; start the SD card.
+    // rf95 wakes up on the first function call.
+    SPI.begin();
+
+#if SD
+    if (!(status & SD_CARD_INIT_ERROR)) {
         yield_spi_to_sd();
         digitalWrite(SD_PWR, HIGH);
         noInterrupts();
@@ -616,11 +639,12 @@ void loop() {
             status |= SD_CARD_WAKEUP_ERROR;
         }
         interrupts();
+    }
+#endif
 
 #if LORA_DEBUG
-        char msg[256];
-        snprintf(msg, 256, "3: t:%ld, o:%d", elapsed_time, offset);
-        send_debug(msg, from);
+    char msg[256];
+    snprintf(msg, 256, "3: t:%ld, o:%d", elapsed_time, offset);
+    send_debug(msg, from);
 #endif
-    }
 }

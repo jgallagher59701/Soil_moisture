@@ -22,20 +22,6 @@
  */
 void error_blink(int pin, int N) {
     blink(pin, N, 0);
-#if 0
-    while (true) {
-        digitalWrite(pin, HIGH);
-        delay(one_second);
-        for (int i = 0; i < N; ++i) {
-            digitalWrite(pin, LOW);
-            delay(eigth_second);
-            digitalWrite(pin, HIGH);
-            delay(eigth_second);
-        }
-        digitalWrite(pin, LOW);
-        delay(one_second);
-    }
-#endif
 }
 
 /**
