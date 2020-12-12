@@ -328,6 +328,7 @@ void loop() {
                 // yield(1000); Not needed
 #if REPLY
                 // Send a reply that includes a time code (unixtime)
+                yield_spi_to_rf95();
                 uint32_t now = RTC.now().unixtime();
                 unsigned long start = millis();
                 if (rf95_manager.sendtoWait((uint8_t *)&now, sizeof(now), from)) {

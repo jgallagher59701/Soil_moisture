@@ -43,13 +43,12 @@
 #define RFM95_INT 2 // RF95 Interrupt
 #define RFM95_CS 5  // RF95 SPI CS
 
-#define SD_PWR 11 // HIGH == power on SD card
-#define SD_CS 10  // CS for the SD card, SPI uses dedicated lines
+// NB: The two hand-built units have SD_PWR on 11, the PCB uses pin 9
+#define SD_PWR 9 // HIGH == power on SD card
+#define SD_CS 10 // CS for the SD card, SPI uses dedicated lines
 
 #define FLASH_CS 4 // CS for 2MB onboard flash on the SPI bus
 
-#define USE_STANDBY 8 // If pin 8 is LOW, use rtc.standbyMode() for delay. Pull HIGH to use yield()
-#define MAX_POWER 9   // Not used
 #define STATUS_LED 13 // Only for DEBUG mode
 
 #define V_BAT A0
@@ -68,7 +67,7 @@
 // RH_CAD_DEFAULT_TIMEOUT 10seconds
 
 #define MAIN_NODE_ADDRESS 0
-#define NODE_ADDRESS 2
+#define NODE_ADDRESS 1
 #define EXPECT_REPLY 1
 
 #define WAIT_AVAILABLE 5000   // ms to wait for reply from main node
@@ -123,24 +122,15 @@ RTCZero rtc;
 Adafruit_SHT31 sht30d = Adafruit_SHT31();
 
 // Singletons for the SD card objects
-SdFat sd;    // File system object.
-SdFile file; // Log file.
+SdFat sd; // File system object.
+// FatFile /*SdFile*/ file; // Log file.
 
 uint8_t status = STATUS_OK;
 
 // Exclude some parts of the code for debugging. Zero excludes the code.
 #define SHT30D 1
 #define SD 1
-
-/**
-   @brief delay that enables background tasks
-   Used fir debugging and to enable program upload. See setup().
-*/
-void yield(unsigned long ms_delay) {
-    unsigned long start = millis();
-    while ((millis() - start) < ms_delay)
-        yield();
-}
+#define SPI_OFF 0
 
 // TODO: Are these functions that set the SPI bus CS lines HIGH needed?
 
@@ -167,6 +157,26 @@ void yield_spi_bus() {
     digitalWrite(SD_CS, HIGH);
     digitalWrite(RFM95_CS, HIGH);
     digitalWrite(FLASH_CS, HIGH);
+}
+
+/**
+ * @brief Send a short message for debugging using the LoRa
+ * @param msg The message; null terminated string
+ * @param to Send to this node
+ */
+void send_debug(const char *msg, uint8_t to) {
+    yield_spi_to_rf95();
+    rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg), to);
+}
+
+/**
+   @brief delay that enables background tasks
+   Used fir debugging and to enable program upload. See setup().
+*/
+void yield(unsigned long ms_delay) {
+    unsigned long start = millis();
+    while ((millis() - start) < ms_delay)
+        yield();
 }
 
 /**
@@ -269,13 +279,15 @@ void write_header(const char *file_name) {
     // disable interrupts
     noInterrupts();
 
-    if (!file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+    FatFile file; // Log file.
+    if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
+        file.write("# Start Log");
+        file.write('\n');
+        file.close();
+    } else {
         IO(Serial.println(F("Couldn't write file header")));
         blink(STATUS_LED, SD_WRITE_HEADER_FAIL, ERROR_TIMES);
     }
-
-    file.println(F("# Start Log"));
-    file.close();
 
     // enable interrupts
     interrupts();
@@ -291,19 +303,35 @@ void write_header(const char *file_name) {
 */
 void log_data(const char *file_name, const char *data) {
 #if SD
-    if (status & SD_CARD_INIT_ERROR)
+    if (status & SD_CARD_INIT_ERROR) {
         return;
+    }
 
     yield_spi_to_sd();
 
     // disable interrupts
     noInterrupts();
 
+    FatFile file; // Log file.
     if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
-        file.println(data);
+        file.write(data);
+        file.write('\n');
         file.close();
+        if (file.getWriteError())
+            status |= SD_FILE_ENTRY_WRITE_ERROR;
     } else {
         status |= SD_FILE_ENTRY_WRITE_ERROR;
+    }
+
+    if (status & SD_FILE_ENTRY_WRITE_ERROR) {
+        char error_info[256];
+        int error = sd.sdErrorCode();
+        // sd.errorPrint(error_info);
+        snprintf(error_info, 256, "SD Card error: 0x%02x, node status: 0x%02x.", error, status);
+
+        interrupts(); // enable interrupts for the rfm95
+
+        send_debug(error_info, MAIN_NODE_ADDRESS);
     }
 
     // enable interrupts
@@ -336,18 +364,6 @@ uint16_t get_humidity() {
 #endif
 }
 
-/**
- * @brief Send a short message for debugging using the LoRa
- * @param msg The message; null terminated string
- * @param to Send to this node
- */
-void send_debug(const char *msg, uint8_t to) {
-#if LORA_DEBUG
-    yield_spi_to_rf95();
-    rf95_manager.sendtoWait((uint8_t *)msg, strlen(msg) + 1, to);
-#endif
-}
-
 /** 
  * @brief Call back for the sleep alarm
  */
@@ -369,10 +385,6 @@ void setup() {
 
     pinMode(25, INPUT_PULLUP);
     pinMode(26, INPUT_PULLUP);
-
-    // pin mode setting for I/O pins used by this code
-    pinMode(USE_STANDBY, INPUT_PULLUP);
-    pinMode(MAX_POWER, INPUT_PULLUP); // not used
 
     pinMode(STATUS_LED, OUTPUT);
     digitalWrite(STATUS_LED, HIGH);
@@ -440,7 +452,7 @@ void setup() {
 
     // Initialize at the highest speed supported by the board that is
     // not over 50 MHz. Try a lower speed if SPI errors occur.
-    if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
+    if (!sd.begin(SD_CS)) { //}, SD_SCK_MHZ(50))) {
         IO(Serial.println(F("Couldn't init the SD Card")));
         blink(STATUS_LED, SD_BEGIN_FAIL, ERROR_TIMES);
         digitalWrite(STATUS_LED, HIGH);
@@ -528,7 +540,7 @@ void loop() {
                       get_temperature(), get_humidity(), status);
 
     // Preserve the 4 high bits of the status byte - the initialization errors.
-    status = status & 0xF0; // clear status low nybble for the next sample interval
+    status = status & 0xF0; // clear status low nyble for the next sample interval
 
     IO(Serial.println(data_packet_to_string(&data, true)));
 
@@ -566,7 +578,9 @@ void loop() {
                     rtc.setEpoch(main_node_time);
                 }
             }
+#if LORA_DEBUG
             send_debug("1", from);
+#endif
         } else {
             status |= RFM95_NO_REPLY;
             send_debug("No Reply received", from);
@@ -575,8 +589,9 @@ void loop() {
 #endif // EXPECT_REPLY
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
-
+#if LORA_DEBUG
     send_debug("2", from);
+#endif
 
     yield_spi_bus();
 
@@ -602,8 +617,11 @@ void loop() {
     yield(SD_CARD_WAIT * 1000);
 #endif
 
+#if SPI_SLEEP
     // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
     SPI.end();
+#endif
+
     digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
 
     // TODO Fix this so that the times are on the hour.
@@ -624,25 +642,26 @@ void loop() {
     rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
     rtc.attachInterrupt(alarmMatch);
 #if STANDBY_MODE
+    // TODO Try adding a 10ms wait here. jhrg 12/5/20
     rtc.standbyMode();
 #else
     yield(offset * 1000);
 #endif
 
+#if SPI_SLEEP
     // Reverse low-power options; start the SD card.
     // rf95 wakes up on the first function call.
     SPI.begin();
+#endif
 
 #if SD
-    if (!(status & SD_CARD_INIT_ERROR)) {
-        yield_spi_to_sd();
-        digitalWrite(SD_PWR, HIGH);
-        noInterrupts();
-        if (!sd.begin(SD_CS, SD_SCK_MHZ(50))) {
-            status |= SD_CARD_WAKEUP_ERROR;
-        }
-        interrupts();
+    yield_spi_to_sd();
+    digitalWrite(SD_PWR, HIGH);
+    noInterrupts();
+    if (!sd.begin(SD_CS)) { //}, SD_SCK_MHZ(50))) {
+        status |= SD_CARD_WAKEUP_ERROR;
     }
+    interrupts();
 #endif
 
 #if LORA_DEBUG
