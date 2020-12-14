@@ -32,12 +32,12 @@
 
 #define Serial SerialUSB // Needed for RS. jhrg 7/26/20
 
-#define DEBUG 0          // Requires USB
-#define LORA_DEBUG 0     // Send debugging info to the main node
+#define DEBUG 0      // Requires USB
+#define LORA_DEBUG 0 // Send debugging info to the main node
 
 // Exclude some parts of the code for debugging. Zero excludes the code.
-#define STANDBY_MODE 1   // Use RTC standby mode and not yield()
-#define TX_LED 1         // 1 == show the LED during operation, 0 == not
+#define STANDBY_MODE 1 // Use RTC standby mode and not yield()
+#define TX_LED 1       // 1 == show the LED during operation, 0 == not
 #define SHT30D 1
 #define SD 1
 #define SPI_SLEEP 1
@@ -324,7 +324,7 @@ void log_data(const char *file_name, const char *data) {
     if (file.open(file_name, O_WRONLY | O_CREAT | O_APPEND)) {
         file.write(data);
         file.write('\n');
-        // getWriteError returns true if there was an error writing OR 
+        // getWriteError returns true if there was an error writing OR
         // if the file has been closed (which is not an error...)
         if (file.getWriteError())
             status |= SD_FILE_ENTRY_WRITE_ERROR;
@@ -354,10 +354,9 @@ void log_data(const char *file_name, const char *data) {
  * 
  * Wait for SD_CARD_WAIT seconds before cutting the power.
  */
-void shutdown_sd_card()
-{     
+void shutdown_sd_card() {
 #if STANDBY_MODE
-    // Wait SD_CARD_WAIT seconds for the SD card to settle. 
+    // Wait SD_CARD_WAIT seconds for the SD card to settle.
     rtc.setAlarmEpoch(rtc.getEpoch() + SD_CARD_WAIT);
     rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
     rtc.attachInterrupt(alarmMatch);
@@ -373,8 +372,7 @@ void shutdown_sd_card()
 /**
  * @brief Power on teh SD card and initialize the driver
  */
-void wake_up_sd_card()
-{
+void wake_up_sd_card() {
 #if SD
     yield_spi_to_sd();
     digitalWrite(SD_PWR, HIGH);
@@ -420,8 +418,7 @@ void send_data_packet(packet_t &data, uint8_t to) {
  * when broadcasting the packet). Read the time code and update
  * the local node's RTC.
  */
-void read_main_node_reply(uint8_t *rf95_buf)
-{
+void read_main_node_reply(uint8_t *rf95_buf) {
     yield_spi_to_rf95();
     // Now wait for a reply
     uint8_t len = sizeof(rf95_buf);
@@ -450,8 +447,7 @@ void read_main_node_reply(uint8_t *rf95_buf)
 /**
  * @brief RMF95 sleep mode. Any API call wakes it up
  */
-void radio_silence()
-{
+void radio_silence() {
     yield_spi_to_rf95();
     rf95.sleep(); // Turn off the LoRa
 }
@@ -481,8 +477,7 @@ uint16_t get_humidity() {
 #endif
 }
 
-void sleep_node(unsigned long start_time_ms) 
-{
+void sleep_node(unsigned long start_time_ms) {
     // TODO Fix this so that the times are on the hour.
     // Use setAlaramTime(h, m, s) and rtc.MATCH_MMSS for every hour or MATCH_SS for
     // every minute. Update the m and s values using 'time + n mod 60'
@@ -652,14 +647,14 @@ void setup() {
     digitalWrite(STATUS_LED, LOW);
 }
 
-// Used to hold any reply from the main node
-uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
-// The data sent to the main node
-packet_t data;
-
 void loop() {
     static unsigned long last_time_awake = 0;
     static unsigned long message = 0;
+
+    // Used to hold any reply from the main node
+    uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
+    // The data sent to the main node
+    packet_t data;
 
     unsigned long start_time_ms = millis();
 
@@ -679,59 +674,9 @@ void loop() {
 
     send_data_packet(data, RH_BROADCAST_ADDRESS);
 
-#if 0
-    // Broadcast. This may block for up to CAD_TIMEOUT seconds
-    // Broadcasting means there's no waiting for an ACK.
-    yield_spi_to_rf95();
-    if (!rf95_manager.sendtoWait((uint8_t *)&data, DATA_PACKET_SIZE, RH_BROADCAST_ADDRESS)) {
-        status |= RFM95_SEND_ERROR;
-        IO(Serial.println(F("Could not queue data packet")));
-    }
-
-    // This is not needed if the 'TO' address above is a specific node. If
-    // RH_BROADCAST_ADDRESS is used, then we should wait
-    if (!rf95_manager.waitPacketSent(WAIT_AVAILABLE)) {
-        status |= RFM95_SEND_ERROR;
-        IO(Serial.println(F("Could not send data packet")));
-    }
-#endif
-    // last_time_awake = millis() - start_time_ms; // last_time_awake used next iteration
-
     read_main_node_reply(rf95_buf);
 
-#if 0   // EXPECT_REPLY
-    // Now wait for a reply
-    uint8_t len = sizeof(rf95_buf);
-    uint8_t from;
-
-    // Should be a reply message for us now
-    if (rf95_manager.waitAvailableTimeout(WAIT_AVAILABLE)) {
-        if (rf95_manager.recvfromAck(rf95_buf, &len, &from)) {
-            uint32_t main_node_time = 0;
-            if (len == sizeof(uint32_t)) { // time code?
-                memcpy(&main_node_time, rf95_buf, sizeof(uint32_t));
-                // cast in abs() needed to resolve ambiguity
-                uint32_t delta_time = main_node_time - rtc.getEpoch();
-                if (abs(long(delta_time)) > 1) {
-                    rtc.setEpoch(main_node_time);
-                }
-            }
-#if LORA_DEBUG
-            send_debug("1", from);
-#endif
-        } else {
-            status |= RFM95_NO_REPLY;
-            send_debug("No Reply received", from);
-        }
-    }
-#endif // EXPECT_REPLY
-    
-
     log_data(get_log_filename(), data_packet_to_string(&data, false));
-
-#if 0
-    yield_spi_bus();
-#endif
 
     // NB: millis() doesn't run during StandBy mode
     last_time_awake = millis() - start_time_ms; // last_time_awake used next iteration
@@ -743,27 +688,7 @@ void loop() {
     // low-power configuration
     radio_silence();
 
-#if 0
-    rf95.sleep(); // Turn off the LoRa
-#endif
-
     shutdown_sd_card();
-
-#if 0
-#if STANDBY_MODE
-    // Wait 5s for the SD card to settle. Do this here to save power by turning the
-    // LORA off and sleeping the RS
-    rtc.setAlarmEpoch(rtc.getEpoch() + SD_CARD_WAIT);
-    rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
-    rtc.attachInterrupt(alarmMatch);
-    yield(10);
-    rtc.standbyMode();
-#else
-    yield(SD_CARD_WAIT * 1000);
-#endif
-
-    digitalWrite(SD_PWR, LOW); // Now, turn off the SD card
-#endif
 
 #if SPI_SLEEP
     // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
@@ -772,49 +697,11 @@ void loop() {
 
     sleep_node(start_time_ms);
 
-#if 0
-    // TODO Fix this so that the times are on the hour.
-    // Use setAlaramTime(h, m, s) and rtc.MATCH_MMSS for every hour or MATCH_SS for
-    // every minute. Update the m and s values using 'time + n mod 60'
-
-    // The time interval to sleep is the length of the sample interval minus
-    // the time needed to perform the sample operations millis() - start_time_ms
-    // and minus the time spent sleeping while the SD card cleans up after the
-    // last write.
-    unsigned long elapsed_time = (millis() - start_time_ms) / 1000;
-    uint8_t offset = max(STANDBY_INTERVAL_S - elapsed_time - SD_CARD_WAIT, 1);
-    // remove 1 to account for a rounding error
-    if (offset > 1)
-        offset -= 1;
-#if STANDBY_MODE
-    rtc.setAlarmEpoch(rtc.getEpoch() + offset);
-    rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
-    rtc.attachInterrupt(alarmMatch);
-    // TODO Try adding a 10ms wait here. jhrg 12/5/20
-    yield(10);
-    rtc.standbyMode();
-#else
-    yield(offset * 1000);
-#endif
-#endif
-
 #if SPI_SLEEP
-    // Reverse low-power options; start the SD card.
-    // rf95 wakes up on the first function call.
     SPI.begin();
 #endif
 
     wake_up_sd_card();
-
-#if SD
-    yield_spi_to_sd();
-    digitalWrite(SD_PWR, HIGH);
-    noInterrupts();
-    if (!sd.begin(SD_CS)) { //}, SD_SCK_MHZ(50))) {
-        status |= SD_CARD_WAKEUP_ERROR;
-    }
-    interrupts();
-#endif
 
 #if LORA_DEBUG
     char msg[256];
