@@ -147,15 +147,17 @@ void alarmMatch() {
 */
 void yield_spi_to_sd() {
     digitalWrite(RFM95_CS, HIGH);
+    // digitalWrite(FLASH_CS, HIGH);
     // Setting the SD card SS LOW seems to break things. Let the
     // SdFat library code control when to set SS to LOW.
 }
 
 /**
-    @brief RF95 off the SPI bus to enable SD card access
+    @brief SD card off the SPI bus to enable RFM95 access
 */
 void yield_spi_to_rf95() {
     digitalWrite(SD_CS, HIGH);
+    // digitalWrite(FLASH_CS, HIGH);
 }
 
 /**
@@ -164,7 +166,7 @@ void yield_spi_to_rf95() {
 void yield_spi_bus() {
     digitalWrite(SD_CS, HIGH);
     digitalWrite(RFM95_CS, HIGH);
-    digitalWrite(FLASH_CS, HIGH);
+    // FLASH_CS is always off the bus digitalWrite(FLASH_CS, HIGH);
 }
 
 /**
@@ -235,8 +237,9 @@ char file_name[13] = FILE_BASE_NAME "00.csv";
 /**
  * @brief get an unused filename for the new log.
  * This function returns a pointer to local static storage.
- * @note Only call this from setup(), never from Loop and never if
- * the SD library has been initialized correctly.
+ * @note Only call this from setup(), never from loop() and never if
+ * the SD library has not been initialized correctly and never after
+ * the radiohead library (RFM95) has been initialized.
  * @return A pointer to the new file name.
  */
 const char *
@@ -282,6 +285,10 @@ get_log_filename() {
 */
 void write_header(const char *file_name) {
 #if SD
+    if (status & SD_CARD_INIT_ERROR) {
+        return;
+    }
+
     yield_spi_to_sd();
 
     // disable interrupts
@@ -377,7 +384,7 @@ void wake_up_sd_card() {
     yield_spi_to_sd();
     digitalWrite(SD_PWR, HIGH);
     noInterrupts();
-    if (!sd.begin(SD_CS)) { //}, SD_SCK_MHZ(50))) {
+    if (!sd.begin(SD_CS)) {
         status |= SD_CARD_WAKEUP_ERROR;
     }
     interrupts();
@@ -664,8 +671,8 @@ void loop() {
     digitalWrite(STATUS_LED, HIGH);
 #endif
 
-    // New packet encoding. TODO Could drop NODE_ADDRESS and status if using
-    // RH Datagrams.
+    // New packet encoding.
+    // TODO Could drop NODE_ADDRESS and status if using RH Datagrams.
     build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_time_awake,
                       get_temperature(), get_humidity(), status);
 
@@ -674,6 +681,7 @@ void loop() {
 
     send_data_packet(data, RH_BROADCAST_ADDRESS);
 
+    // TODO Move this inside send_data_packet. Then move rf95_buf.
     read_main_node_reply(rf95_buf);
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
@@ -684,6 +692,10 @@ void loop() {
 #if TX_LED
     digitalWrite(STATUS_LED, LOW);
 #endif
+
+    // TODO Move the next three calls into a new before_sleep() function
+    //  and add an after_wake() function. Consider moving the STATUS_LED
+    //  calls to those functions too.
 
     // low-power configuration
     radio_silence();
