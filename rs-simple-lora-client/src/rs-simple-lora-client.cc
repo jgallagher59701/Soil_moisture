@@ -73,7 +73,7 @@
 // RH_CAD_DEFAULT_TIMEOUT 10seconds
 
 #define MAIN_NODE_ADDRESS 0
-#define NODE_ADDRESS 1
+#define NODE_ADDRESS 2
 #define EXPECT_REPLY 1
 
 #define WAIT_AVAILABLE 5000   // ms to wait for reply from main node
@@ -485,6 +485,20 @@ uint16_t get_humidity() {
 }
 
 void sleep_node(unsigned long start_time_ms) {
+#if TX_LED
+    digitalWrite(STATUS_LED, LOW);
+#endif
+
+    // low-power configuration
+    radio_silence();
+
+    shutdown_sd_card();
+
+#if SPI_SLEEP
+    // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
+    SPI.end();
+#endif
+
     // TODO Fix this so that the times are on the hour.
     // Use setAlaramTime(h, m, s) and rtc.MATCH_MMSS for every hour or MATCH_SS for
     // every minute. Update the m and s values using 'time + n mod 60'
@@ -507,6 +521,16 @@ void sleep_node(unsigned long start_time_ms) {
     rtc.standbyMode();
 #else
     yield(offset * 1000);
+#endif
+
+#if SPI_SLEEP
+    SPI.begin();
+#endif
+
+    wake_up_sd_card();
+
+#if TX_LED
+    digitalWrite(STATUS_LED, HIGH);
 #endif
 }
 
@@ -651,7 +675,8 @@ void setup() {
     USBDevice.detach();
 #endif
 
-    digitalWrite(STATUS_LED, LOW);
+    // digitalWrite(STATUS_LED, LOW);
+    // Exit setup() with the status LED lit.
 }
 
 void loop() {
@@ -666,10 +691,6 @@ void loop() {
     unsigned long start_time_ms = millis();
 
     ++message;
-
-#if TX_LED
-    digitalWrite(STATUS_LED, HIGH);
-#endif
 
     // New packet encoding.
     // TODO Could drop NODE_ADDRESS and status if using RH Datagrams.
@@ -689,31 +710,7 @@ void loop() {
     // NB: millis() doesn't run during StandBy mode
     last_time_awake = millis() - start_time_ms; // last_time_awake used next iteration
 
-#if TX_LED
-    digitalWrite(STATUS_LED, LOW);
-#endif
-
-    // TODO Move the next three calls into a new before_sleep() function
-    //  and add an after_wake() function. Consider moving the STATUS_LED
-    //  calls to those functions too.
-
-    // low-power configuration
-    radio_silence();
-
-    shutdown_sd_card();
-
-#if SPI_SLEEP
-    // Adding SPI.end() drops the measured current draw from 0.65mA to 0.18mA
-    SPI.end();
-#endif
-
     sleep_node(start_time_ms);
-
-#if SPI_SLEEP
-    SPI.begin();
-#endif
-
-    wake_up_sd_card();
 
 #if LORA_DEBUG
     char msg[256];
