@@ -10,3 +10,6 @@
 [submodule "pro-mini-simple-lora-server/lib/soil_sensor_common"]
 	path = main-node/lib/soil_sensor_common
 	url = https://github.com/jgallagher59701/soil_sensor_common
+[submodule "rs-simple-lora-client/lib/SdFat"]
+	path = rs-simple-lora-client/lib/SdFat
+	url = https://github.com/greiman/SdFat.git
