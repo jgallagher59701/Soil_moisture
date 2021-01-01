@@ -46,16 +46,23 @@
 
 // Pin assignments
 
-#define RFM95_INT 2 // RF95 Interrupt
+#define RFM95_INT 2 // RF95 Interrup
+#define FLASH_CS 4 // CS for 2MB onboard flash on the SPI bus
 #define RFM95_CS 5  // RF95 SPI CS
 
 // NB: The two hand-built units have SD_PWR on 11, the PCB uses pin 9
 #define SD_PWR 9 // HIGH == power on SD card
 #define SD_CS 10 // CS for the SD card, SPI uses dedicated lines
 
-#define FLASH_CS 4 // CS for 2MB onboard flash on the SPI bus
-
 #define STATUS_LED 13 // Only for DEBUG mode
+
+// These GPIO pins are used for debugging the leaf node state in case
+// it crashes/freezes. Could add 17–19 if needed. jhrg 1/1/21
+#define STATE_1 3
+#define STATE_2 6
+#define STATE_3 7
+#define STATE_4 8
+#define STATE_5 12
 
 #define V_BAT A0
 
@@ -102,12 +109,13 @@
 // LSB of the 'status' field. Currently this is part of the data packet.
 #define STATUS_OK 0x00
 
+// These errors are reset on every iteration of loop()
 #define RFM95_SEND_ERROR 0x01
 #define RFM95_NO_REPLY 0x02
 #define SD_FILE_ENTRY_WRITE_ERROR 0x04
 #define SD_CARD_WAKEUP_ERROR 0x08
 
-// These codes indicate errors at boot time.
+// These codes indicate errors at boot time. They are persistent.
 #define SD_NO_MORE_NAMES 0x10 // means it will use "Data99.csv"
 #define SD_CARD_INIT_ERROR 0x20
 #define RFM95_INIT_ERROR 0x40
@@ -421,12 +429,17 @@ void send_data_packet(packet_t &data, uint8_t to) {
 
 /**
  * @brief Read the time time code reply from the main node
+ * 
  * Once a packet is sent to the main node, expect a reply (even
  * when broadcasting the packet). Read the time code and update
  * the local node's RTC.
  */
-void read_main_node_reply(uint8_t *rf95_buf) {
+void read_main_node_reply() {
     yield_spi_to_rf95();
+
+    // Used to hold any reply from the main node
+    uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
+ 
     // Now wait for a reply
     uint8_t len = sizeof(rf95_buf);
     uint8_t from;
@@ -444,10 +457,13 @@ void read_main_node_reply(uint8_t *rf95_buf) {
                     rtc.setEpoch(main_node_time);
                 }
             }
-        } else {
+        } 
+        else {
             status |= RFM95_NO_REPLY;
-            send_debug("No Reply received", from);
         }
+    } 
+    else {
+        status |= RFM95_NO_REPLY;
     }
 }
 
@@ -532,6 +548,20 @@ void sleep_node(unsigned long start_time_ms) {
 #if TX_LED
     digitalWrite(STATUS_LED, HIGH);
 #endif
+}
+
+void clear_state_pins()
+{
+    digitalWrite(STATE_1, LOW);
+    digitalWrite(STATE_2, LOW);
+    digitalWrite(STATE_3, LOW);
+    digitalWrite(STATE_4, LOW);
+    digitalWrite(STATE_5, LOW);
+}
+
+void set_state_pin(unsigned int pin) 
+{
+    digitalWrite(pin, HIGH);
 }
 
 void setup() {
@@ -683,14 +713,14 @@ void loop() {
     static unsigned long last_time_awake = 0;
     static unsigned long message = 0;
 
-    // Used to hold any reply from the main node
-    uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
     // The data sent to the main node
     packet_t data;
 
     unsigned long start_time_ms = millis();
 
     ++message;
+
+    clear_state_pins();
 
     // New packet encoding.
     // TODO Could drop NODE_ADDRESS and status if using RH Datagrams.
@@ -702,15 +732,23 @@ void loop() {
 
     send_data_packet(data, RH_BROADCAST_ADDRESS);
 
+    set_state_pin(STATE_1);
+
     // TODO Move this inside send_data_packet. Then move rf95_buf.
-    read_main_node_reply(rf95_buf);
+    read_main_node_reply();
+
+    set_state_pin(STATE_2);
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
+
+    set_state_pin(STATE_3);
 
     // NB: millis() doesn't run during StandBy mode
     last_time_awake = millis() - start_time_ms; // last_time_awake used next iteration
 
     sleep_node(start_time_ms);
+
+    set_state_pin(STATE_4);
 
 #if LORA_DEBUG
     char msg[256];
