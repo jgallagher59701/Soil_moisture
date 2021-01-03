@@ -47,7 +47,7 @@
 // Pin assignments
 
 #define RFM95_INT 2 // RF95 Interrup
-#define FLASH_CS 4 // CS for 2MB onboard flash on the SPI bus
+#define FLASH_CS 4  // CS for 2MB onboard flash on the SPI bus
 #define RFM95_CS 5  // RF95 SPI CS
 
 // NB: The two hand-built units have SD_PWR on 11, the PCB uses pin 9
@@ -80,7 +80,7 @@
 // RH_CAD_DEFAULT_TIMEOUT 10seconds
 
 #define MAIN_NODE_ADDRESS 0
-#define NODE_ADDRESS 2
+#define NODE_ADDRESS 3
 #define EXPECT_REPLY 1
 
 #define WAIT_AVAILABLE 5000   // ms to wait for reply from main node
@@ -439,7 +439,7 @@ void read_main_node_reply() {
 
     // Used to hold any reply from the main node
     uint8_t rf95_buf[RH_RF95_MAX_MESSAGE_LEN];
- 
+
     // Now wait for a reply
     uint8_t len = sizeof(rf95_buf);
     uint8_t from;
@@ -457,12 +457,10 @@ void read_main_node_reply() {
                     rtc.setEpoch(main_node_time);
                 }
             }
-        } 
-        else {
+        } else {
             status |= RFM95_NO_REPLY;
         }
-    } 
-    else {
+    } else {
         status |= RFM95_NO_REPLY;
     }
 }
@@ -550,8 +548,15 @@ void sleep_node(unsigned long start_time_ms) {
 #endif
 }
 
-void clear_state_pins()
-{
+void init_state_pins() {
+    pinMode(STATE_1, OUTPUT);
+    pinMode(STATE_2, OUTPUT);
+    pinMode(STATE_3, OUTPUT);
+    pinMode(STATE_4, OUTPUT);
+    pinMode(STATE_5, OUTPUT);
+}
+
+void clear_state_pins() {
     digitalWrite(STATE_1, LOW);
     digitalWrite(STATE_2, LOW);
     digitalWrite(STATE_3, LOW);
@@ -559,8 +564,7 @@ void clear_state_pins()
     digitalWrite(STATE_5, LOW);
 }
 
-void set_state_pin(unsigned int pin) 
-{
+void set_state_pin(unsigned int pin) {
     digitalWrite(pin, HIGH);
 }
 
@@ -580,6 +584,8 @@ void setup() {
 
     pinMode(STATUS_LED, OUTPUT);
     digitalWrite(STATUS_LED, HIGH);
+
+    init_state_pins();
 
     analogReadResolution(ADC_BITS);
 
