@@ -586,6 +586,7 @@ void setup() {
     digitalWrite(STATUS_LED, HIGH);
 
     init_state_pins();
+    clear_state_pins();
 
     analogReadResolution(ADC_BITS);
 
@@ -726,35 +727,36 @@ void loop() {
 
     ++message;
 
-    clear_state_pins();
-
     // New packet encoding.
     // TODO Could drop NODE_ADDRESS and status if using RH Datagrams.
     build_data_packet(&data, NODE_ADDRESS, message, rtc.getEpoch(), get_bat_v(), (uint16_t)last_time_awake,
                       get_temperature(), get_humidity(), status);
+
+    clear_state_pins();
+    set_state_pin(STATE_1);
 
     // Preserve the 4 high bits of the status byte - the initialization errors.
     status = status & 0xF0; // clear status low nyble for the next sample interval
 
     send_data_packet(data, RH_BROADCAST_ADDRESS);
 
-    set_state_pin(STATE_1);
+    set_state_pin(STATE_2);
 
     // TODO Move this inside send_data_packet. Then move rf95_buf.
     read_main_node_reply();
 
-    set_state_pin(STATE_2);
+    set_state_pin(STATE_3);
 
     log_data(get_log_filename(), data_packet_to_string(&data, false));
 
-    set_state_pin(STATE_3);
+    set_state_pin(STATE_4);
 
     // NB: millis() doesn't run during StandBy mode
     last_time_awake = millis() - start_time_ms; // last_time_awake used next iteration
 
     sleep_node(start_time_ms);
 
-    set_state_pin(STATE_4);
+    set_state_pin(STATE_5);
 
 #if LORA_DEBUG
     char msg[256];
