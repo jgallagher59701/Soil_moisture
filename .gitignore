@@ -4,3 +4,5 @@
 old/
 SDR_Recordings/
 test_data.csv
+leaf-node-measurements/
+DS3231_I2C_scope/
