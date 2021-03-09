@@ -51,7 +51,7 @@
 #define RFM95_CS 5  // RF95 SPI CS
 
 // NB: The two hand-built units have SD_PWR on 11, the PCB uses pin 9
-#define SD_PWR 9 // HIGH == power on SD card
+#define SD_PWR 9 // HIGH == power on SD card; hand built nodes use pin 11 for this
 #define SD_CS 10 // CS for the SD card, SPI uses dedicated lines
 
 #define STATUS_LED 13 // Only for DEBUG mode
@@ -80,11 +80,12 @@
 // RH_CAD_DEFAULT_TIMEOUT 10seconds
 
 #define MAIN_NODE_ADDRESS 0
-#define NODE_ADDRESS 3
+#define NODE_ADDRESS 4
 #define EXPECT_REPLY 1
 
 #define WAIT_AVAILABLE 5000   // ms to wait for reply from main node
 #define STANDBY_INTERVAL_S 20 // seconds to wait/sleep before next transmission
+#define SD_POWER_ON_DELAY 200 // ms
 
 #define ADC_BITS 12
 #define ADC_MAX_VALUE 4096
@@ -392,6 +393,7 @@ void wake_up_sd_card() {
     yield_spi_to_sd();
     digitalWrite(SD_PWR, HIGH);
     noInterrupts();
+    yield(SD_POWER_ON_DELAY);
     if (!sd.begin(SD_CS)) {
         status |= SD_CARD_WAKEUP_ERROR;
     }
@@ -526,6 +528,10 @@ void sleep_node(unsigned long start_time_ms) {
     // remove 1 to account for a rounding error
     if (offset > 1)
         offset -= 1;
+
+    IO(Serial.print("Sleep offset: "));
+    IO(Serial.println(offset));
+
 #if STANDBY_MODE
     rtc.setAlarmEpoch(rtc.getEpoch() + offset);
     rtc.enableAlarm(rtc.MATCH_YYMMDDHHMMSS);
@@ -648,10 +654,9 @@ void setup() {
     yield_spi_to_sd();
 
     IO(Serial.print(F("Initializing SD card...")));
+    yield(SD_POWER_ON_DELAY);
 
-    // Initialize at the highest speed supported by the board that is
-    // not over 50 MHz. Try a lower speed if SPI errors occur.
-    if (!sd.begin(SD_CS)) { //}, SD_SCK_MHZ(50))) {
+    if (!sd.begin(SD_CS)) {
         IO(Serial.println(F("Couldn't init the SD Card")));
         blink(STATUS_LED, SD_BEGIN_FAIL, ERROR_TIMES);
         digitalWrite(STATUS_LED, HIGH);
@@ -742,7 +747,6 @@ void loop() {
 
     set_state_pin(STATE_2);
 
-    // TODO Move this inside send_data_packet. Then move rf95_buf.
     read_main_node_reply();
 
     set_state_pin(STATE_3);
